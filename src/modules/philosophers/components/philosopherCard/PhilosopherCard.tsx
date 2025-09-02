@@ -3,7 +3,7 @@ import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typo
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { type RootState } from '../../../../store'
-import { ROUTES } from '../../../../routes/pathes'
+
 import './PhilosopherCard.scss'
 
 import Socrates from '../../../../assets/socrates.jpg'

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
 import {
-  Box,
+ 
   Grid,
   TextField,
   Button,
@@ -16,7 +16,7 @@ import {
   Paper,
 
 } from '@mui/material';
-import { ROUTES } from '../../../routes/pathes';
+
 import './signup.scss';
 
 // Zod validation schema
@@ -30,7 +30,7 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const Signup: React.FC = () => {
-  const navigate = useNavigate();
+  
   const { t } = useTranslation('auth');
   const {
     register,
