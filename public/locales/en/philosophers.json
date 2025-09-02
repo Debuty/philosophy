@@ -1,0 +1,73 @@
+{
+  "Philosophers": {
+    "title": "Meet the Philosophers Who Shaped Human Thought",
+    "subtitle": "Explore the lives and ideas of the greatest thinkers in history",
+    
+    "filter": {
+      "title": "Filter Philosophers",
+      "search": "Search for a philosopher...",
+      "eras": {
+        "title": "Philosophical Eras",
+        "ancient": "Ancient Philosophy",
+        "medieval": "Medieval Philosophy",
+        "earlyModern": "Early Modern Philosophy",
+        "modern": "Modern Philosophy",
+        "contemporary": "Contemporary Philosophy"
+      },
+      "schools": {
+        "title": "Philosophical Schools",
+        "idealism": "Idealism",
+        "materialism": "Materialism",
+        "existentialism": "Existentialism",
+        "stoicism": "Stoicism",
+        "epicureanism": "Epicureanism",
+        "rationalism": "Rationalism",
+        "empiricism": "Empiricism"
+      },
+      "clearFilters": "Clear Filters",
+      "noResults": "No results found"
+    },
+    
+    "philosopherCard": {
+      "readMore": "Read More",
+      "era": "Era",
+      "school": "Philosophical School",
+      "born": "Born",
+      "died": "Died",
+      "nationality": "Nationality",
+      "mainWorks": "Main Works"
+    }
+  },
+
+  "PhilosopherDetails": {
+    "biography": "Biography",
+    "philosophy": "Philosophy",
+    "mainIdeas": "Main Ideas",
+    "influences": "Influences",
+    "legacy": "Philosophical Legacy",
+    "famousQuotes": "Famous Quotes",
+    "works": "Works",
+    "timeline": "Timeline",
+    "relatedPhilosophers": "Related Philosophers",
+    "backToList": "Back to Philosophers List",
+    "share": "Share",
+    "print": "Print",
+    "download": "Download",
+    "sections": {
+      "earlyLife": "Early Life",
+      "education": "Education",
+      "career": "Career",
+      "majorWorks": "Major Works",
+      "philosophicalViews": "Philosophical Views",
+      "controversies": "Controversies",
+      "death": "Death",
+      "posthumousInfluence": "Posthumous Influence"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "favorite": "Favorite",
+      "bookmark": "Bookmark"
+    }
+  }
+}

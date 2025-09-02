@@ -1,0 +1,15 @@
+.layout {
+  //  height: 100%;
+   min-height: 100vh;
+  display: flex;
+  background-color: #bab8b5;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 30rem 2rem 30rem;
+  // overflow-y: auto;
+
+}
+

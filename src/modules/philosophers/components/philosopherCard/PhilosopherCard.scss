@@ -1,0 +1,19 @@
+// Custom PhilosopherCard styles
+.MuiCard-root {
+  .MuiCardContent-root {
+    .MuiTypography-h5 {
+      font-size: 2.5rem !important;
+    }
+    
+    .MuiTypography-body2 {
+      font-size: 1.8rem !important;
+    }
+  }
+  
+  .MuiCardActions-root {
+    .MuiButton-root {
+      font-size: 1.6rem !important;
+    }
+  }
+}
+

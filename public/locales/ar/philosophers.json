@@ -1,0 +1,73 @@
+{
+  "Philosophers": {
+    "title": "تعرف علي الفلاسفة الذين شكلوا الفكر البشري",
+    "subtitle": "استكشف حياة و افكار اعظم المفكرين في التاريخ",
+    
+    "filter": {
+      "title": "تصفية الفلاسفة",
+      "search": "البحث عن فيلسوف...",
+      "eras": {
+        "title": "العصور الفلسفية",
+        "ancient": "الفلسفة القديمة",
+        "medieval": "الفلسفة في العصور الوسطى",
+        "earlyModern": "الفلسفة الحديثة المبكرة",
+        "modern": "الفلسفة الحديثة",
+        "contemporary": "الفلسفة المعاصرة"
+      },
+      "schools": {
+        "title": "المدارس الفلسفية",
+        "idealism": "المثالية",
+        "materialism": "المادية",
+        "existentialism": "الوجودية",
+        "stoicism": "الرواقية",
+        "epicureanism": "الأبيقورية",
+        "rationalism": "العقلانية",
+        "empiricism": "التجريبية"
+      },
+      "clearFilters": "مسح الفلاتر",
+      "noResults": "لا توجد نتائج"
+    },
+    
+    "philosopherCard": {
+      "readMore": "اقرأ المزيد",
+      "era": "العصر",
+      "school": "المدرسة الفلسفية",
+      "born": "ولد",
+      "died": "توفي",
+      "nationality": "الجنسية",
+      "mainWorks": "الأعمال الرئيسية"
+    }
+  },
+
+  "PhilosopherDetails": {
+    "biography": "السيرة الذاتية",
+    "philosophy": "الفلسفة",
+    "mainIdeas": "الأفكار الرئيسية",
+    "influences": "التأثيرات",
+    "legacy": "الإرث الفلسفي",
+    "famousQuotes": "أشهر الاقتباسات",
+    "works": "الأعمال",
+    "timeline": "الخط الزمني",
+    "relatedPhilosophers": "الفلاسفة المرتبطون",
+    "backToList": "العودة إلى قائمة الفلاسفة",
+    "share": "مشاركة",
+    "print": "طباعة",
+    "download": "تحميل",
+    "sections": {
+      "earlyLife": "الحياة المبكرة",
+      "education": "التعليم",
+      "career": "المسيرة المهنية",
+      "majorWorks": "الأعمال الرئيسية",
+      "philosophicalViews": "الآراء الفلسفية",
+      "controversies": "الخلافات",
+      "death": "الوفاة",
+      "posthumousInfluence": "التأثير بعد الوفاة"
+    },
+    "actions": {
+      "edit": "تعديل",
+      "delete": "حذف",
+      "favorite": "مفضل",
+      "bookmark": "إشارة مرجعية"
+    }
+  }
+}

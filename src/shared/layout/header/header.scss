@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3rem;
+  direction: rtl;
+  &__nav {
+  }
+
+  
+  &__image-wraper {
+    width: 10rem;
+  }
+
+  &__image {
+    width: 100%;
+  }
+
+  &__list {
+    display: flex;
+    gap: 4rem;
+    list-style: none;
+    margin: 0;
+    text-decoration: none;
+    align-items: center;
+    color: #534e46;
+  }
+
+  &__item a {
+    font-size: 2.3rem;
+    &:visited {
+      color: inherit;
+    }
+  }
+
+  // Language icon styling
+  .MuiSvgIcon-root {
+    color: white !important;
+    
+    path {
+      fill: white !important;
+    }
+  }
+}

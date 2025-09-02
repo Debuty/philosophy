@@ -1,0 +1,12 @@
+{
+  "nav": {
+    "home": "Home",
+    "philosophers": "Philosophers",
+    "articles": "Articles",
+    "schools": "Philosophical Schools",
+    "timeline": "Timeline"
+  },
+  "title": "Philos",
+  "language": "Language",
+  "login": "Login"
+}

@@ -1,0 +1,48 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #534e46;
+}
+
+html {
+  font-size: 10px;
+}
+
+body {
+  // background-color: rgb(69, 67, 67);
+}
+
+// Custom TextField styles
+.MuiTextField-root {
+  .MuiFormHelperText-root {
+    font-size: 1.5rem !important;
+  }
+
+
+  .MuiInputBase-input {
+    font-size: 1.5rem !important;
+
+    &:focus {
+      border-color: #534e46 !important;
+    }
+  }
+}
+
+// Custom InputLabel styles
+.MuiInputLabel-root {
+  font-size: 1.5rem !important;
+  margin-bottom: 10px !important;
+}
+
+// Custom Button styles
+.MuiButton-root {
+  font-size: 1.5rem !important;
+  background-color: #534e46 !important;
+  color: #ffffff !important;
+
+}
+
+.MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #534e46 !important;
+}

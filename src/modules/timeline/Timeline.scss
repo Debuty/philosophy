@@ -1,0 +1,93 @@
+// Timeline page custom styles
+.timeline-page {
+  direction: rtl;
+  
+  // Ensure proper Arabic text rendering
+  .MuiTypography-root {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    font-size: 1.5rem;
+  }
+  
+  // MUI Timeline customizations
+  .MuiTimeline-root {
+    direction: rtl;
+  }
+  
+  // Timeline dot styling
+  .MuiTimelineDot-root {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  // Timeline connector styling
+  .MuiTimelineConnector-root {
+    transition: all 0.3s ease;
+  }
+  
+  // Timeline content styling
+  .MuiTimelineContent-root {
+    text-align: right;
+  }
+  
+  // Paper hover effects
+  .MuiPaper-root {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+  
+  // Modal animations
+  .MuiModal-root {
+    .MuiCard-root {
+      animation: modalSlideIn 0.3s ease-out;
+    }
+  }
+}
+
+// Keyframe animations
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .timeline-page {
+    .MuiTimelineDot-root {
+      width: 48px !important;
+      height: 48px !important;
+    }
+    
+    .MuiTypography-h2 {
+      font-size: 2rem !important;
+    }
+    
+    .MuiTypography-h5 {
+      font-size: 1.25rem !important;
+    }
+    
+    // Stack timeline items vertically on mobile
+    .MuiTimeline-root {
+      padding: 0 16px;
+    }
+  }
+}
+
+// RTL support for Arabic text
+[dir="rtl"] .timeline-page {
+  .MuiTimelineContent-root {
+    text-align: right;
+  }
+}

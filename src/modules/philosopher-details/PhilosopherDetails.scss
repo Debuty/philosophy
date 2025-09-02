@@ -1,0 +1,42 @@
+.philosopher-details {
+  padding: 20px;
+  
+  h1 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .philosopher-details-info-container {
+   display: flex;
+   flex-direction: column;
+  //  justify-content: center;
+   align-items: center;
+  }
+ 
+  .philosopher-details-info {
+   display: flex;
+  
+   gap: 5rem;
+  }
+
+  .philosopher-details-info-text {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .philosopher-details-info-text-long-article {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+
+}
+
+.quick-facts-item {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
