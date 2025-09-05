@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Grid,
   Pagination,
@@ -10,46 +10,73 @@ import {
   MenuItem,
   Button,
   Paper,
-  Typography
+  Typography,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import './philosophers.scss';
 import { PhilosopherCard } from './components/philosopherCard/PhilosopherCard';
-import { PhilosophersData } from './data/PhilosophersData';
+import { supabase } from '../../supabaseClient';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPage } from '../../store/reducers/paginationSlice';
+import type { AppDispatch, RootState } from '../../store';
+// Define the philosopher type based on your Supabase table structure
+async function getPhilosophersPage(page: number, pageSize: number = 12) {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { data, error, count } = await supabase
+    .from('Philosophers')
+    .select('*', { count: 'exact' })
+    .order('id', { ascending: true })
+    .range(from, to);
+
+  if (error) throw error;
+
+  return {
+    rows: data ?? [],
+    total: count ?? 0,
+    totalPages: Math.ceil((count ?? 0) / pageSize),
+    page,
+    pageSize,
+  };
+}
+
+
+
+// Custom hook to fetch philosophers from Supabase
+const usePhilosophers = (currentPage: number, cardsPerPage: number) => {
+  return useQuery({
+    queryKey: ['Philosophers', currentPage],
+    queryFn: () => getPhilosophersPage(currentPage, cardsPerPage)
+  });
+};
 
 const philosophers: React.FC = () => {
   const { t } = useTranslation('philosophers');
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEra, setSelectedEra] = useState('');
   const [selectedSchool, setSelectedSchool] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
+  const currentPage = useSelector((state: RootState) => state.pagination.currentPage)
+
   const cardsPerPage = 12;
 
-  // Filter philosophers based on search and filters
-  const filteredPhilosophers = useMemo(() => {
-    return PhilosophersData.filter(philosopher => {
-      const matchesSearch = philosopher.name.en.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        philosopher.name.ar.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        philosopher.shortDescription.en.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        philosopher.shortDescription.ar.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesEra = !selectedEra || philosopher.era.en === selectedEra || philosopher.era.ar === selectedEra;
-      const matchesSchool = !selectedSchool || philosopher.school.en === selectedSchool || philosopher.school.ar === selectedSchool;
-      return matchesSearch && matchesEra && matchesSchool;
-    });
-  }, [searchTerm, selectedEra, selectedSchool]);
+  // Fetch philosophers from Supabase
+  const { data: PhilosophersData, isLoading, error } = usePhilosophers(currentPage, cardsPerPage);
+
+  console.log(PhilosophersData);
 
   // Calculate total pages based on filtered data
-  const totalPages = Math.ceil(filteredPhilosophers.length / cardsPerPage);
 
-  // Paginate filtered philosophers
-  const paginatedPhilosophers = useMemo(() => {
-    const startIndex = (currentPage - 1) * cardsPerPage;
-    const endIndex = startIndex + cardsPerPage;
-    return filteredPhilosophers.slice(startIndex, endIndex);
-  }, [filteredPhilosophers, currentPage]);
+
+
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
-    setCurrentPage(page);
+    dispatch(setCurrentPage(page))
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleClearFilters = () => {
@@ -144,28 +171,32 @@ const philosophers: React.FC = () => {
         {/* Results Count */}
         <Box className="results-info">
           <Typography variant="body2">
-            {filteredPhilosophers.length === 0
-              ? t('Philosophers.filter.noResults')
-              : `${filteredPhilosophers.length} ${t('Philosophers.filter.resultsFound', { defaultValue: 'results found' })}`
-            }
+
+            Test
           </Typography>
         </Box>
       </Paper>
 
       {/* Philosopher Cards */}
-      <Grid container spacing={3}>
-        {paginatedPhilosophers.map((philosopher) => (
-          <Grid key={philosopher.id} size={{ xs: 12, md: 4 }}>
-            <PhilosopherCard philosopher={philosopher} />
-          </Grid>
-        ))}
-      </Grid>
+      {isLoading ? (
+        <CircularProgress sx={{ margin: "auto", display: "block" }} />
+      ) : error ? (
+        <Alert severity="error" sx={{ margin: "2rem auto", display: "block" ,fontSize: "2rem" }}>Error fetching philosophers</Alert>
+      ) : (
+        <Grid container spacing={3}>
+          {PhilosophersData?.rows?.map((philosopher) => (
+            <Grid key={philosopher.id} size={{ xs: 12, md: 4 }}>
+              <PhilosopherCard philosopher={philosopher} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
       {/* Pagination */}
-      {totalPages > 1 && (
+      {PhilosophersData?.totalPages && PhilosophersData?.totalPages > 1 && (
         <Box className="pagination-container">
           <Pagination
-            count={totalPages}
+            count={PhilosophersData?.totalPages}
             page={currentPage}
             onChange={handlePageChange}
             color="primary"

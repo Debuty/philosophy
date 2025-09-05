@@ -6,10 +6,29 @@ import { type RootState } from '../../../../store'
 
 import './PhilosopherCard.scss'
 
-import Socrates from '../../../../assets/socrates.jpg'
-import type { PhilosopherData } from '../../data/PhilosophersData'
 
-export const PhilosopherCard = ({philosopher}: {philosopher: PhilosopherData}) => {
+
+// Interface for Supabase philosopher data
+interface SupabasePhilosopher {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  birth: number;
+  death: number;
+  era_en: string;
+  era_ar: string;
+  nationality_en: string;
+  nationality_ar: string;
+  school_en: string;
+  school_ar: string;
+  quote_en: string;
+  quote_ar: string;
+  short_description_en: string;
+  short_description_ar: string;
+  image: string;
+}
+
+export const PhilosopherCard = ({philosopher}: {philosopher: SupabasePhilosopher}) => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const navigate = useNavigate();
   // console.log(philosopher);
@@ -19,18 +38,16 @@ export const PhilosopherCard = ({philosopher}: {philosopher: PhilosopherData}) =
     <CardActionArea>
       <CardMedia
         component="img"
-        height="140"
-        image={Socrates} 
-        alt="green iguana"
+        height="400"
+        image={philosopher.image} 
+        alt={lang == "ar" ? philosopher.name_ar : philosopher.name_en}
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {lang == "ar" ? philosopher.name.ar : philosopher.name.en}
-       
+        <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: "1000" }}>
+          {lang == "ar" ? philosopher.name_ar : philosopher.name_en} <span style={{ fontSize: "2rem", fontWeight: "500" , whiteSpace: "nowrap" }}> ( {philosopher.birth} / {philosopher.death} )</span>
         </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {lang == "ar" ? philosopher.shortDescription.ar : philosopher.shortDescription.en}
-       
+        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: "500" }}>
+          {lang == "ar" ? philosopher.short_description_ar : philosopher.short_description_en}
         </Typography>
       </CardContent>
     </CardActionArea>

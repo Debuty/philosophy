@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../routes/pathes";
 import LanguageIcon from "@mui/icons-material/Language";
@@ -34,23 +34,7 @@ const Header: React.FC = () => {
     console.log(store.getState().locale);
   };
 
-  const [philosophers, setPhilosophers] = useState([]);
-  const fetchPhilosophers = async () => {
-    const { data, error } = await supabase
-      .from('philosophers')
-      .select('*');
-    setPhilosophers(data);
-    if (error) {
-      console.error("Error fetching philosophers:", error.message);
-      return [];
-    }
-
-    return data;
-  };
-  useEffect(() => {
-    fetchPhilosophers();
-  }, []);
-  console.log(philosophers);
+  
   return (
     <div className="header">
       <nav className="header__nav">
@@ -114,6 +98,11 @@ const Header: React.FC = () => {
           <li className="header__item">
             <Link style={{ display: "contents" }} to={ROUTES.SCHOOLS}>
               {t("nav.schools", { ns: "header" })}
+            </Link>
+          </li>
+          <li className="header__item">
+            <Link style={{ display: "contents" }} to={ROUTES.BOOKS}>
+              {t("nav.books", { ns: "header" })}
             </Link>
           </li>
           <li className="header__item">

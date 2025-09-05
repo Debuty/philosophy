@@ -1,0 +1,84 @@
+.books {
+  padding: 2rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+  .books-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+
+    .books-title {
+      font-weight: 700;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .books-subtitle {
+      color: #7f8c8d;
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .books-content {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    .books-description {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #34495e;
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 0 1rem;
+    }
+
+    .books-grid {
+      margin-top: 2rem;
+    }
+
+    .coming-soon {
+      text-align: center;
+      color: #e74c3c;
+      font-weight: 600;
+      padding: 3rem;
+      background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .books {
+    padding: 1rem;
+
+    .books-header {
+      margin-bottom: 2rem;
+      padding: 1rem 0;
+
+      .books-title {
+        font-size: 2rem;
+      }
+
+      .books-subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .books-content {
+      padding: 1rem;
+
+      .books-description {
+        font-size: 1rem;
+        padding: 0;
+      }
+    }
+  }
+}

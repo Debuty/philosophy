@@ -16,6 +16,7 @@ const Login = React.lazy(() => import('../modules/auth/login/login'));
 const Signup = React.lazy(() => import('../modules/auth/signup/signup'));
 const Schools = React.lazy(() => import('../modules/schools/Schools'));
 const SchoolDetails = React.lazy(() => import('../modules/school-details/SchoolDetails'));
+const Books = React.lazy(() => import('../modules/books/Books'));
 
 
 // Mock authentication state - replace with your actual auth logic
@@ -86,6 +87,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<div>Loading...</div>}>
             <SchoolDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: ROUTES.BOOKS,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Books />
           </Suspense>
         ),
       },

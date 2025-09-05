@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
 import {
- 
+
   Grid,
   TextField,
   Button,
@@ -17,7 +17,7 @@ import {
 
 } from '@mui/material';
 
-import './signup.scss';
+import './signup.scss'; 
 
 // Zod validation schema
 const signupSchema = z.object({
@@ -30,7 +30,7 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const Signup: React.FC = () => {
-  
+
   const { t } = useTranslation('auth');
   const {
     register,
@@ -47,24 +47,25 @@ const Signup: React.FC = () => {
   });
 
   const onSubmit = async (dataForm: SignupFormData) => {
-    // console.log('Signup data:', dataForm);
-    // const { data, error } = await supabase.auth.signUp(dataForm)
-  
-    // if (error) {
-    //   console.error('Error signing up:', error.message)
-    // } else {
-      console.log(dataForm);
-      await supabase.from("profiles").insert({
-        username: dataForm.username,
-        bio: "Loves philosophy",
-        phone: dataForm.phone,
-      });
+    console.log('Signup data:', dataForm);
+    const { data, error } = await supabase.auth.signUp(dataForm)
+
+    if (error) {
+      console.error('Error signing up:', error.message)
+    } else {
+    console.log(data);
+    }
+    // await supabase.from("profiles").insert({
+    //   username: dataForm.username,
+    //   bio: "Loves philosophy",
+    //   phone: dataForm.phone,
+    // });
     // }
   };
 
   return (
-    <Paper className="signup" sx={{ p: 3, mx: 'auto', backgroundColor:"#afada9"}}>
-      <Typography variant="h4" component="h1" gutterBottom align="center" sx={{marginBottom: "5rem"}}>
+    <Paper className="signup" sx={{ p: 3, mx: 'auto', backgroundColor: "#afada9" }}>
+      <Typography variant="h4" component="h1" gutterBottom align="center" sx={{ marginBottom: "5rem" }}>
         {t('signup.title')}
       </Typography>
 
@@ -123,12 +124,12 @@ const Signup: React.FC = () => {
               helperText={errors.phone?.message}
               variant="outlined"
               fullWidth
-            
+
             />
           </Grid>
 
           {/* Submit Button */}
-          <Grid size={{ xs: 12, md: 6 }} sx={{m:"auto"}}>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ m: "auto" }}>
             <Button
               type="submit"
               variant="contained"
@@ -140,7 +141,7 @@ const Signup: React.FC = () => {
             </Button>
           </Grid>
 
-          
+
         </Grid>
       </form>
     </Paper>

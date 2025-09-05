@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import locale from "./reducers/localeSlice";
+import pagination from "./reducers/paginationSlice";
 import { combineReducers } from "@reduxjs/toolkit";
 
 const persistConfig = {
@@ -21,6 +22,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   locale: locale,
+  pagination: pagination,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

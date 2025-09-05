@@ -10,4 +10,6 @@ export const ROUTES = {
   PROFILE: "/profile",
   SCHOOLS: "/schools",
   SCHOOL_DETAILS: "/schools/:id",
+  BOOKS: "/books",
+  BOOK_DETAILS: "/books/:id",
 };
