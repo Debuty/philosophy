@@ -21,7 +21,7 @@ const Books = React.lazy(() => import('../modules/books/Books'));
 
 
 // Mock authentication state - replace with your actual auth logic
-const isAuthenticated = true;
+
 
 export const router = createBrowserRouter([
   {

@@ -57,7 +57,7 @@ const Login: React.FC = () => {
 
   }
 
-  const { mutate, isPending, isError, data } = useMutation({
+  const { mutate, isPending} = useMutation({
     mutationFn: handelsignIn,
     onSuccess: (data) => {
       console.log(data);
