@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { store } from './store';
 import { router } from './routes';
 import './i18n/i18n';
+import { supabase } from './supabaseClient';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -16,6 +17,8 @@ const queryClient = new QueryClient({
   },
 });
 
+// const { data } = await supabase.auth.getSession()
+// console.log(data)
 function App() {
   return (
     <QueryClientProvider client={queryClient}>

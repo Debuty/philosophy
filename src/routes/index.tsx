@@ -1,8 +1,9 @@
 import React, { Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { ROUTES } from './pathes';
 import Layout from '../shared/layout/Layout';
 import ProtectedRoute from './ProtectedRoute';
+import Loading from '../shared/loading/Loading';
 
 // Lazy load components
 const Home = React.lazy(() => import('../modules/home/Home'));
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.HOME,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Home />
           </Suspense>
         ),
@@ -37,7 +38,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.PHILOSOPHERS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Philosophers />
           </Suspense>
         ),
@@ -45,7 +46,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.PHILOSOPHER_DETAILS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <PhilosopherDetails />
           </Suspense>
         ),
@@ -53,7 +54,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.ARTICLS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Articles />
           </Suspense>
         ),
@@ -61,7 +62,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.ARTICLE_DETAILS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <ArticleDetails />
           </Suspense>
         ),
@@ -69,7 +70,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.TIMELINE,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Timeline />
           </Suspense>
         ),
@@ -77,7 +78,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.SCHOOLS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Schools />
           </Suspense>
         ),
@@ -85,7 +86,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.SCHOOL_DETAILS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <SchoolDetails />
           </Suspense>
         ),
@@ -93,7 +94,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.BOOKS,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Books />
           </Suspense>
         ),
@@ -101,7 +102,7 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.LOGIN,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Login />
           </Suspense>
         ),
@@ -109,22 +110,25 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.SIGNUP,
         element: (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<Loading />}>
             <Signup />
           </Suspense>
         ),
       },
       {
         element: (
-          <ProtectedRoute isAuthenticated={isAuthenticated} redirectPath={ROUTES.HOME}>
-            <Suspense fallback={<div>Loading...</div>} />
+          <ProtectedRoute redirectPath={ROUTES.HOME}>
+            <Outlet />
           </ProtectedRoute>
         ),
         children: [
-
           {
             path: ROUTES.PROFILE,
-            element: <Auth />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Auth />
+              </Suspense>
+            ),
           },
         ],
       },

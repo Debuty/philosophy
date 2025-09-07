@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -14,10 +14,15 @@ import {
   Typography,
   InputLabel,
   Paper,
+  Modal,
+  Box,
 
 } from '@mui/material';
-
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
 import './signup.scss'; 
+import { ROUTES } from '../../../routes/pathes';
+import { useNavigate } from 'react-router-dom';
 
 // Zod validation schema
 const signupSchema = z.object({
@@ -30,7 +35,9 @@ const signupSchema = z.object({
 type SignupFormData = z.infer<typeof signupSchema>;
 
 const Signup: React.FC = () => {
-
+  const [openModal, setOpenModal] = useState(false);
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const navigate = useNavigate();
   const { t } = useTranslation('auth');
   const {
     register,
@@ -48,12 +55,24 @@ const Signup: React.FC = () => {
 
   const onSubmit = async (dataForm: SignupFormData) => {
     console.log('Signup data:', dataForm);
-    const { data, error } = await supabase.auth.signUp(dataForm)
+    const { data, error } = await supabase.auth.signUp({...dataForm, options: {
+      data: {
+        username: dataForm.username,
+        phone: dataForm.phone,
+      }
+    }})
 
     if (error) {
       console.error('Error signing up:', error.message)
     } else {
-    console.log(data);
+      console.log(data);
+      if (data.user?.identities?.length === 0) {
+        console.log('User already exists');
+        setOpenErrorModal(true);
+      }
+      else {
+        setOpenModal(true);
+      }
     }
     // await supabase.from("profiles").insert({
     //   username: dataForm.username,
@@ -144,6 +163,93 @@ const Signup: React.FC = () => {
 
         </Grid>
       </form>
+
+      {/* Email Confirmation Modal */}
+      <Modal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="email-confirmation-modal"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+            <CheckCircleIcon sx={{ fontSize: '3rem', color: 'green', mr: 1 }} />
+            <Typography id="email-confirmation-modal" variant="h6" component="h2" sx={{fontSize: "2rem"}}>
+              {t('signup.successModal.title')}
+            </Typography>
+          </Box>
+          <Typography sx={{ mt: 2, mb: 3 ,fontSize: "1.5rem" }} >
+            {t('signup.successModal.message')}
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => setOpenModal(false)}
+            sx={{ mt: 2 }}
+          >
+            {t('signup.successModal.okButton')}
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* Email Already Exists Modal */}
+      <Modal
+        open={openErrorModal}
+        onClose={() => setOpenErrorModal(false)}
+        aria-labelledby="email-exists-modal"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+            <ErrorIcon sx={{ fontSize: '3rem', color: 'red', mr: 1 }} />
+            <Typography id="email-exists-modal" variant="h6" component="h2" sx={{fontSize: "2rem"}}>
+              {t('signup.errorModal.title')}
+            </Typography>
+          </Box>
+          <Typography sx={{ mt: 2, mb: 3 ,fontSize: "1.5rem" }} >
+            {t('signup.errorModal.message')}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2, gap: 10 }}>
+            <Button
+              variant="contained"
+              onClick={() => setOpenErrorModal(false)}
+              sx={{ mt: 2 }}
+            >
+              {t('signup.errorModal.okButton')}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => navigate(ROUTES.LOGIN)}
+              sx={{ mt: 2 }}
+            >
+              {t('signup.errorModal.loginButton')}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Paper>
   );
 };

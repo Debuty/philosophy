@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import type { Session } from "@supabase/supabase-js";
 import { ROUTES } from "../../../routes/pathes";
 import LanguageIcon from "@mui/icons-material/Language";
 import { store, type RootState } from "../../../store";
@@ -12,11 +13,14 @@ import Button from "@mui/material/Button";
 import hederLogo from "../../../assets/heder-logo.png";
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
+import { Avatar } from "@mui/material";
 const Header: React.FC = () => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   console.log(lang);
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const [session, setSession] = useState<Session | null>(null)
+  const navigate = useNavigate();
 
   const SetLangAr = () => {
     i18n.changeLanguage("ar");
@@ -33,8 +37,16 @@ const Header: React.FC = () => {
     dispatch(changeLang({ dir: "ltr", lang: "en" }));
     console.log(store.getState().locale);
   };
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session || null)
+    })
 
-  
+    return () => subscription.unsubscribe()
+  }, [])
+
+
+ 
   return (
     <div className="header">
       <nav className="header__nav">
@@ -68,16 +80,39 @@ const Header: React.FC = () => {
             >
               {" "}
               العربية
-              <LanguageIcon/>
+              <LanguageIcon />
             </Button>
           )}
-          <li>
-            {" "}
-            <Link to={ROUTES.LOGIN} style={{ display: "contents" }}>
-              <Button sx={{ fontSize: "1.5rem", backgroundColor: "#534e46" }} variant="contained">
-                {t("login", { ns: "header" })}
-              </Button>
-            </Link>
+          <li style={{ display: "flex", gap: "10px" }}>
+
+            {!session ?
+              <Link to={ROUTES.LOGIN} style={{ display: "contents" }}>
+                <Button sx={{ fontSize: "1.5rem", backgroundColor: "#534e46" }} variant="contained">
+                  {t("login", { ns: "header" })}
+                </Button>
+              </Link>
+              : <>
+
+                <Button
+                  sx={{ fontSize: "1.5rem", backgroundColor: "#534e46", alignSelf: "center" }}
+                  variant="contained"
+                  onClick={async () => {
+                    const { error } = await supabase.auth.signOut();
+                    if (error) {
+                      console.error('Error signing out:', error.message);
+                    } else {
+                      console.log('User signed out successfully');
+                      navigate(ROUTES.LOGIN);
+                    }
+                  }
+                  }
+                >
+                  {t("logout", { ns: "header" })}
+                </Button>
+                <Avatar onClick={() => navigate(ROUTES.PROFILE)} src={session.user.user_metadata.avatar_url} sx={{ backgroundColor: "#534e46", margin: "auto 1rem", width: "5rem", height: "5rem" , cursor: "pointer"}} />
+              </>
+            }
+
           </li>
           <li className="header__item">
             <Link style={{ display: "contents" }} to={ROUTES.HOME}>

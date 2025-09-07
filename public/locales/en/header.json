@@ -9,5 +9,6 @@
   },
   "title": "Philos",
   "language": "Language",
-  "login": "Login"
+  "login": "Login",
+  "logout": "Logout"
 }

@@ -17,6 +17,8 @@ import {
 import Grid from '@mui/material/Grid';
 import { ROUTES } from '../../../routes/pathes';
 import './login.scss';
+import { useMutation } from '@tanstack/react-query';
+import { toast, ToastContainer } from 'react-toastify';
 
 // Zod validation schema
 const loginSchema = z.object({
@@ -41,15 +43,36 @@ const Login: React.FC = () => {
     },
   });
 
-  const onSubmit = async (dataForm: LoginFormData) => {
-    console.log('Login data:', dataForm);
-    const { data, error } = await supabase.auth.signInWithPassword(dataForm);
-
+  const handelsignIn = async (data: LoginFormData) => {
+    const { data: dataSignIn, error } = await supabase.auth.signInWithPassword(data);
     if (error) {
-      console.error('Error signing in:', error.message);
-    } else {
-      console.log('User signed in:', data);
+
+
+      throw error;
     }
+    else {
+
+      return dataSignIn;
+    }
+
+  }
+
+  const { mutate, isPending, isError, data } = useMutation({
+    mutationFn: handelsignIn,
+    onSuccess: (data) => {
+      console.log(data);
+      navigate(ROUTES.PHILOSOPHERS);
+      toast.success('Login successful');
+    },
+    onError: (error) => {
+      console.error('Error signing in:', error.message);
+      toast.error('Login failed');
+    },
+  });
+
+  const onSubmit = async (dataForm: LoginFormData) => {
+
+    mutate(dataForm);
   };
 
   return (
@@ -96,6 +119,7 @@ const Login: React.FC = () => {
               fullWidth
               size="large"
               sx={{ mt: 2 }}
+              disabled={isPending}
             >
               {t('login.submitButton')}
             </Button>
@@ -122,6 +146,18 @@ const Login: React.FC = () => {
           </Grid>
         </Grid>
       </form>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </Paper>
   );
 };
