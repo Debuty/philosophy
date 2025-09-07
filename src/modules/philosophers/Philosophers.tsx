@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import './philosophers.scss';
+import './Philosophers.scss';
 import { PhilosopherCard } from './components/philosopherCard/PhilosopherCard';
 import { supabase } from '../../supabaseClient';
 import { useDispatch, useSelector } from 'react-redux';
