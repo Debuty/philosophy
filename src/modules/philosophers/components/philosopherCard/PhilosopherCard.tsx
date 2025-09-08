@@ -34,7 +34,7 @@ export const PhilosopherCard = ({philosopher}: {philosopher: SupabasePhilosopher
   // console.log(philosopher);
   
   return (
-    <Card sx={{ height: "fit-content", maxWidth: 500 , backgroundColor: "rgb(193, 188, 181) !important" }}>
+    <Card sx={{ padding: "2rem", minHeight: "65rem", maxWidth: 500 , backgroundColor: "rgb(193, 188, 181) !important"  , display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
     <CardActionArea>
       <CardMedia
         component="img"

@@ -214,80 +214,78 @@ const Header: React.FC = () => {
         }}
       >
         <div style={{ padding: '20px' }}>
-          
-        <div>
-              <div className="header__lang-button-container" style={{ display: "flex", justifyContent: "space-between" , marginBottom: "2rem"  , alignItems: "center"}}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={() =>{ navigate(ROUTES.PROFILE);  setSidebarOpen(false)}}
-                  color="inherit"
-                 
-        
-                >
-                  <AccountCircle sx={{ fontSize: "3rem" }} />
 
-                </IconButton>
-
-                {lang == "ar" ? (
-                  <Button
-                    variant="contained"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      cursor: "pointer",
-                      backgroundColor: "#534e46",
-                      height: "3rem"
-                    }}
-                    onClick={() => SetLangEn()}
-                    className="header__lang-button"
-                  >
-                    {" "}
-                    English
-                    <LanguageIcon />
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      backgroundColor: "#534e46",
-                      height: "3rem"
-
-                    }}
-                    onClick={() => SetLangAr()}
-                    className="header__lang-button"
-                  >
-                    {" "}
-                    العربية
-                    <LanguageIcon sx={{ color: "white !important"  }} />
-                  </Button>
-                )}
-              </div>
-              <Menu
-                id="menu-appbar"
-                anchorEl={null}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(null)}
-                onClose={() => { }}
+          <div>
+            <div className="header__lang-button-container" style={{ display: "flex", justifyContent: "space-between", marginBottom: "2rem", alignItems: "center" }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={() => { navigate(ROUTES.PROFILE); setSidebarOpen(false) }}
+                color="inherit"
               >
-                <MenuItem onClick={() => { }}>Profile</MenuItem>
-                <MenuItem onClick={() => { }}>My account</MenuItem>
-              </Menu>
+                <AccountCircle sx={{ fontSize: "3rem" }} />
+
+              </IconButton>
+
+              {lang == "ar" ? (
+                <Button
+                  variant="contained"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    cursor: "pointer",
+                    backgroundColor: "#534e46",
+                    height: "3rem"
+                  }}
+                  onClick={() => SetLangEn()}
+                  className="header__lang-button"
+                >
+                  {" "}
+                  English
+                  <LanguageIcon />
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    backgroundColor: "#534e46",
+                    height: "3rem"
+
+                  }}
+                  onClick={() => SetLangAr()}
+                  className="header__lang-button"
+                >
+                  {" "}
+                  العربية
+                  <LanguageIcon sx={{ color: "white !important" }} />
+                </Button>
+              )}
             </div>
+            <Menu
+              id="menu-appbar"
+              anchorEl={null}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(null)}
+              onClose={() => { }}
+            >
+              <MenuItem onClick={() => { }}>Profile</MenuItem>
+              <MenuItem onClick={() => { }}>My account</MenuItem>
+            </Menu>
+          </div>
           <Divider sx={{ mb: 2 }} />
 
           <List>
@@ -314,21 +312,21 @@ const Header: React.FC = () => {
             ))}
             <Divider sx={{ mb: 2 }} />
             {session ? (
-            <ListItem
-              onClick={handleLogout}
-              sx={{
-                borderRadius: 1,
-                mb: 1,
-                '&:hover': {
-                  backgroundColor: '#e0e0e0',
-                }
-              }}
-            >
-              <ListItemIcon sx={{ color: '#534e46' }}><Logout /></ListItemIcon>
-              {t("logout", { ns: "header" })}
-            </ListItem>
+              <ListItem
+                onClick={handleLogout}
+                sx={{
+                  borderRadius: 1,
+                  mb: 1,
+                  '&:hover': {
+                    backgroundColor: '#e0e0e0',
+                  }
+                }}
+              >
+                <ListItemIcon sx={{ color: '#534e46' }}><Logout /></ListItemIcon>
+                {t("logout", { ns: "header" })}
+              </ListItem>
             ) : (
-              <ListItem onClick={() => {navigate(ROUTES.LOGIN); setSidebarOpen(false)}} sx={{ borderRadius: 1, mb: 1, '&:hover': { backgroundColor: '#e0e0e0' } }}>
+              <ListItem onClick={() => { navigate(ROUTES.LOGIN); setSidebarOpen(false) }} sx={{ borderRadius: 1, mb: 1, '&:hover': { backgroundColor: '#e0e0e0' } }}>
                 <ListItemIcon sx={{ color: '#534e46' }}><Login /></ListItemIcon>
                 {t("login", { ns: "header" })}
               </ListItem>
