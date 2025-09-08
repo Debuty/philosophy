@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Paper, Typography, Box, Button, Avatar } from '@mui/material';
 import './Profile.scss';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {  useQuery } from '@tanstack/react-query';
 import { supabase } from '../../supabaseClient';
-import type { Session, User } from '@supabase/supabase-js';
+import type {  User } from '@supabase/supabase-js';
 import Loading from '../../shared/loading/Loading';
-import { toast, ToastContainer } from 'react-toastify';
+import {ToastContainer } from 'react-toastify';
 import EditIcon from '@mui/icons-material/Edit';
 const Profile: React.FC = () => {
 
     // state
     const [user, setUser] = useState<User | null>(null)
-    const queryClient = useQueryClient()
+    // const queryClient = useQueryClient()
 
     // check session
     useEffect(() => {
@@ -36,55 +36,55 @@ const Profile: React.FC = () => {
     }
 
     // update name profile
-    const updateNameProfile = async (dataForm: any) => {
-        const { data, error } = await supabase.from('profiles').update({
-            username: dataForm.username,
-        }).eq('id', user?.id).single();
-        if (error) throw error;
-        return data;
-    }
+    // const updateNameProfile = async (dataForm: any) => {
+    //     const { data, error } = await supabase.from('profiles').update({
+    //         username: dataForm.username,
+    //     }).eq('id', user?.id).single();
+    //     if (error) throw error;
+    //     return data;
+    // }
    
 
     // update name profile
-    const { mutate: updateNameProfileMutation, isPending} = useMutation({
-        mutationFn: updateNameProfile,
-        onSuccess: (data) => {
-            console.log(data);
-            toast.success('Profile updated successfully');
-             queryClient.invalidateQueries({ queryKey: ['profile', user?.id] })
-        },
-        onError: (error) => {
-            console.error('Error updating profile:', error.message);
-            toast.error('Error updating profile');
-        },
-    })
+    // const { mutate: updateNameProfileMutation} = useMutation({
+    //     mutationFn: updateNameProfile,
+    //     onSuccess: (data) => {
+    //         console.log(data);
+    //         toast.success('Profile updated successfully');
+    //          queryClient.invalidateQueries({ queryKey: ['profile', user?.id] })
+    //     },
+    //     onError: (error) => {
+    //         console.error('Error updating profile:', error.message);
+    //         toast.error('Error updating profile');
+    //     },
+    // })
     // handle update name profile
-    const handleUpdateNameProfile = (dataForm: any) => {
-        updateNameProfileMutation(dataForm);
-    }
+    // const handleUpdateNameProfile = (dataForm: any) => {
+    //     updateNameProfileMutation(dataForm);
+    // }
 // update bio profile
-    const updateBioProfile = async (dataForm: any) => {
-        const { data, error } = await supabase.from('profiles').update({
-            bio: dataForm.bio,
-        }).eq('id', user?.id).single();
-        if (error) throw error;
-        return data;
-    }
+    // const updateBioProfile = async (dataForm: any) => {
+    //     const { data, error } = await supabase.from('profiles').update({
+    //         bio: dataForm.bio,
+    //     }).eq('id', user?.id).single();
+    //     if (error) throw error;
+    //     return data;
+    // }
 
     // update bio profile
-    const { mutate: updateBioProfileMutation, isPending: isUpdateBioProfilePending} = useMutation({
-        mutationFn: updateBioProfile,
-        onSuccess: (data) => {
-            console.log(data);
-            toast.success('Profile updated successfully');
-            queryClient.invalidateQueries({ queryKey: ['profile', user?.id] })
-        },
-    })
+    // const { mutate: updateBioProfileMutation, isPending: isUpdateBioProfilePending} = useMutation({
+    //     mutationFn: updateBioProfile,
+    //     onSuccess: (data) => {
+    //         console.log(data);
+    //         toast.success('Profile updated successfully');
+    //         queryClient.invalidateQueries({ queryKey: ['profile', user?.id] })
+    //     },
+    // })
 
     // handle update bio profile
-    const handleUpdateBioProfile = (dataForm: any) => {
-        updateBioProfileMutation(dataForm);
-    }
+    // const handleUpdateBioProfile = (dataForm: any) => {
+    //     updateBioProfileMutation(dataForm);
+    // }
 
    
     // get profile
