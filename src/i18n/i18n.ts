@@ -29,7 +29,7 @@ i18n
     lng: initialLanguage,
     fallbackLng: "en",
     defaultNS: "general",
-    ns: ["header" ,"philosophers", "auth", "articles"],
+    ns: ["header" ,"philosophers", "auth", "articles", "home"],
     interpolation: {
       escapeValue: false,
     },

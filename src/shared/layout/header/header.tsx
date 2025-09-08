@@ -101,73 +101,6 @@ const Header: React.FC = () => {
             </IconButton>
 
 
-            <div>
-              <div style={{ display: "flex", gap: "10px" }}>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={() => navigate(ROUTES.PROFILE)}
-                  color="inherit"
-        
-                >
-                  <AccountCircle />
-
-                </IconButton>
-
-                {lang == "ar" ? (
-                  <Button
-                    variant="contained"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      cursor: "pointer",
-                      backgroundColor: "#534e46"
-                    }}
-                    onClick={() => SetLangEn()}
-                  >
-                    {" "}
-                    English
-                    <LanguageIcon />
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      backgroundColor: "#534e46"
-                    }}
-                    onClick={() => SetLangAr()}
-                  >
-                    {" "}
-                    العربية
-                    <LanguageIcon />
-                  </Button>
-                )}
-              </div>
-              <Menu
-                id="menu-appbar"
-                anchorEl={null}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(null)}
-                onClose={() => { }}
-              >
-                <MenuItem onClick={() => { }}>Profile</MenuItem>
-                <MenuItem onClick={() => { }}>My account</MenuItem>
-              </Menu>
-            </div>
 
           </Toolbar>
         </AppBar>
@@ -270,7 +203,7 @@ const Header: React.FC = () => {
 
       {/* Sidebar Drawer */}
       <Drawer
-        anchor={lang == "ar" ? "left" : "right"}
+        anchor={lang == "ar" ? "right" : "left"}
         open={sidebarOpen}
         onClose={toggleSidebar}
         sx={{
@@ -281,9 +214,74 @@ const Header: React.FC = () => {
         }}
       >
         <div style={{ padding: '20px' }}>
-          <Typography variant="h6" component="div" sx={{ mb: 2, fontWeight: 'bold', color: '#333' }}>
-            {t("navigation", { ns: "header" })}
-          </Typography>
+          
+        <div>
+              <div style={{ display: "flex", justifyContent: "space-between" , marginBottom: "2rem" }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={() => navigate(ROUTES.PROFILE)}
+                  color="inherit"
+        
+                >
+                  <AccountCircle />
+
+                </IconButton>
+
+                {lang == "ar" ? (
+                  <Button
+                    variant="contained"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                      backgroundColor: "#534e46"
+                    }}
+                    onClick={() => SetLangEn()}
+                  >
+                    {" "}
+                    English
+                    <LanguageIcon />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      backgroundColor: "#534e46"
+                    }}
+                    onClick={() => SetLangAr()}
+                  >
+                    {" "}
+                    العربية
+                    <LanguageIcon />
+                  </Button>
+                )}
+              </div>
+              <Menu
+                id="menu-appbar"
+                anchorEl={null}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(null)}
+                onClose={() => { }}
+              >
+                <MenuItem onClick={() => { }}>Profile</MenuItem>
+                <MenuItem onClick={() => { }}>My account</MenuItem>
+              </Menu>
+            </div>
           <Divider sx={{ mb: 2 }} />
 
           <List>
