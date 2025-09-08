@@ -13,7 +13,7 @@ const PhilosopherDetails = React.lazy(() => import('../modules/philosopher-detai
 const Articles = React.lazy(() => import('../modules/articles/Articles'));
 const ArticleDetails = React.lazy(() => import('../modules/article-details/ArticleDetails'));
 const Timeline = React.lazy(() => import('../modules/timeline/Timeline'));
-const Auth = React.lazy(() => import('../modules/auth/Auth'));
+
 const Login = React.lazy(() => import('../modules/auth/login/login'));
 const Signup = React.lazy(() => import('../modules/auth/signup/signup'));
 const Schools = React.lazy(() => import('../modules/schools/Schools'));
