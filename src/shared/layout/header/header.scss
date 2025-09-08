@@ -88,3 +88,13 @@
   
   }
 }
+
+.header__lang-button {
+  .MuiSvgIcon-root {
+    color: white !important;
+    
+    path {
+      fill: white !important;
+    }
+  }
+}

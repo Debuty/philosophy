@@ -216,17 +216,18 @@ const Header: React.FC = () => {
         <div style={{ padding: '20px' }}>
           
         <div>
-              <div style={{ display: "flex", justifyContent: "space-between" , marginBottom: "2rem" }}>
+              <div className="header__lang-button-container" style={{ display: "flex", justifyContent: "space-between" , marginBottom: "2rem"  , alignItems: "center"}}>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-                  onClick={() => navigate(ROUTES.PROFILE)}
+                  onClick={() =>{ navigate(ROUTES.PROFILE);  setSidebarOpen(false)}}
                   color="inherit"
+                 
         
                 >
-                  <AccountCircle />
+                  <AccountCircle sx={{ fontSize: "3rem" }} />
 
                 </IconButton>
 
@@ -238,9 +239,11 @@ const Header: React.FC = () => {
                       alignItems: "center",
                       gap: "10px",
                       cursor: "pointer",
-                      backgroundColor: "#534e46"
+                      backgroundColor: "#534e46",
+                      height: "3rem"
                     }}
                     onClick={() => SetLangEn()}
+                    className="header__lang-button"
                   >
                     {" "}
                     English
@@ -253,13 +256,16 @@ const Header: React.FC = () => {
                       display: "flex",
                       alignItems: "center",
                       gap: "10px",
-                      backgroundColor: "#534e46"
+                      backgroundColor: "#534e46",
+                      height: "3rem"
+
                     }}
                     onClick={() => SetLangAr()}
+                    className="header__lang-button"
                   >
                     {" "}
                     العربية
-                    <LanguageIcon />
+                    <LanguageIcon sx={{ color: "white !important"  }} />
                   </Button>
                 )}
               </div>
