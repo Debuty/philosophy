@@ -183,9 +183,9 @@ const philosophers: React.FC = () => {
       ) : error ? (
         <Alert severity="error" sx={{ margin: "2rem auto", display: "block" ,fontSize: "2rem" }}>Error fetching philosophers</Alert>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ justifyContent: "center" }}>
           {PhilosophersData?.rows?.map((philosopher) => (
-            <Grid key={philosopher.id} size={{ xs: 12, md: 4 }}>
+            <Grid key={philosopher.id} size={{ xs: 12, md: 4  }  } sx={{ maxWidth: "500px" }}>
               <PhilosopherCard philosopher={philosopher} />
             </Grid>
           ))}

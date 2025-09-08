@@ -11,12 +11,13 @@ import { changeLang } from "../../../store/reducers/localeSlice";
 import "./header.scss";
 import Button from "@mui/material/Button";
 import hederLogo from "../../../assets/heder-logo.png";
+import MenuIcon from "@mui/icons-material/Menu";
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
-import { Avatar } from "@mui/material";
+import { AppBar, Toolbar, Avatar, IconButton, Typography, Menu, MenuItem } from "@mui/material";
+import { AccountCircle } from "@mui/icons-material";
 const Header: React.FC = () => {
   const lang = useSelector((state: RootState) => state.locale.lang);
-  console.log(lang);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [session, setSession] = useState<Session | null>(null)
@@ -35,7 +36,6 @@ const Header: React.FC = () => {
     document.documentElement.setAttribute("lang", "en");
     document.documentElement.setAttribute("dir", "ltr");
     dispatch(changeLang({ dir: "ltr", lang: "en" }));
-    console.log(store.getState().locale);
   };
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -46,111 +46,205 @@ const Header: React.FC = () => {
   }, [])
 
 
- 
+
   return (
-    <div className="header">
-      <nav className="header__nav">
-        <ul className="header__list">
-          {lang == "ar" ? (
-            <Button
-              variant="contained"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                cursor: "pointer",
-                backgroundColor: "#534e46"
-              }}
-              onClick={() => SetLangEn()}
-            >
-              {" "}
-              English
-              <LanguageIcon />
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                backgroundColor: "#534e46"
-              }}
-              onClick={() => SetLangAr()}
-            >
-              {" "}
-              العربية
-              <LanguageIcon />
-            </Button>
-          )}
-          <li style={{ display: "flex", gap: "10px" }}>
+    <>
 
-            {!session ?
-              <Link to={ROUTES.LOGIN} style={{ display: "contents" }}>
-                <Button sx={{ fontSize: "1.5rem", backgroundColor: "#534e46" }} variant="contained">
-                  {t("login", { ns: "header" })}
-                </Button>
-              </Link>
-              : <>
+      <div className="header-sm-screen">
+        <AppBar position="static" style={{ backgroundColor: "transparent" , direction: "ltr"}}>
+          <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <div className="header__image-wraper">
+                <img src={hederLogo} alt="header__image" className="header__image" />
+              </div>
+            </Typography>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+           
 
-                <Button
-                  sx={{ fontSize: "1.5rem", backgroundColor: "#534e46", alignSelf: "center" }}
-                  variant="contained"
-                  onClick={async () => {
-                    const { error } = await supabase.auth.signOut();
-                    if (error) {
-                      console.error('Error signing out:', error.message);
-                    } else {
-                      console.log('User signed out successfully');
-                      navigate(ROUTES.LOGIN);
-                    }
-                  }
-                  }
+            <div>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+
+                  color="inherit"
                 >
-                  {t("logout", { ns: "header" })}
-                </Button>
-                <Avatar onClick={() => navigate(ROUTES.PROFILE)} src={session.user.user_metadata.avatar_url} sx={{ backgroundColor: "#534e46", margin: "auto 1rem", width: "5rem", height: "5rem" , cursor: "pointer"}} />
-              </>
-            }
+                  <AccountCircle />
 
-          </li>
-          <li className="header__item">
-            <Link style={{ display: "contents" }} to={ROUTES.HOME}>
-              {" "}
-              {t("nav.home", { ns: "header" })}
-            </Link>
-          </li>
-          <li className="header__item">
-            <Link style={{ display: "contents" }} to={ROUTES.PHILOSOPHERS}>
-              {t("nav.philosophers", { ns: "header" })}
-            </Link>
-          </li>
-          <li className="header__item">
-            <Link style={{ display: "contents" }} to={ROUTES.ARTICLS}>
-              {t("nav.articles", { ns: "header" })}
-            </Link>
-          </li>
-          <li className="header__item">
-            <Link style={{ display: "contents" }} to={ROUTES.SCHOOLS}>
-              {t("nav.schools", { ns: "header" })}
-            </Link>
-          </li>
-          <li className="header__item">
-            <Link style={{ display: "contents" }} to={ROUTES.BOOKS}>
-              {t("nav.books", { ns: "header" })}
-            </Link>
-          </li>
-          <li className="header__item">
-            <Link to={ROUTES.TIMELINE} style={{ display: "contents" }}>
-              {t("nav.timeline", { ns: "header" })}
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <div className="header__image-wraper">
-        <img src={hederLogo} alt="header__image" className="header__image" />
+                </IconButton>
+
+                {lang == "ar" ? (
+                  <Button
+                    variant="contained"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      cursor: "pointer",
+                      backgroundColor: "#534e46"
+                    }}
+                    onClick={() => SetLangEn()}
+                  >
+                    {" "}
+                    English
+                    <LanguageIcon />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      backgroundColor: "#534e46"
+                    }}
+                    onClick={() => SetLangAr()}
+                  >
+                    {" "}
+                    العربية
+                    <LanguageIcon />
+                  </Button>
+                )}
+              </div>
+              <Menu
+                id="menu-appbar"
+                anchorEl={null}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(null)}
+                onClose={() => { }}
+              >
+                <MenuItem onClick={() => { }}>Profile</MenuItem>
+                <MenuItem onClick={() => { }}>My account</MenuItem>
+              </Menu>
+            </div>
+
+          </Toolbar>
+        </AppBar>
       </div>
-    </div>
+      {/* /////////////////////////////////////////////// */}
+      <div className="header">
+        <nav className="header__nav">
+          <ul className="header__list">
+            {lang == "ar" ? (
+              <Button
+                variant="contained"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  cursor: "pointer",
+                  backgroundColor: "#534e46"
+                }}
+                onClick={() => SetLangEn()}
+              >
+                {" "}
+                English
+                <LanguageIcon />
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  backgroundColor: "#534e46"
+                }}
+                onClick={() => SetLangAr()}
+              >
+                {" "}
+                العربية
+                <LanguageIcon />
+              </Button>
+            )}
+            <li style={{ display: "flex", gap: "10px" }}>
+
+              {!session ?
+                <Link to={ROUTES.LOGIN} style={{ display: "contents" }}>
+                  <Button sx={{ fontSize: "1.5rem", backgroundColor: "#534e46" }} variant="contained">
+                    {t("login", { ns: "header" })}
+                  </Button>
+                </Link>
+                : <>
+
+                  <Button
+                    sx={{ fontSize: "1.5rem", backgroundColor: "#534e46", alignSelf: "center" }}
+                    variant="contained"
+                    onClick={async () => {
+                      // Navigate first, then logout
+                      navigate(ROUTES.LOGIN);
+                      const { error } = await supabase.auth.signOut();
+                      if (error) {
+                        console.error('Error signing out:', error.message);
+                      } else {
+                        console.log('User signed out successfully');
+                      }
+                    }
+                    }
+                  >
+                    {t("logout", { ns: "header" })}
+                  </Button>
+                  <Avatar onClick={() => navigate(ROUTES.PROFILE)} src={session.user.user_metadata.avatar_url} sx={{ backgroundColor: "#534e46", margin: "auto 1rem", width: "5rem", height: "5rem", cursor: "pointer" }} />
+                </>
+              }
+
+            </li>
+            <li className="header__item">
+              <Link style={{ display: "contents" }} to={ROUTES.HOME}>
+                {" "}
+                {t("nav.home", { ns: "header" })}
+              </Link>
+            </li>
+            <li className="header__item">
+              <Link style={{ display: "contents" }} to={ROUTES.PHILOSOPHERS}>
+                {t("nav.philosophers", { ns: "header" })}
+              </Link>
+            </li>
+            <li className="header__item">
+              <Link style={{ display: "contents" }} to={ROUTES.ARTICLS}>
+                {t("nav.articles", { ns: "header" })}
+              </Link>
+            </li>
+            <li className="header__item">
+              <Link style={{ display: "contents" }} to={ROUTES.SCHOOLS}>
+                {t("nav.schools", { ns: "header" })}
+              </Link>
+            </li>
+            <li className="header__item">
+              <Link style={{ display: "contents" }} to={ROUTES.BOOKS}>
+                {t("nav.books", { ns: "header" })}
+              </Link>
+            </li>
+            <li className="header__item">
+              <Link to={ROUTES.TIMELINE} style={{ display: "contents" }}>
+                {t("nav.timeline", { ns: "header" })}
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        <div className="header__image-wraper">
+          <img src={hederLogo} alt="header__image" className="header__image" />
+        </div>
+      </div>
+    </>
   );
 };
 

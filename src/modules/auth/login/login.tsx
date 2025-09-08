@@ -61,7 +61,7 @@ const Login: React.FC = () => {
     mutationFn: handelsignIn,
     onSuccess: (data) => {
       console.log(data);
-      navigate(ROUTES.PHILOSOPHERS);
+      navigate(ROUTES.PROFILE);
       toast.success('Login successful');
     },
     onError: (error) => {

@@ -8,8 +8,13 @@
 
 .main-content {
   flex: 1;
-  padding: 2rem 30rem 2rem 30rem;
+  padding: 2rem 2rem 2rem 2rem;
   // overflow-y: auto;
 
 }
 
+@media(min-width: 1200px) {
+  .main-content {
+    padding: 2rem 30rem 2rem 30rem;
+  }
+}

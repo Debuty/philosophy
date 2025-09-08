@@ -45,6 +45,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       }
     );
 
+  
     // Cleanup function
     return () => {
       subscription.unsubscribe();
@@ -57,6 +58,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
 
   if (!isAuthenticated) {
+    console.log('Not authenticated, redirecting to:', redirectPath);
     return <Navigate to={redirectPath} replace />;
   }
 

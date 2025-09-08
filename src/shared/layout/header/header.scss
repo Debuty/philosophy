@@ -18,7 +18,7 @@
 
   &__list {
     display: flex;
-    gap: 4rem;
+    gap: 3rem;
     list-style: none;
     margin: 0;
     text-decoration: none;
@@ -40,5 +40,23 @@
     path {
       fill: white !important;
     }
+  }
+}
+
+.header-sm-screen {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .header-sm-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .header {
+    display: none;
+  
   }
 }
