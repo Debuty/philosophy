@@ -7,6 +7,7 @@ import type {  User } from '@supabase/supabase-js';
 import Loading from '../../shared/loading/Loading';
 import {ToastContainer } from 'react-toastify';
 import EditIcon from '@mui/icons-material/Edit';
+import { getCurrentUser} from '../../utils/auth';
 const Profile: React.FC = () => {
 
     // state
@@ -15,25 +16,29 @@ const Profile: React.FC = () => {
 
     // check session
     useEffect(() => {
-        checkSession()
+        // checkSession()
+        getCurrentUser().then(data => setUser(data))
+      
+     
     }, [])
-
+  
     // check session
-    async function checkSession() {
-        const { data, error } = await supabase.auth.getSession()
+    // async function checkSession() {
+    //     const { data, error } = await supabase.auth.getSession()
 
-        if (error) {
-            console.error("Error getting session:", error)
-            return
-        }
+    //     if (error) {
+    //         console.error("Error getting session:", error)
+    //         return
+    //     }
 
-        if (data.session) {
+    //     if (data.session) {
 
-            setUser(data.session.user)
-        } else {
-            console.log("No active session (user not logged in).")
-        }
-    }
+    //         setUser(data.session.user)
+    //         return data.session
+    //     } else {
+    //         console.log("No active session (user not logged in).")
+    //     }
+    // }
 
     // update name profile
     // const updateNameProfile = async (dataForm: any) => {
@@ -89,7 +94,6 @@ const Profile: React.FC = () => {
    
     // get profile
     const getProfile = async () => {
-        console.log(" getProfile")
         const user_info = user
         if (user_info) {
             const { data, error } = await supabase.from('profiles').select('*').eq('id', user_info.id).single();

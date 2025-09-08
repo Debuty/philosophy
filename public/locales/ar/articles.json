@@ -42,5 +42,60 @@
     "next": "التالي",
     "page": "صفحة",
     "of": "من"
+  },
+  "add_article_page": {
+    "title": "كتابة مقال جديد",
+    "subtitle": "شارك رؤاك الفلسفية مع العالم.",
+    "form": {
+      "title": "العنوان",
+      "title_placeholder": "أدخل عنوان المقال",
+      "subtitle": "العنوان الفرعي",
+      "subtitle_placeholder": "وصف مختصر لمقالك",
+      "content": "محتوى المقال",
+      "content_placeholder": "في عالم الأفكار...",
+      "category": "التصنيف",
+      "tags": "العلامات",
+      "tags_placeholder": "أفلاطون، الأشكال، نظرية المعرفة"
+    },
+    "categories": {
+      "philosophy_of_mind": "فلسفة العقل",
+      "ethics": "الأخلاق",
+      "metaphysics": "الميتافيزيقا",
+      "epistemology": "نظرية المعرفة",
+      "logic": "المنطق",
+      "aesthetics": "علم الجمال",
+      "political_philosophy": "الفلسفة السياسية",
+      "philosophy_of_science": "فلسفة العلوم",
+      "philosophy_of_religion": "فلسفة الدين",
+      "philosophy_of_language": "فلسفة اللغة",
+      "philosophy_of_mathematics": "فلسفة الرياضيات",
+      "philosophy_of_history": "فلسفة التاريخ",
+      "philosophy_of_education": "فلسفة التربية",
+      "philosophy_of_law": "فلسفة القانون",
+      "philosophy_of_economics": "فلسفة الاقتصاد",
+      "philosophy_of_technology": "فلسفة التكنولوجيا",
+      "social_philosophy": "الفلسفة الاجتماعية"
+    },
+    "buttons": {
+      "save_draft": "حفظ كمسودة",
+      "publish": "نشر المقال",
+      "cancel": "إلغاء",
+      "preview": "معاينة"
+    },
+    "validation": {
+      "title_required": "العنوان مطلوب",
+      "content_required": "محتوى المقال مطلوب",
+      "category_required": "يرجى اختيار تصنيف",
+      "title_min_length": "يجب أن يكون العنوان 10 أحرف على الأقل",
+      "content_min_length": "يجب أن يكون محتوى المقال 100 حرف على الأقل"
+    },
+    "success": {
+      "draft_saved": "تم حفظ المسودة بنجاح",
+      "article_published": "تم نشر المقال بنجاح"
+    },
+    "error": {
+      "save_failed": "فشل في حفظ المقال",
+      "publish_failed": "فشل في نشر المقال"
+    }
   }
 }

@@ -42,5 +42,60 @@
     "next": "Next",
     "page": "Page",
     "of": "of"
+  },
+  "add_article_page": {
+    "title": "Write a New Article",
+    "subtitle": "Share your philosophical insights with the world.",
+    "form": {
+      "title": "Title",
+      "title_placeholder": "Enter article title",
+      "subtitle": "Subtitle",
+      "subtitle_placeholder": "A short description of your article",
+      "content": "Article Content",
+      "content_placeholder": "In the realm of ideas...",
+      "category": "Category",
+      "tags": "Tags",
+      "tags_placeholder": "Plato, Forms, Epistemology"
+    },
+    "categories": {
+      "philosophy_of_mind": "Philosophy of Mind",
+      "ethics": "Ethics",
+      "metaphysics": "Metaphysics",
+      "epistemology": "Epistemology",
+      "logic": "Logic",
+      "aesthetics": "Aesthetics",
+      "political_philosophy": "Political Philosophy",
+      "philosophy_of_science": "Philosophy of Science",
+      "philosophy_of_religion": "Philosophy of Religion",
+      "philosophy_of_language": "Philosophy of Language",
+      "philosophy_of_mathematics": "Philosophy of Mathematics",
+      "philosophy_of_history": "Philosophy of History",
+      "philosophy_of_education": "Philosophy of Education",
+      "philosophy_of_law": "Philosophy of Law",
+      "philosophy_of_economics": "Philosophy of Economics",
+      "philosophy_of_technology": "Philosophy of Technology",
+      "social_philosophy": "Social Philosophy"
+    },
+    "buttons": {
+      "save_draft": "Save Draft",
+      "publish": "Publish Article",
+      "cancel": "Cancel",
+      "preview": "Preview"
+    },
+    "validation": {
+      "title_required": "Title is required",
+      "content_required": "Article content is required",
+      "category_required": "Please select a category",
+      "title_min_length": "Title must be at least 10 characters",
+      "content_min_length": "Article content must be at least 100 characters"
+    },
+    "success": {
+      "draft_saved": "Draft saved successfully",
+      "article_published": "Article published successfully"
+    },
+    "error": {
+      "save_failed": "Failed to save article",
+      "publish_failed": "Failed to publish article"
+    }
   }
 }

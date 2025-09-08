@@ -1,12 +1,20 @@
 .add-article {
   padding: 20px;
   
-  h2 {
-    color: #333;
-    margin-bottom: 20px;
+  .MuiPaper-root {
+    border-radius: 12px;
+    
   }
   
-  p {
-    color: #666;
+  .MuiTextField-root {
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+    }
+  }
+  
+  .MuiFormControl-root {
+    .MuiOutlinedInput-root {
+      border-radius: 8px;
+    }
   }
 }

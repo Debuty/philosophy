@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Articles.scss';
 // import { supabase } from '../../supabaseClient';
 import ArticlesCard from './components/ArticlesCard';
@@ -6,6 +6,8 @@ import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../routes/pathes';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUser } from '../../utils/auth';
+import type { User } from '@supabase/supabase-js';
 
 const Articles: React.FC = () => {
   const { t } = useTranslation();
@@ -80,12 +82,22 @@ const Articles: React.FC = () => {
   }
 ]
 
+const [user, setUser] = useState<User | null>(null)
+useEffect(() => {
+  // checkSession()
+  getCurrentUser().then(data => setUser(data))
+
+
+}, [])
+
 
   return (
     <div className="articles">
+      {user && (
       <Button variant="contained" className="articles-button" onClick={() => navigate(ROUTES.ADD_ARTICLE)}>
       {t("add_article", { ns: "articles" })}
       </Button>
+      )}
       {article.map((article) => (
         <ArticlesCard article={article}  />
       ))}
