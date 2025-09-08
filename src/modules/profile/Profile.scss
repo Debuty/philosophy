@@ -1,5 +1,4 @@
 .profile {
-  padding: 20px;
   
 
   &__main-paper {
@@ -49,11 +48,15 @@
   }
   
   &__header {
-    // Flex container for avatar and user info
+   @media(max-width: 410px) {
+    flex-direction: column;
   }
-  
+}
   &__avatar {
-    // Avatar container
+   
+    @media(max-width: 410px) {
+     align-self: center;
+    }
   }
   
   &__user-info {
