@@ -15,7 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
 import { AppBar, Toolbar, Avatar, IconButton, Typography, Menu, MenuItem, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
-import { AccountCircle, Home, People, Article, Timeline, School, MenuBook, Logout } from "@mui/icons-material";
+import { AccountCircle, Home, People, Article, Timeline, School, MenuBook, Logout, Login } from "@mui/icons-material";
 const Header: React.FC = () => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const { t } = useTranslation();
@@ -108,8 +108,9 @@ const Header: React.FC = () => {
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-
+                  onClick={() => navigate(ROUTES.PROFILE)}
                   color="inherit"
+        
                 >
                   <AccountCircle />
 
@@ -308,6 +309,7 @@ const Header: React.FC = () => {
               </ListItem>
             ))}
             <Divider sx={{ mb: 2 }} />
+            {session ? (
             <ListItem
               onClick={handleLogout}
               sx={{
@@ -321,7 +323,12 @@ const Header: React.FC = () => {
               <ListItemIcon sx={{ color: '#534e46' }}><Logout /></ListItemIcon>
               {t("logout", { ns: "header" })}
             </ListItem>
-
+            ) : (
+              <ListItem onClick={() => {navigate(ROUTES.LOGIN); setSidebarOpen(false)}} sx={{ borderRadius: 1, mb: 1, '&:hover': { backgroundColor: '#e0e0e0' } }}>
+                <ListItemIcon sx={{ color: '#534e46' }}><Login /></ListItemIcon>
+                {t("login", { ns: "header" })}
+              </ListItem>
+            )}
           </List>
         </div>
       </Drawer>
