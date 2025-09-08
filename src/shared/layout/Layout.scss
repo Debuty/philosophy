@@ -11,10 +11,16 @@
   padding: 2rem 2rem 2rem 2rem;
   // overflow-y: auto;
 
-}
+  @media(min-width: 1200px) {
+    padding: 2rem 10rem 2rem 10rem;
+  }
 
-@media(min-width: 1200px) {
-  .main-content {
+  @media(min-width: 1600px) {
+    padding: 2rem 20rem 2rem 20rem;
+  }
+  @media(min-width: 1800px) {
     padding: 2rem 30rem 2rem 30rem;
   }
+
 }
+

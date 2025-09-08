@@ -38,7 +38,7 @@ export const PhilosopherCard = ({philosopher}: {philosopher: SupabasePhilosopher
     <CardActionArea>
       <CardMedia
         component="img"
-        height="500"
+        height="700"
         image={philosopher.image} 
         alt={lang == "ar" ? philosopher.name_ar : philosopher.name_en}
       />

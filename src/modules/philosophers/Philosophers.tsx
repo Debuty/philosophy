@@ -90,10 +90,20 @@ const philosophers: React.FC = () => {
     <div className="philosophers">
       {/* Filter Bar */}
       <Paper className="filter-bar" elevation={2} sx={{ backgroundColor: "	#bfbdb9 !important" }}>
-        <Typography variant="h6" className="filter-title">
-          {t('Philosophers.filter.title')}
-        </Typography>
 
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
+          <Typography variant="h6" className="filter-title">
+            {t('Philosophers.filter.title')}
+          </Typography>
+
+          <Button
+            variant="outlined"
+            onClick={handleClearFilters}
+            style={{ margin: "1rem" }}
+          >
+            {t('Philosophers.filter.clearFilters')}
+          </Button>
+        </div>
         <Grid container spacing={3} alignItems="center">
           {/* Search Field */}
           <Grid size={{ xs: 12, md: 4 }}>
@@ -110,7 +120,7 @@ const philosophers: React.FC = () => {
           </Grid>
 
           {/* Era Filter */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControl fullWidth>
               <InputLabel>{t('Philosophers.filter.eras.title')}</InputLabel>
               <Select
@@ -132,7 +142,7 @@ const philosophers: React.FC = () => {
           </Grid>
 
           {/* School Filter */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControl fullWidth>
               <InputLabel>{t('Philosophers.filter.schools.title')}</InputLabel>
               <Select
@@ -156,7 +166,7 @@ const philosophers: React.FC = () => {
           </Grid>
 
           {/* Clear Filters Button */}
-          <Grid size={{ xs: 12, md: 2 }}>
+          {/* <Grid size={{ xs: 12, md: 2 }}>
             <Button
               variant="outlined"
               onClick={handleClearFilters}
@@ -165,7 +175,7 @@ const philosophers: React.FC = () => {
             >
               {t('Philosophers.filter.clearFilters')}
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         {/* Results Count */}
@@ -181,11 +191,11 @@ const philosophers: React.FC = () => {
       {isLoading ? (
         <CircularProgress sx={{ margin: "auto", display: "block" }} />
       ) : error ? (
-        <Alert severity="error" sx={{ margin: "2rem auto", display: "block" ,fontSize: "2rem" }}>Error fetching philosophers</Alert>
+        <Alert severity="error" sx={{ margin: "2rem auto", display: "block", fontSize: "2rem" }}>Error fetching philosophers</Alert>
       ) : (
         <Grid container spacing={3} sx={{ justifyContent: "center" }}>
           {PhilosophersData?.rows?.map((philosopher) => (
-            <Grid key={philosopher.id} size={{ xs: 12, md: 4  }  } sx={{ maxWidth: "500px" }}>
+            <Grid key={philosopher.id} size={{ xs: 12, md: 4 }} sx={{ maxWidth: "500px" }}>
               <PhilosopherCard philosopher={philosopher} />
             </Grid>
           ))}
