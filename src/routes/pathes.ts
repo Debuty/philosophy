@@ -4,6 +4,7 @@ export const ROUTES = {
   PHILOSOPHER_DETAILS: "/philosophers/:id",
   ARTICLS: "/articles",
   ARTICLE_DETAILS: "/articles/:id",
+  ADD_ARTICLE: "/articles/add",
   TIMELINE: "/timeline",
   LOGIN: "/login",
   SIGNUP: "/signup",

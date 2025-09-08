@@ -14,13 +14,14 @@ import hederLogo from "../../../assets/heder-logo.png";
 import MenuIcon from "@mui/icons-material/Menu";
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
-import { AppBar, Toolbar, Avatar, IconButton, Typography, Menu, MenuItem } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
+import { AppBar, Toolbar, Avatar, IconButton, Typography, Menu, MenuItem, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
+import { AccountCircle, Home, People, Article, Timeline, School, MenuBook, Logout } from "@mui/icons-material";
 const Header: React.FC = () => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [session, setSession] = useState<Session | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const navigate = useNavigate();
 
   const SetLangAr = () => {
@@ -45,15 +46,45 @@ const Header: React.FC = () => {
     return () => subscription.unsubscribe()
   }, [])
 
+  const handleLogout = async () => {
+    navigate(ROUTES.LOGIN);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error.message);
+    } else {
+      console.log('User signed out successfully');
+    }
+    setSidebarOpen(false)
+  }
+
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
+
+  const navigationItems = [
+    { text: t("nav.home", { ns: "header" }), icon: <Home />, path: ROUTES.HOME },
+    { text: t("nav.philosophers", { ns: "header" }), icon: <People />, path: ROUTES.PHILOSOPHERS },
+    { text: t("nav.articles", { ns: "header" }), icon: <Article />, path: ROUTES.ARTICLS },
+    { text: t("nav.timeline", { ns: "header" }), icon: <Timeline />, path: ROUTES.TIMELINE },
+    { text: t("nav.schools", { ns: "header" }), icon: <School />, path: ROUTES.SCHOOLS },
+    { text: t("nav.books", { ns: "header" }), icon: <MenuBook />, path: ROUTES.BOOKS },
+  ]
+
+  const handleNavigation = (path: string) => {
+    navigate(path)
+    setSidebarOpen(false)
+  }
+
 
 
   return (
     <>
 
       <div className="header-sm-screen">
-        <AppBar position="static" style={{ backgroundColor: "transparent" , direction: "ltr"}}>
+        <AppBar position="static" style={{ backgroundColor: "transparent", direction: "ltr" }}>
           <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <div className="header__image-wraper">
                 <img src={hederLogo} alt="header__image" className="header__image" />
               </div>
@@ -64,10 +95,11 @@ const Header: React.FC = () => {
               color="inherit"
               aria-label="menu"
               sx={{ mr: 2 }}
+              onClick={toggleSidebar}
             >
               <MenuIcon />
             </IconButton>
-           
+
 
             <div>
               <div style={{ display: "flex", gap: "10px" }}>
@@ -188,17 +220,7 @@ const Header: React.FC = () => {
                   <Button
                     sx={{ fontSize: "1.5rem", backgroundColor: "#534e46", alignSelf: "center" }}
                     variant="contained"
-                    onClick={async () => {
-                      // Navigate first, then logout
-                      navigate(ROUTES.LOGIN);
-                      const { error } = await supabase.auth.signOut();
-                      if (error) {
-                        console.error('Error signing out:', error.message);
-                      } else {
-                        console.log('User signed out successfully');
-                      }
-                    }
-                    }
+                    onClick={handleLogout}
                   >
                     {t("logout", { ns: "header" })}
                   </Button>
@@ -244,6 +266,65 @@ const Header: React.FC = () => {
           <img src={hederLogo} alt="header__image" className="header__image" />
         </div>
       </div>
+
+      {/* Sidebar Drawer */}
+      <Drawer
+        anchor={lang == "ar" ? "left" : "right"}
+        open={sidebarOpen}
+        onClose={toggleSidebar}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: 280,
+            backgroundColor: '#b1aea9',
+          },
+        }}
+      >
+        <div style={{ padding: '20px' }}>
+          <Typography variant="h6" component="div" sx={{ mb: 2, fontWeight: 'bold', color: '#333' }}>
+            {t("navigation", { ns: "header" })}
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+
+          <List>
+            {navigationItems.map((item, index) => (
+              <ListItem
+                key={index}
+                onClick={() => handleNavigation(item.path)}
+                sx={{
+                  borderRadius: 1,
+                  mb: 1,
+                  '&:hover': {
+                    backgroundColor: '#e0e0e0',
+                  }
+                }}
+              >
+                <ListItemIcon sx={{ color: '#534e46' }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{ color: '#333' }}
+                />
+              </ListItem>
+            ))}
+            <Divider sx={{ mb: 2 }} />
+            <ListItem
+              onClick={handleLogout}
+              sx={{
+                borderRadius: 1,
+                mb: 1,
+                '&:hover': {
+                  backgroundColor: '#e0e0e0',
+                }
+              }}
+            >
+              <ListItemIcon sx={{ color: '#534e46' }}><Logout /></ListItemIcon>
+              {t("logout", { ns: "header" })}
+            </ListItem>
+
+          </List>
+        </div>
+      </Drawer>
     </>
   );
 };

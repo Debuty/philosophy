@@ -1,0 +1,46 @@
+{
+  "title": "Articles",
+  "article": "Article",
+  "subtitle": "Explore philosophical articles and insights",
+  "search_placeholder": "Search articles...",
+  "filter_by": "Filter by",
+  "category": "Category",
+  "author": "Author",
+  "date": "Date",
+  "read_more": "Read More",
+  "read_time": "min read",
+  "views": "views",
+  "likes": "likes",
+  "comments": "comments",
+  "share": "Share",
+  "bookmark": "Bookmark",
+  "add_article": "Add Article",
+  "no_articles": "No articles found",
+  "loading": "Loading articles...",
+  "error": "Error loading articles",
+  "categories": {
+    "all": "All",
+    "ethics": "Ethics",
+    "metaphysics": "Metaphysics",
+    "epistemology": "Epistemology",
+    "logic": "Logic",
+    "aesthetics": "Aesthetics",
+    "political_philosophy": "Political Philosophy",
+    "philosophy_of_mind": "Philosophy of Mind",
+    "philosophy_of_science": "Philosophy of Science",
+    "philosophy_of_religion": "Philosophy of Religion"
+  },
+  "sort_by": {
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "most_viewed": "Most Viewed",
+    "most_liked": "Most Liked",
+    "most_commented": "Most Commented"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
+  }
+}

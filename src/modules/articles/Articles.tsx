@@ -2,10 +2,14 @@ import React from 'react';
 import './Articles.scss';
 // import { supabase } from '../../supabaseClient';
 import ArticlesCard from './components/ArticlesCard';
+import { Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { ROUTES } from '../../routes/pathes';
+import { useNavigate } from 'react-router-dom';
 
 const Articles: React.FC = () => {
-  
-  
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   
   const article =[ {
@@ -79,8 +83,11 @@ const Articles: React.FC = () => {
 
   return (
     <div className="articles">
+      <Button variant="contained" className="articles-button" onClick={() => navigate(ROUTES.ADD_ARTICLE)}>
+      {t("add_article", { ns: "articles" })}
+      </Button>
       {article.map((article) => (
-        <ArticlesCard article={article} />
+        <ArticlesCard article={article}  />
       ))}
      
     </div>

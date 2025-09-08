@@ -1,12 +1,200 @@
 .profile {
   padding: 20px;
   
-  h1 {
-    color: #333;
+
+  &__main-paper {
+    padding: 2rem !important;
+    background-color: #cac8c4 !important;
+    border-radius: 1rem !important;
+  }
+  &__content-paper {
+    background-color: #cac8c4 !important;
+  }
+
+  &__edit-icon {
+    font-size: 2rem !important;
+    font-weight: 400 !important;
+    color: #534e46 !important;
+    cursor: pointer;
+  }
+
+  &__title {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+  }
+
+  &__email {
+    font-size: 1.5rem !important;
+    font-weight: 400 !important;
+  }
+
+  &__bio {
+   font-size: 1.5rem !important;
+   font-weight: 400 !important;
+  }
+
+
+  // Grid container
+  &__grid {
+    // MUI Grid handles the layout, so we can add custom styles here if needed
+  }
+  
+  // Main content area
+  &__main {
+    // MUI Grid item for main content
+  }
+  
+  &__main-paper {
+    // Main content paper styling
+  }
+  
+  &__header {
+    // Flex container for avatar and user info
+  }
+  
+  &__avatar {
+    // Avatar container
+  }
+  
+  &__user-info {
+    // User information container
+  }
+  
+  &__email {
+    color: #666;
+    margin-bottom: 10px;
+  }
+  
+  &__bio {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+  
+  &__edit-button {
+    // Edit profile button styling
+  }
+  
+  &__title {    
+    color:  red($color: #000000);
+    margin-bottom: 20px;
+   
+  }
+  
+  &__subtitle {
+    color: #666;
     margin-bottom: 20px;
   }
   
-  p {
+  &__content {
+    margin-top: 20px;
+  }
+  
+  &__content-title {
+    color: #495057;
+    margin-bottom: 15px;
+  }
+  
+  &__content-description {
     color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  &__details {
+    margin-top: 20px;
+  }
+  
+  &__section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  &__section-title {
+    color: #495057;
+    margin-bottom: 10px;
+  }
+  
+  &__section-text {
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  // Sidebar area
+  &__sidebar {
+    // MUI Grid item for sidebar
+  }
+  
+  &__sidebar-paper {
+    // Sidebar paper styling
+    background-color: #cac8c4 !important;
+    border-radius: 1rem !important;
+    
+    &--additional {
+      // Additional styling for the second sidebar paper
+    }
+  }
+  
+  &__sidebar-title {
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 2.5rem !important;
+  }
+  
+  &__sidebar-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  // Widget styling
+  &__widget {
+    background: #e2e0db !important;
+    padding: 15px;
+    border-radius: 1rem !important;
+    margin-top: 15px;
+  }
+  
+  &__widget-title {
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+  }
+  
+  &__widget-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    font-size: 1.5rem !important;
+  }
+  
+  &__widget-item {
+    padding: 5px 0;
+    color: #666;
+    font-size: 1.2rem !important;
+  }
+  
+  // Additional content
+  &__additional-content {
+    margin-top: 15px;
+    font-size: 1.5rem !important;
+  }
+  
+  &__additional-title {
+    color: #495057;
+    margin-bottom: 10px;
+    font-size: 1.7rem !important;
+  }
+  
+  &__additional-text {
+    color: #666;
+    line-height: 1.6;
+    font-size: 1.2rem !important;
   }
 }

@@ -1,0 +1,46 @@
+{
+  "title": "المقالات",
+  "article": "مقال",
+  "subtitle": "استكشف المقالات الفلسفية والرؤى",
+  "search_placeholder": "البحث في المقالات...",
+  "filter_by": "تصفية حسب",
+  "category": "التصنيف",
+  "author": "المؤلف",
+  "date": "التاريخ",
+  "read_more": "اقرأ المزيد",
+  "read_time": "دقيقة قراءة",
+  "views": "مشاهدات",
+  "likes": "إعجابات",
+  "comments": "تعليقات",
+  "share": "مشاركة",
+  "bookmark": "حفظ",
+  "add_article": "إضافة مقال",
+  "no_articles": "لم يتم العثور على مقالات",
+  "loading": "جاري تحميل المقالات...",
+  "error": "خطأ في تحميل المقالات",
+  "categories": {
+    "all": "الكل",
+    "ethics": "الأخلاق",
+    "metaphysics": "الميتافيزيقا",
+    "epistemology": "نظرية المعرفة",
+    "logic": "المنطق",
+    "aesthetics": "علم الجمال",
+    "political_philosophy": "الفلسفة السياسية",
+    "philosophy_of_mind": "فلسفة العقل",
+    "philosophy_of_science": "فلسفة العلوم",
+    "philosophy_of_religion": "فلسفة الدين"
+  },
+  "sort_by": {
+    "newest": "الأحدث",
+    "oldest": "الأقدم",
+    "most_viewed": "الأكثر مشاهدة",
+    "most_liked": "الأكثر إعجاباً",
+    "most_commented": "الأكثر تعليقاً"
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من"
+  }
+}

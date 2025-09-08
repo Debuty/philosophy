@@ -12,6 +12,7 @@ const Philosophers = React.lazy(() => import('../modules/philosophers/Philosophe
 const PhilosopherDetails = React.lazy(() => import('../modules/philosopher-details/PhilosopherDetails'));
 const Articles = React.lazy(() => import('../modules/articles/Articles'));
 const ArticleDetails = React.lazy(() => import('../modules/article-details/ArticleDetails'));
+const AddArticle = React.lazy(() => import('../modules/articles/components/add-article/AddArticle'));
 const Timeline = React.lazy(() => import('../modules/timeline/Timeline'));
 
 const Login = React.lazy(() => import('../modules/auth/login/login'));
@@ -128,6 +129,14 @@ export const router = createBrowserRouter([
             element: (
               <Suspense fallback={<Loading />}>
                 <Profile />
+              </Suspense>
+            ),
+          },
+          {
+            path: ROUTES.ADD_ARTICLE,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AddArticle />
               </Suspense>
             ),
           },
