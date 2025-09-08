@@ -1,5 +1,8 @@
 // Custom PhilosopherCard styles
 .MuiCard-root {
+  @media(max-width: 768px) {
+   max-width: 400px !important;
+  }
   .MuiCardContent-root {
     .MuiTypography-h5 {
       font-size: 2.5rem !important;

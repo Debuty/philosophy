@@ -195,7 +195,7 @@ const philosophers: React.FC = () => {
       ) : (
         <Grid container spacing={3} sx={{ justifyContent: "center" }}>
           {PhilosophersData?.rows?.map((philosopher) => (
-            <Grid key={philosopher.id} size={{ xs: 12, md: 4 }} sx={{ maxWidth: "500px" }}>
+            <Grid key={philosopher.id} size={{ xs: 12, md: 4 }} sx={{ maxWidth: "fit-content" }}>
               <PhilosopherCard philosopher={philosopher} />
             </Grid>
           ))}

@@ -34,13 +34,14 @@ export const PhilosopherCard = ({philosopher}: {philosopher: SupabasePhilosopher
   // console.log(philosopher);
   
   return (
-    <Card sx={{ maxWidth: 500 , backgroundColor: "rgb(193, 188, 181) !important" }}>
+    <Card sx={{ height: "fit-content", maxWidth: 500 , backgroundColor: "rgb(193, 188, 181) !important" }}>
     <CardActionArea>
       <CardMedia
         component="img"
-        height="700"
+      
         image={philosopher.image} 
         alt={lang == "ar" ? philosopher.name_ar : philosopher.name_en}
+        sx={{ height: "366px !important", width: "278px !important" , margin: "1rem auto" ,  borderRadius: "1rem" }}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: "1000" }}>
