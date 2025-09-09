@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './PhilosopherDetails.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Avatar, Button, Grid, Paper, Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Avatar, Button, Grid, Paper,Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
 import { ROUTES } from '../../routes/pathes';
