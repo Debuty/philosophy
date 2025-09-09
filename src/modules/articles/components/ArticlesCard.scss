@@ -62,3 +62,25 @@
     }
   
 }
+
+@media (max-width: 900px) {
+    .articles-card{
+.articles-card-grid{
+    gap: 2rem;
+}
+
+    .article-info{
+        order: 2;
+    }
+    .author-info{
+        text-align: center;
+        border-bottom: 1px solid #534e46;
+        border-left: none;
+        padding-bottom: 2rem;
+    }
+    .articles-card-box{
+        flex-direction: column;
+
+    }
+    }
+}

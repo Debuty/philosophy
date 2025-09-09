@@ -8,80 +8,21 @@ import { ROUTES } from '../../routes/pathes';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../../utils/auth';
 import type { User } from '@supabase/supabase-js';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '../../supabaseClient';
+import Loading from '../../shared/loading/Loading';
 
 const Articles: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+const getArticles = async () => {
+  const { data, error } = await supabase.from('articles').select('*').eq('state', 'published');
+  if (error) throw error;
+  return data;
+}
   
-  const article =[ {
-    title: {
-      en: "The Future of Artificial Intelligence",
-      ar: "المستقبل التكنولوجي الذكاء الاصطناعي"
-    },  
-    description: {
-      en: "Explain the future of Artificial Intelligence and how it will change the world",
-      ar: "شرح المستقبل التكنولوجي الذكاء الاصطناعي وكيف سيتغير العالم"
-    },
-    content: {
-      en: "It will be the most important technology in the future and how it will change the world",
-      ar: "سيكون أكثر التكنولوجيات الأهمية في المستقبل وكيف سيتغير العالم"
-    },
-    author_name: {
-      en: "Socrates",
-      ar: "سقراط"
-    },
-    author_field: {
-      en: "Philosopher",
-      ar: "فيلسوف"
-    },
-    author_avatar: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Head_Sokrates_Glyptothek_Munich.jpg",
-    category: {
-      en: "Philosophy",
-      ar: "فلسفة"
-    },
-    date: {
-      en: "2025-01-01",
-      ar: "2025-01-01"
-    },
-    likes: 100,
-    dislikes: 10,
-  },
-  {
-    title: {
-      en: "The Future of Artificial Intelligence",
-      ar: "المستقبل التكنولوجي الذكاء الاصطناعي"
-    },
-    description: {
-      en: "Explain the future of Artificial Intelligence and how it will change the world",
-      ar: "شرح المستقبل التكنولوجي الذكاء الاصطناعي وكيف سيتغير العالم"
-    },
-    content: {
-      en: "It will be the most important technology in the future and how it will change the world",
-      ar: "سيكون أكثر التكنولوجيات الأهمية في المستقبل وكيف سيتغير العالم"
-    },
-    author_name: {
-      en: "Socrates",
-      ar: "سقراط"
-    },
-    author_field: {
-      en: "Philosopher",
-      ar: "فيلسوف"
-    },
-    author_avatar: "https://upload.wikimedia.org/wikipedia/commons/d/d2/Head_Sokrates_Glyptothek_Munich.jpg",
-      category: {
-      en: "Philosophy",
-      ar: "فلسفة"
-    },
-    date: {
-      en: "2025-01-01",
-      ar: "2025-01-01"
-    },
-    likes: 100,
-    dislikes: 10,
-  }
-]
-
+ 
 const [user, setUser] = useState<User | null>(null)
 useEffect(() => {
   // checkSession()
@@ -91,6 +32,13 @@ useEffect(() => {
 }, [])
 
 
+
+const { data: articles, isLoading } = useQuery({
+  queryKey: ['articles'],
+  queryFn: () => getArticles(),
+})
+
+ console.log(articles)
   return (
     <div className="articles">
       {user && (
@@ -98,10 +46,12 @@ useEffect(() => {
       {t("add_article", { ns: "articles" })}
       </Button>
       )}
-      {article.map((article) => (
-        <ArticlesCard article={article}  />
+      {isLoading ? <Loading />
+      : articles?.map((article) => (
+        <ArticlesCard article={article} key={article.id} />
       ))}
-     
+        
+    
     </div>
   );
 };

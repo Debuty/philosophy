@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Paper, 
   TextField, 
@@ -12,10 +12,104 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import './AddArticle.scss';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import type { User } from '@supabase/supabase-js';
+import { getCurrentUser } from '../../../../utils/auth';
+import { supabase } from '../../../../supabaseClient';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast, ToastContainer } from 'react-toastify';
+
+const addArticleSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  subtitle: z.string().min(1, 'Subtitle is required'),
+  content: z.string().min(1, 'Content is required'),
+  category: z.string().min(1, 'Category is required'),
+});
+
+type AddArticleFormData = z.infer<typeof addArticleSchema>;
 
 const AddArticle: React.FC = () => {
   const { t } = useTranslation('articles');
-  
+  const [status, setStatus] = useState('draft');
+  const [user, setUser] = useState<User | null>(null);
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    getCurrentUser().then((data: User | null) => setUser(data))
+  }, [])
+
+  const { register, handleSubmit, formState: { errors } } = useForm<AddArticleFormData>({
+    resolver: zodResolver(addArticleSchema),
+    defaultValues: {
+      title: '',
+      subtitle: '',
+      content: '',
+      category: '',
+    },
+
+  });
+
+  const addArticle = async (data: AddArticleFormData) => {
+  const { data: dataArticle, error } = await supabase
+  .from("articles")
+  .insert({
+    title: data.title,
+    subtitle: data.subtitle,
+    content: data.content,
+    category: data.category,
+    state: status,
+  })
+    .select("id")
+    .single();
+    if (error) {
+      throw error;
+    }
+    else {
+        return dataArticle;
+    }
+  }
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: addArticle,
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success('Article added successfully', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
+       queryClient.invalidateQueries({ queryKey: ['articles'] })
+    },
+    onError: (error) => {
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      })
+    },
+  }); 
+
+
+  const onSubmit = (data: AddArticleFormData) => {
+    const dataForm = {
+      ...data,
+      status: status,
+    }
+    mutate(dataForm);
+  };
+
   return (
     <div className="add-article">
       <Paper elevation={2} sx={{ p: 4, mx: 'auto' , backgroundColor:" rgb(193, 188, 181)" }}>
@@ -26,7 +120,7 @@ const AddArticle: React.FC = () => {
           {t('add_article_page.subtitle')}
         </Typography>
 
-        <Box component="form" noValidate>
+        <Box component="form"  onSubmit={handleSubmit(onSubmit)}>
           {/* Title Box */}
           <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
             <InputLabel>{t('add_article_page.form.title')}</InputLabel>
@@ -37,6 +131,9 @@ const AddArticle: React.FC = () => {
               defaultValue="The Allegory of the Cave"
               placeholder={t('add_article_page.form.title_placeholder')}
               sx={{ mb: 2 }}
+              {...register('title')}
+              error={!!errors.title}
+              helperText={errors.title?.message}
             />
           </Paper>
 
@@ -49,6 +146,9 @@ const AddArticle: React.FC = () => {
               variant="outlined"
               placeholder={t('add_article_page.form.subtitle_placeholder')}
               sx={{ mb: 2 }}
+              {...register('subtitle')}
+              error={!!errors.subtitle}
+              helperText={errors.subtitle?.message}
             />
           </Paper>
 
@@ -63,6 +163,9 @@ const AddArticle: React.FC = () => {
               variant="outlined"
               placeholder={t('add_article_page.form.content_placeholder')}
               sx={{ mb: 2 }}
+              {...register('content')}
+              error={!!errors.content}
+              helperText={errors.content?.message}
               
             />
           </Paper>
@@ -76,6 +179,9 @@ const AddArticle: React.FC = () => {
                   value="Philosophy of Mind"
                   label={t('add_article_page.form.category')}
                   fullWidth
+                  {...register('category')}
+                  error={!!errors.category}
+             
                 >
                   <MenuItem value="Philosophy of Mind">{t('add_article_page.categories.philosophy_of_mind')}</MenuItem>
                   <MenuItem value="Ethics">{t('add_article_page.categories.ethics')}</MenuItem>
@@ -87,16 +193,7 @@ const AddArticle: React.FC = () => {
                   <MenuItem value="Philosophy of Science">{t('add_article_page.categories.philosophy_of_science')}</MenuItem>
                   <MenuItem value="Philosophy of Religion">{t('add_article_page.categories.philosophy_of_religion')}</MenuItem>
                 </Select>
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <InputLabel>{t('add_article_page.form.tags')}</InputLabel>
-                <TextField
-                  fullWidth
-                  label=""
-                  placeholder={t('add_article_page.form.tags_placeholder')}
-                  variant="outlined"
-                  sx={{ mb: 2 }}
-                />
+                {errors.category && <Typography color="error">{errors.category.message}</Typography>}
               </Grid>
             </Grid>
           </Paper>
@@ -113,6 +210,8 @@ const AddArticle: React.FC = () => {
                 fontSize: '1rem',
                 fontWeight: 500
               }}
+              type="submit"
+              onClick={() => setStatus('draft')}
             >
               {t('add_article_page.buttons.save_draft')}
             </Button>
@@ -130,6 +229,8 @@ const AddArticle: React.FC = () => {
                   backgroundColor: '#1565c0'
                 }
               }}
+              type="submit"
+              onClick={() => setStatus('published')}
             >
               {t('add_article_page.buttons.publish')}
             </Button>
@@ -137,6 +238,18 @@ const AddArticle: React.FC = () => {
         </Box>
         
       </Paper>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 };
