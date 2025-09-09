@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Paper, 
-  TextField, 
-  Grid, 
-  Box, 
+import {
+  Paper,
+  TextField,
+  Grid,
+  Box,
   Typography,
   InputLabel,
   Select,
@@ -21,6 +21,16 @@ import { supabase } from '../../../../supabaseClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 
+import { detect} from "tinyld";
+import { ROUTES } from '../../../../routes/pathes';
+import { useNavigate } from 'react-router-dom';
+
+const code = detect("هذا نص عربي");     // -> "ar"
+const top3 = detect("Hello world ");
+//  const english = code || top3;
+console.log(code)
+console.log(top3)
+
 const addArticleSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   subtitle: z.string().min(1, 'Subtitle is required'),
@@ -34,8 +44,9 @@ const AddArticle: React.FC = () => {
   const { t } = useTranslation('articles');
   const [status, setStatus] = useState('draft');
   const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-console.log(user)
+  console.log(user)
   useEffect(() => {
     getCurrentUser().then((data: User | null) => setUser(data))
   }, [])
@@ -52,22 +63,22 @@ console.log(user)
   });
 
   const addArticle = async (data: AddArticleFormData) => {
-  const { data: dataArticle, error } = await supabase
-  .from("articles")
-  .insert({
-    title: data.title,
-    subtitle: data.subtitle,
-    content: data.content,
-    category: data.category,
-    state: status,
-  })
-    .select("id")
-    .single();
+    const { data: dataArticle, error } = await supabase
+      .from("articles")
+      .insert({
+        title: data.title,
+        subtitle: data.subtitle,
+        content: data.content,
+        category: data.category,
+        state: status,
+      })
+      .select("id")
+      .single();
     if (error) {
       throw error;
     }
     else {
-        return dataArticle;
+      return dataArticle;
     }
   }
 
@@ -85,7 +96,7 @@ console.log(user)
         progress: undefined,
         theme: "light",
       })
-       queryClient.invalidateQueries({ queryKey: ['articles'] })
+      queryClient.invalidateQueries({ queryKey: ['articles'] })
     },
     onError: (error) => {
       toast.error(error.message, {
@@ -99,7 +110,7 @@ console.log(user)
         theme: "light",
       })
     },
-  }); 
+  });
 
 
   const onSubmit = (data: AddArticleFormData) => {
@@ -107,12 +118,16 @@ console.log(user)
       ...data,
       status: status,
     }
+   
+    const code = detect(dataForm.content);
+    console.log(code)
     mutate(dataForm);
+    navigate(ROUTES.ARTICLS);
   };
 
   return (
     <div className="add-article">
-      <Paper elevation={2} sx={{ p: 4, mx: 'auto' , backgroundColor:" rgb(193, 188, 181)" }}>
+      <Paper elevation={2} sx={{ p: 4, mx: 'auto', backgroundColor: " rgb(193, 188, 181)" }}>
         <Typography variant="h4" component="h1" gutterBottom>
           {t('add_article_page.title')}
         </Typography>
@@ -120,7 +135,7 @@ console.log(user)
           {t('add_article_page.subtitle')}
         </Typography>
 
-        <Box component="form"  onSubmit={handleSubmit(onSubmit)}>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           {/* Title Box */}
           <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
             <InputLabel>{t('add_article_page.form.title')}</InputLabel>
@@ -166,7 +181,7 @@ console.log(user)
               {...register('content')}
               error={!!errors.content}
               helperText={errors.content?.message}
-              
+
             />
           </Paper>
 
@@ -181,7 +196,7 @@ console.log(user)
                   fullWidth
                   {...register('category')}
                   error={!!errors.category}
-             
+
                 >
                   <MenuItem value="Philosophy of Mind">{t('add_article_page.categories.philosophy_of_mind')}</MenuItem>
                   <MenuItem value="Ethics">{t('add_article_page.categories.ethics')}</MenuItem>
@@ -203,8 +218,8 @@ console.log(user)
             <Button
               variant="outlined"
               size="large"
-              sx={{ 
-                px: 4, 
+              sx={{
+                px: 4,
                 py: 1.5,
                 textTransform: 'none',
                 fontSize: '1rem',
@@ -218,8 +233,8 @@ console.log(user)
             <Button
               variant="contained"
               size="large"
-              sx={{ 
-                px: 4, 
+              sx={{
+                px: 4,
                 py: 1.5,
                 textTransform: 'none',
                 fontSize: '1rem',
@@ -236,7 +251,7 @@ console.log(user)
             </Button>
           </Box>
         </Box>
-        
+
       </Paper>
       <ToastContainer
         position="top-right"

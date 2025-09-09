@@ -9,9 +9,7 @@ html {
   font-size: 10px;
 }
 
-body {
-  // background-color: rgb(69, 67, 67);
-}
+
 
 // Custom TextField styles
 .MuiTextField-root {
@@ -45,4 +43,8 @@ body {
 
 .MuiOutlinedInput-root.Mui-focused fieldset {
   border-color: #534e46 !important;
+}
+
+.MuiButtonBase-root{
+  border: none !important;
 }

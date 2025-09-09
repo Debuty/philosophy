@@ -1,8 +1,70 @@
 .article-details {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
   
   h1 {
     color: #333;
     margin-bottom: 20px;
   }
+
+  .article-content {
+    margin-bottom: 2rem;
+    
+    p {
+      margin-bottom: 1.5rem;
+      text-indent: 1.5rem;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .MuiPaper-root {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .MuiChip-root {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .MuiButton-root {
+    text-transform: none;
+    font-weight: 500;
+    
+    &.MuiButton-outlined {
+      border-radius: 8px;
+    }
+  }
+
+  .MuiIconButton-root {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    padding: 10px;
+    
+    .article-content {
+      font-size: 1rem;
+    }
+  }
+
+  svg path {
+    fill: white;
+  }
+  
+}
+
+.article-details-actions {
+  display: flex;
+  gap: 1rem;
 }

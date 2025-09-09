@@ -47,9 +47,9 @@ const { data: articles, isLoading } = useQuery({
       </Button>
       )}
       {isLoading ? <Loading />
-      : articles?.map((article) => (
+      :articles && articles.length > 0 ? articles?.map((article) => (
         <ArticlesCard article={article} key={article.id} />
-      ))}
+      )): <div className="no-articles-found">No articles found</div>}
         
     
     </div>
