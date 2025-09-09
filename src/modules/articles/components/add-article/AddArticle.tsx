@@ -137,7 +137,7 @@ const AddArticle: React.FC = () => {
 
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           {/* Title Box */}
-          <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
+          <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: "rgb(174 171 165) !important" }}>
             <InputLabel>{t('add_article_page.form.title')}</InputLabel>
             <TextField
               fullWidth
@@ -153,7 +153,7 @@ const AddArticle: React.FC = () => {
           </Paper>
 
           {/* Subtitle Box */}
-          <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
+          <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: "rgb(174 171 165) !important" }}>
             <InputLabel>{t('add_article_page.form.subtitle')}</InputLabel>
             <TextField
               fullWidth
@@ -168,7 +168,7 @@ const AddArticle: React.FC = () => {
           </Paper>
 
           {/* Article Content Box */}
-          <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
+          <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: "rgb(174 171 165) !important" }}>
             <InputLabel>{t('add_article_page.form.content')}</InputLabel>
             <TextField
               fullWidth
@@ -186,17 +186,17 @@ const AddArticle: React.FC = () => {
           </Paper>
 
           {/* Category and Tags Box */}
-          <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
+          <Paper elevation={1} sx={{ p: 3, mb: 3, backgroundColor: "rgb(174 171 165) !important" }}>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, md: 6 }}>
                 <InputLabel>{t('add_article_page.form.category')}</InputLabel>
                 <Select
                   value="Philosophy of Mind"
-                  label={t('add_article_page.form.category')}
+                  label=""
                   fullWidth
                   {...register('category')}
-                  error={!!errors.category}
-
+                  error={!!errors.category} 
+                 className='add-article-select'
                 >
                   <MenuItem value="Philosophy of Mind">{t('add_article_page.categories.philosophy_of_mind')}</MenuItem>
                   <MenuItem value="Ethics">{t('add_article_page.categories.ethics')}</MenuItem>

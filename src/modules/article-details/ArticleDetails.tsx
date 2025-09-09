@@ -14,7 +14,12 @@ import {
   Avatar,
   Divider,
   Chip,
-  IconButton
+  IconButton,
+  TextField,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -25,6 +30,7 @@ import {
 } from '@mui/icons-material';
 import Loading from '../../shared/loading/Loading';
 import './ArticleDetails.scss';
+import { detect } from 'tinyld';
 
 
 const ArticleDetails: React.FC = () => {
@@ -34,6 +40,29 @@ const ArticleDetails: React.FC = () => {
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState([
+    {
+      id: 1,
+      author: 'Ahmed Hassan',
+      avatar: '',
+      content: 'لقد أعجبني هذا المقال جداً لأنه ينقل المعرفة الفلسفية بشكل يسهل فهمه للجميع',
+      timestamp: '2 hours ago',
+      likes: 5
+    },
+    {
+      id: 2,
+      author: 'Sarah Johnson',
+      avatar: '',
+      content: 'Great read! The author has done an excellent job explaining complex philosophical concepts in an accessible way. Looking forward to more articles like this.',
+      timestamp: '1 day ago',
+      likes: 3
+    }
+  ]);
+
+  const code = detect(article?.content);     // -> "ar"
+
+console.log(code)
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,6 +113,31 @@ const ArticleDetails: React.FC = () => {
     }
   };
 
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      const comment = {
+        id: comments.length + 1,
+        author: 'You',
+        avatar: '',
+        content: newComment,
+        timestamp: 'Just now',
+        likes: 0
+      };
+      setComments(prev => [comment, ...prev]);
+      setNewComment('');
+    }
+  };
+
+  const handleLikeComment = (commentId: number) => {
+    setComments(prev =>
+      prev.map(comment =>
+        comment.id === commentId
+          ? { ...comment, likes: comment.likes + 1 }
+          : comment
+      )
+    );
+  };
+
   if (isLoading) {
     return <Loading message="Loading article..." />;
   }
@@ -95,8 +149,8 @@ const ArticleDetails: React.FC = () => {
           <Typography variant="h5" color="error">
             {lang === "ar" ? "خطأ في تحميل المقال" : "Error loading article"}
           </Typography>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={() => navigate(ROUTES.ARTICLS)}
             sx={{ mt: 2 }}
           >
@@ -124,9 +178,9 @@ const ArticleDetails: React.FC = () => {
         <Grid size={{ xs: 12, md: 8 }}>
           <Paper elevation={2} sx={{ p: 4, backgroundColor: "rgb(174 171 165) !important" }}>
             {/* Article Header */}
-            <Box sx={{ mb: 4 }}>
-              <Chip 
-                label={article.category} 
+            <Box sx={{ mb: 4 }}  dir={code === "ar" ? "rtl" : "ltr"}>
+              <Chip
+                label={article.category}
                 sx={{ mb: 2 }}
               />
               <Typography variant="h3" component="h1" gutterBottom>
@@ -135,7 +189,7 @@ const ArticleDetails: React.FC = () => {
               <Typography variant="h5" color="text.secondary" sx={{ mb: 3 }}>
                 {article.subtitle}
               </Typography>
-              
+
               {/* Article Meta */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <Typography variant="body2" color="text.secondary">
@@ -150,10 +204,10 @@ const ArticleDetails: React.FC = () => {
             <Divider sx={{ mb: 4 }} />
 
             {/* Article Content */}
-            <Box className="article-content">
-              <Typography 
-                variant="body1" 
-                sx={{ 
+            <Box className="article-content" dir={code === "ar" ? "rtl" : "ltr"}>
+              <Typography
+                variant="body1"
+                sx={{
                   fontSize: '1.7rem',
                   textAlign: 'justify',
                   whiteSpace: 'pre-wrap'
@@ -182,14 +236,92 @@ const ArticleDetails: React.FC = () => {
                 {dislikes} {lang === "ar" ? "عدم إعجاب" : "Dislike"}
               </Button>
               <div className="article-details-actions">
-                 <IconButton onClick={handleBookmark} color={isBookmarked ? "primary" : "default"}>
-                <BookmarkIcon />
-              </IconButton>
-              <IconButton onClick={handleShare}>
-                <ShareIcon />
-              </IconButton>
+                <IconButton onClick={handleBookmark} color={isBookmarked ? "primary" : "default"}>
+                  <BookmarkIcon />
+                </IconButton>
+                <IconButton onClick={handleShare}>
+                  <ShareIcon />
+                </IconButton>
               </div>
             </Box>
+          </Paper>
+
+          {/* Comments Section */}
+          <Paper elevation={2} sx={{ p: 4, mt: 3, backgroundColor: "rgb(174 171 165) !important" }}>
+            <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+              {lang === "ar" ? "التعليقات" : "Comments"} ({comments.length})
+            </Typography>
+
+            {/* Add Comment Form */}
+            <Box sx={{ mb: 4 }}>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                placeholder={lang === "ar" ? "اكتب تعليقك هنا..." : "Write your comment here..."}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                variant="outlined"
+                sx={{ mb: 2 }}
+              />
+              <Button
+                variant="contained"
+                onClick={handleAddComment}
+                disabled={!newComment.trim()}
+                sx={{
+                  backgroundColor: '#534e46',
+                  '&:hover': { backgroundColor: '#2c2820' }
+                }}
+              >
+                {lang === "ar" ? "إضافة تعليق" : "Add Comment"}
+              </Button>
+            </Box>
+
+            <Divider sx={{ mb: 3 }} />
+
+            {/* Comments List */}
+            <List>
+              {comments.map((comment) => (
+                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2 }}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: '#534e46' }}>
+                      {comment.author.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                        <Typography variant="subtitle2" fontWeight="bold">
+                          {comment.author}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {comment.timestamp}
+                        </Typography>
+                      </Box>
+                    }
+                    secondary={
+                      <Box>
+                        <Typography variant="body2" sx={{ mb: 1 , textAlign:lang === "ar" ? "right" : "left" }}>
+                          {comment.content}
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleLikeComment(comment.id)}
+                            sx={{ color: '#534e46' }}
+                          >
+                            <ThumbUpIcon fontSize="small" />
+                          </IconButton>
+                          <Typography variant="caption" color="text.secondary">
+                            {comment.likes} {lang === "ar" ? "إعجاب" : "likes"}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
           </Paper>
         </Grid>
 
@@ -199,11 +331,11 @@ const ArticleDetails: React.FC = () => {
             <Typography variant="h6" gutterBottom>
               {lang === "ar" ? "عن الكاتب" : "About the Author"}
             </Typography>
-            
+
             {authorProfile && (
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                <Avatar 
-                  src={authorProfile.avatar_url} 
+                <Avatar
+                  src={authorProfile.avatar_url}
                   sx={{ width: 80, height: 80, mb: 2 }}
                 />
                 <Typography variant="h6" gutterBottom>
@@ -212,11 +344,11 @@ const ArticleDetails: React.FC = () => {
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                   {authorProfile.bio}
                 </Typography>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   size="small"
                   onClick={() => navigate(`/profile/${article.author_id}`)}
-                  sx={{ border:"none"}}
+                  sx={{ border: "none" }}
                 >
                   {lang === "ar" ? "عرض الملف الشخصي" : "View Profile"}
                 </Button>
@@ -233,8 +365,11 @@ const ArticleDetails: React.FC = () => {
               {lang === "ar" ? "المزيد من المقالات قريباً..." : "More articles coming soon..."}
             </Typography>
           </Paper>
+
         </Grid>
+
       </Grid>
+
     </div>
   );
 };
