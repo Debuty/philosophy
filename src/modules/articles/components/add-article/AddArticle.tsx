@@ -35,7 +35,7 @@ const AddArticle: React.FC = () => {
   const [status, setStatus] = useState('draft');
   const [user, setUser] = useState<User | null>(null);
   const queryClient = useQueryClient();
-
+console.log(user)
   useEffect(() => {
     getCurrentUser().then((data: User | null) => setUser(data))
   }, [])
@@ -71,7 +71,7 @@ const AddArticle: React.FC = () => {
     }
   }
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, } = useMutation({
     mutationFn: addArticle,
     onSuccess: (data) => {
       console.log(data);
