@@ -40,6 +40,9 @@ const Header: React.FC = () => {
   };
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if(window.location.pathname === "/reset-password") {
+        return;
+      }
       setSession(session || null)
     })
 

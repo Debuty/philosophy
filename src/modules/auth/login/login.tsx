@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next';
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
 import {
-
   TextField,
   Button,
   Typography,
   InputLabel,
   Paper,
+  Link,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { ROUTES } from '../../../routes/pathes';
@@ -44,19 +44,27 @@ const Login: React.FC = () => {
   });
 
   const handelsignIn = async (data: LoginFormData) => {
+  console.log("handelsignIn");
     const { data: dataSignIn, error } = await supabase.auth.signInWithPassword(data);
     if (error) {
-
-
       throw error;
     }
     else {
-
       return dataSignIn;
     }
-
   }
 
+  const handleForgotPassword = async (email: string) => {
+    console.log("handleForgotPassword");
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) {
+      throw error;
+    }
+  }
+
+  console.log(window.location.origin);
   const { mutate, isPending} = useMutation({
     mutationFn: handelsignIn,
     onSuccess: (data) => {
@@ -67,6 +75,17 @@ const Login: React.FC = () => {
     onError: (error) => {
       console.error('Error signing in:', error.message);
       toast.error('Login failed');
+    },
+  });
+
+  const { mutate: forgotPassword, isPending: isForgotPasswordPending } = useMutation({
+    mutationFn: handleForgotPassword,
+    onSuccess: () => {
+      toast.success('Password reset email sent! Check your inbox.');
+    },
+    onError: (error) => {
+      console.error('Error sending reset email:', error.message);
+      toast.error('Failed to send reset email');
     },
   });
 
@@ -109,6 +128,39 @@ const Login: React.FC = () => {
               variant="outlined"
               fullWidth
             />
+          </Grid>
+
+          {/* Forgot Password Link */}
+          <Grid size={{ xs: 12, md: 12 }}>
+            <Link
+              component="button"
+              variant="body2"
+              onClick={() => {
+                const email = document.getElementById('email') as HTMLInputElement;
+                if (email?.value) {
+                  forgotPassword(email.value);
+                } else {
+                  toast.error('Please enter your email first');
+                }
+              }}
+              disabled={isForgotPasswordPending}
+              sx={{
+                textAlign: 'right',
+                display: 'block',
+                textDecoration: 'none',
+                fontWeight: '500',
+                fontSize: '1.4rem',
+                color: '#534e46',
+                '&:hover': {
+                  color: '#2c2820',
+                },
+                '&:disabled': {
+                  color: '#999',
+                }
+              }}
+            >
+              {isForgotPasswordPending ? 'Sending...' : 'Forgot Password ?'}
+            </Link>
           </Grid>
 
           {/* Submit Button */}

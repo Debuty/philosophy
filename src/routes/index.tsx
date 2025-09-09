@@ -17,6 +17,7 @@ const Timeline = React.lazy(() => import('../modules/timeline/Timeline'));
 
 const Login = React.lazy(() => import('../modules/auth/login/login'));
 const Signup = React.lazy(() => import('../modules/auth/signup/signup'));
+const ResetPassword = React.lazy(() => import('../modules/auth/reset-password/reset-password'));
 const Schools = React.lazy(() => import('../modules/schools/Schools'));
 const SchoolDetails = React.lazy(() => import('../modules/school-details/SchoolDetails'));
 const Books = React.lazy(() => import('../modules/books/Books'));
@@ -114,6 +115,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <Signup />
+          </Suspense>
+        ),
+      },
+      {
+        path: ROUTES.RESET_PASSWORD,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ResetPassword />
           </Suspense>
         ),
       },
