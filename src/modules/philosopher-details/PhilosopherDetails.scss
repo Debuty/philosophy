@@ -49,3 +49,22 @@
   font-weight: 500;
 }
 
+.philosopher-bio-sections {
+  width: 100%;
+  max-width: 100%;
+  
+  .MuiBox-root {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  // .MuiTypography-h5 {
+  //   border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  //   padding-bottom: 0.5rem;
+  // }
+}
+
