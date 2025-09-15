@@ -36,15 +36,18 @@ import type { User } from '@supabase/supabase-js';
 import EditIcon from '@mui/icons-material/Edit';
 
 // Define the comment type
-interface Comment {
-  id: string;
-  content: string;
-  created_at: string;
-  user_id: string;
-  profiles: {
-    username: string;
-  } | null;
-}
+// interface Comment {
+//   id: string;
+//   content: string;
+//   created_at: string;
+//   user_id: string;
+//   profiles: { username: string } | null;
+// }
+
+// type CommentData = Comment[] | null;
+
+
+
 
 
 const ArticleDetails: React.FC = () => {
@@ -52,29 +55,14 @@ const ArticleDetails: React.FC = () => {
   // const { id } = useParams();
   const navigate = useNavigate();
   const lang = useSelector((state: RootState) => state.locale.lang);
-  const [likes, setLikes] = useState(0);
-  const [dislikes, setDislikes] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [newComment, setNewComment] = useState('');
-  // const [comments, setComments] = useState<any[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const queryClient = useQueryClient();
   useEffect(() => {
-    // const fetchComments = async () => {
-    //   const { data, error } = await supabase
-    //     .from("comments")
-    //     .select("id, content, created_at, user_id, profiles!comments_user_id_fkey1(username)")
-    //     .eq("article_id", article.id)
-    //     .order("created_at", { ascending: false });
-
-    //   if (error) console.error(error);
-    //   else setComments(data || []);
-    // };
-
-    // fetchComments();
-
     getCurrentUser().then(data => setUser(data))
   }, [article.id, user?.id]);
+
   const code = detect(article?.content);     // -> "ar"
 
   useEffect(() => {
@@ -82,7 +70,7 @@ const ArticleDetails: React.FC = () => {
   }, []);
 
 
-  const fetchComments = async (): Promise<Comment[]> => {
+  const fetchComments = async (): Promise<any> => {
     const { data, error } = await supabase
       .from("comments")
       .select("id, content, created_at, user_id, profiles!comments_user_id_fkey1(username)")
@@ -91,22 +79,19 @@ const ArticleDetails: React.FC = () => {
 
     if (error) {
       console.error(error);
-      return [];
+      return null;
     }
-    
-    // Transform the data to match our Comment interface
-    return data?.map(comment => ({
-      ...comment,
-      profiles: comment.profiles?.[0] || null
-    })) || [];
+
+    console.log("data in fetchComments", data)
+    return data || null;
   };
 
- const { data: comments } = useQuery<Comment[]>({
-  queryKey: ['comments', article.id],
-  queryFn: fetchComments,
-  refetchOnWindowFocus: false,
-  enabled: !!article.id
- });
+  const { data: comments } = useQuery<any>({
+    queryKey: ['comments', article.id],
+    queryFn: fetchComments,
+    refetchOnWindowFocus: false,
+    enabled: !!article.id
+  });
 
 
   const getAuthorProfile = async () => {
@@ -129,12 +114,81 @@ const ArticleDetails: React.FC = () => {
     enabled: !!article?.author_id
   });
 
-  const handleLike = () => {
-    setLikes(prev => prev == 1 ? 0 : prev + 1);
+
+  const getCommentAuthorProfile = async () => {
+    if (user?.id) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user?.id)
+        .single();
+      if (error) throw error;
+      return data;
+    }
+    return null;
   };
 
-  const handleDislike = () => {
-    setDislikes(prev => prev == 1 ? 0 : prev + 1);
+  const { data: commentAuthorProfile } = useQuery({
+    queryKey: ['profile', user?.id],
+    queryFn: getCommentAuthorProfile,
+    refetchOnWindowFocus: false,
+    enabled: !!user?.id && !!comments
+  });
+
+
+  const getCounts = async () => {
+    const { data: cnt } = await supabase
+      .from("article_reaction_counts")
+      .select("likes, dislikes")
+      .eq("article_id", article.id)
+      .maybeSingle();
+
+    return {
+      likes: cnt?.likes ?? 0,
+      dislikes: cnt?.dislikes ?? 0,
+    };
+
+  }
+
+  const { data: counts } = useQuery({
+    queryKey: ['article_reaction_counts', article.id],
+    queryFn: getCounts,
+    refetchOnWindowFocus: false,
+    enabled: !!article.id
+  });
+
+  const handleLike = async () => {
+
+    const { error, data } = await supabase
+      .from("article_reactions")
+      .upsert(
+        [{ article_id: article.id, user_id: user?.id, reaction: "like" }],
+        { onConflict: "article_id,user_id" }
+      );
+    if (error) {
+      console.error(error);
+    }
+    else {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article.id] });
+    }
+  };
+
+  const handleDislike = async () => {
+
+    const { error, data } = await supabase
+      .from("article_reactions")
+      .upsert(
+        [{ article_id: article.id, user_id: user?.id, reaction: "dislike" }],
+        { onConflict: "article_id,user_id" }
+      );
+    if (error) {
+      console.error(error);
+    }
+    else {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article.id] });
+    }
   };
 
   const handleBookmark = () => {
@@ -263,7 +317,7 @@ const ArticleDetails: React.FC = () => {
                 onClick={handleLike}
                 sx={{ minWidth: 100 }}
               >
-                {likes} {lang === "ar" ? "إعجاب" : "Like"}
+                {counts?.likes} {lang === "ar" ? "إعجاب" : "Like"}
               </Button>
               <Button
                 variant="outlined"
@@ -271,7 +325,7 @@ const ArticleDetails: React.FC = () => {
                 onClick={handleDislike}
                 sx={{ minWidth: 100, whiteSpace: 'nowrap' }}
               >
-                {dislikes} {lang === "ar" ? "عدم إعجاب" : "Dislike"}
+                {counts?.dislikes} {lang === "ar" ? "عدم إعجاب" : "Dislike"}
               </Button>
               <div className="article-details-actions">
                 <IconButton onClick={handleBookmark} color={isBookmarked ? "primary" : "default"}>
@@ -332,7 +386,7 @@ const ArticleDetails: React.FC = () => {
 
             {/* Comments List */}
             <List className="article-details-comments-list">
-              {comments?.map((comment) => (
+              {comments?.map((comment: any) => (
                 <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2, padding: '1rem', borderRadius: '1rem', backgroundColor: ' #b8b4ad' }}>
                   <ListItemAvatar>
                     <Avatar sx={{ bgcolor: '#534e46' }}>
@@ -342,14 +396,14 @@ const ArticleDetails: React.FC = () => {
                   <Box sx={{ flex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                       <Typography variant="subtitle2" fontWeight="bold" sx={{ fontSize: '1.3rem' }}>
-                        {comment.profiles?.username == user?.user_metadata.username ? 'You' : comment.profiles?.username || 'Anonymous'}
+                        {comment.profiles?.username == commentAuthorProfile?.username ? 'You' : comment.profiles?.username || 'Anonymous'}
                       </Typography>
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
                         {comment.created_at ? new Date(comment.created_at).toLocaleDateString() + ' ' + new Date(comment.created_at).toLocaleTimeString() : ''}
                       </Typography>
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '1.3rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 1 }} >
-                        {comment.profiles?.username == user?.user_metadata.username ? <EditIcon /> : ''}
-                        {comment.profiles?.username == user?.user_metadata.username ? <DeleteForeverIcon /> : ''}
+                        {comment.profiles?.username == commentAuthorProfile?.username ? <EditIcon /> : ''}
+                        {comment.profiles?.username == commentAuthorProfile?.username ? <DeleteForeverIcon /> : ''}
                       </Typography>
                     </Box>
                     <Typography variant="body2" sx={{ mb: 1, textAlign: lang === "ar" ? "right" : "left", fontSize: '1.3rem' }}>

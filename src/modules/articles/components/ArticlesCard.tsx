@@ -40,6 +40,18 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
         return null
     }
 
+    const getCounts = async () => {
+        const { data, error } = await supabase.from('article_reaction_counts').select('*').eq('article_id', article.id).single();
+        if (error) throw error;
+        return data;
+    }   
+
+    const { data: counts } = useQuery({
+        queryKey: ['article_reaction_counts', article.id],
+        queryFn: () => getCounts(),
+        refetchOnWindowFocus: false
+    })
+
     // get profile
     const { data: authorProfile, isLoading, error } = useQuery({
         queryKey: ['profile', article.author_id],
@@ -91,10 +103,10 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
                         <Typography className="articles-card-category">{lang == "ar" ? "الفئة" : "Category"} : {article.category}</Typography>
                         <Box className="articles-card-button-container" sx={{ display: "flex", gap: "1rem" }}>
                             <Button className="articles-card-button-like" variant='outlined'>
-                                like 0
+                                like {counts?counts.likes:0}
                             </Button>
                             <Button className="articles-card-button-dislike" variant='outlined'>
-                                dislike 0
+                                dislike {counts?counts.dislikes:0}
                             </Button>
                         </Box>
                     </Grid>
