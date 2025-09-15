@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
 import { ROUTES } from '../../routes/pathes';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../supabaseClient';
 import {
   Paper,
@@ -19,54 +19,95 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
   ThumbUp as ThumbUpIcon,
   ThumbDown as ThumbDownIcon,
   Share as ShareIcon,
-  Bookmark as BookmarkIcon
+  Bookmark as BookmarkIcon,
+  DeleteForever as DeleteForeverIcon
 } from '@mui/icons-material';
 import Loading from '../../shared/loading/Loading';
 import './ArticleDetails.scss';
 import { detect } from 'tinyld';
+import { getCurrentUser } from '../../utils/auth';
+import type { User } from '@supabase/supabase-js';
+import EditIcon from '@mui/icons-material/Edit';
+
+// Define the comment type
+interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+  profiles: {
+    username: string;
+  } | null;
+}
 
 
 const ArticleDetails: React.FC = () => {
   const { article } = useLocation().state;
+  // const { id } = useParams();
   const navigate = useNavigate();
   const lang = useSelector((state: RootState) => state.locale.lang);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      author: 'Ahmed Hassan',
-      avatar: '',
-      content: 'لقد أعجبني هذا المقال جداً لأنه ينقل المعرفة الفلسفية بشكل يسهل فهمه للجميع',
-      timestamp: '2 hours ago',
-      likes: 5
-    },
-    {
-      id: 2,
-      author: 'Sarah Johnson',
-      avatar: '',
-      content: 'Great read! The author has done an excellent job explaining complex philosophical concepts in an accessible way. Looking forward to more articles like this.',
-      timestamp: '1 day ago',
-      likes: 3
-    }
-  ]);
+  // const [comments, setComments] = useState<any[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    // const fetchComments = async () => {
+    //   const { data, error } = await supabase
+    //     .from("comments")
+    //     .select("id, content, created_at, user_id, profiles!comments_user_id_fkey1(username)")
+    //     .eq("article_id", article.id)
+    //     .order("created_at", { ascending: false });
 
+    //   if (error) console.error(error);
+    //   else setComments(data || []);
+    // };
+
+    // fetchComments();
+
+    getCurrentUser().then(data => setUser(data))
+  }, [article.id, user?.id]);
   const code = detect(article?.content);     // -> "ar"
-
-console.log(code)
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+
+  const fetchComments = async (): Promise<Comment[]> => {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("id, content, created_at, user_id, profiles!comments_user_id_fkey1(username)")
+      .eq("article_id", article.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      return [];
+    }
+    
+    // Transform the data to match our Comment interface
+    return data?.map(comment => ({
+      ...comment,
+      profiles: comment.profiles?.[0] || null
+    })) || [];
+  };
+
+ const { data: comments } = useQuery<Comment[]>({
+  queryKey: ['comments', article.id],
+  queryFn: fetchComments,
+  refetchOnWindowFocus: false,
+  enabled: !!article.id
+ });
+
 
   const getAuthorProfile = async () => {
     if (article?.author_id) {
@@ -113,30 +154,8 @@ console.log(code)
     }
   };
 
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      const comment = {
-        id: comments.length + 1,
-        author: 'You',
-        avatar: '',
-        content: newComment,
-        timestamp: 'Just now',
-        likes: 0
-      };
-      setComments(prev => [comment, ...prev]);
-      setNewComment('');
-    }
-  };
 
-  const handleLikeComment = (commentId: number) => {
-    setComments(prev =>
-      prev.map(comment =>
-        comment.id === commentId
-          ? { ...comment, likes: comment.likes + 1 }
-          : comment
-      )
-    );
-  };
+
 
   if (isLoading) {
     return <Loading message="Loading article..." />;
@@ -161,6 +180,25 @@ console.log(code)
     );
   }
 
+
+  const handleAddComment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const comment = (e.target as HTMLFormElement).comment.value;
+    const { data, error } = await supabase
+      .from("comments")
+      .insert([{ article_id: article.id, content: comment, user_id: user?.id }])
+      .select();
+
+    if (error) {
+      console.error('Error adding comment:', error.message);
+    } else {
+      console.log(data);
+    }
+    setNewComment('');
+    queryClient.invalidateQueries({ queryKey: ['comments', article.id] });
+  };
+  console.log("user in section", user)
+  console.log("comments in section", comments)
   return (
     <div className="article-details">
       {/* Back Button */}
@@ -178,7 +216,7 @@ console.log(code)
         <Grid size={{ xs: 12, md: 8 }}>
           <Paper elevation={2} sx={{ p: 4, backgroundColor: "rgb(174 171 165) !important" }}>
             {/* Article Header */}
-            <Box sx={{ mb: 4 }}  dir={code === "ar" ? "rtl" : "ltr"}>
+            <Box sx={{ mb: 4 }} dir={code === "ar" ? "rtl" : "ltr"}>
               <Chip
                 label={article.category}
                 sx={{ mb: 2 }}
@@ -249,76 +287,92 @@ console.log(code)
           {/* Comments Section */}
           <Paper elevation={2} sx={{ p: 4, mt: 3, backgroundColor: "rgb(174 171 165) !important" }}>
             <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-              {lang === "ar" ? "التعليقات" : "Comments"} ({comments.length})
+              {lang === "ar" ? "التعليقات" : "Comments"} ({comments?.length})
             </Typography>
 
             {/* Add Comment Form */}
             <Box sx={{ mb: 4 }}>
-              <TextField
-                fullWidth
-                multiline
-                rows={3}
-                placeholder={lang === "ar" ? "اكتب تعليقك هنا..." : "Write your comment here..."}
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                variant="outlined"
-                sx={{ mb: 2 }}
-              />
-              <Button
-                variant="contained"
-                onClick={handleAddComment}
-                disabled={!newComment.trim()}
-                sx={{
-                  backgroundColor: '#534e46',
-                  '&:hover': { backgroundColor: '#2c2820' }
-                }}
-              >
-                {lang === "ar" ? "إضافة تعليق" : "Add Comment"}
-              </Button>
+              <form onSubmit={handleAddComment}>
+                <TextField
+                  name="comment"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  placeholder={lang === "ar" ? "اكتب تعليقك هنا..." : "Write your comment here..."}
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  variant="outlined"
+                  sx={{ mb: 2 }}
+                />
+
+                {user ? (
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={!newComment.trim()}
+                    sx={{
+                      backgroundColor: '#534e46',
+                      '&:hover': { backgroundColor: '#2c2820' }
+                    }}
+                  >
+                    {lang === "ar" ? "إضافة تعليق" : "Add Comment"}
+                  </Button>
+                ) : (<Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
+                    {lang === "ar" ? "يجب عليك تسجيل الدخول لإضافة تعليق" : "You must be logged in to add a comment"}
+                  </Typography>
+                  <Button variant="contained" onClick={() => navigate(ROUTES.LOGIN)}>
+                    {lang === "ar" ? "تسجيل الدخول" : "Login"}
+                  </Button>
+                </Box>)}
+              </form>
             </Box>
 
             <Divider sx={{ mb: 3 }} />
 
             {/* Comments List */}
-            <List>
-              {comments.map((comment) => (
-                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2 }}>
+            <List className="article-details-comments-list">
+              {comments?.map((comment) => (
+                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2, padding: '1rem', borderRadius: '1rem', backgroundColor: ' #b8b4ad' }}>
                   <ListItemAvatar>
                     <Avatar sx={{ bgcolor: '#534e46' }}>
-                      {comment.author.charAt(0).toUpperCase()}
+                      {comment?.profiles?.username?.charAt(0)?.toUpperCase() || '?'}
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <Typography variant="subtitle2" fontWeight="bold">
-                          {comment.author}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {comment.timestamp}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={
-                      <Box>
-                        <Typography variant="body2" sx={{ mb: 1 , textAlign:lang === "ar" ? "right" : "left" }}>
-                          {comment.content}
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleLikeComment(comment.id)}
-                            sx={{ color: '#534e46' }}
-                          >
-                            <ThumbUpIcon fontSize="small" />
-                          </IconButton>
-                          <Typography variant="caption" color="text.secondary">
-                            {comment.likes} {lang === "ar" ? "إعجاب" : "likes"}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    }
-                  />
+                  <Box sx={{ flex: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                      <Typography variant="subtitle2" fontWeight="bold" sx={{ fontSize: '1.3rem' }}>
+                        {comment.profiles?.username == user?.user_metadata.username ? 'You' : comment.profiles?.username || 'Anonymous'}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
+                        {comment.created_at ? new Date(comment.created_at).toLocaleDateString() + ' ' + new Date(comment.created_at).toLocaleTimeString() : ''}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '1.3rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 1 }} >
+                        {comment.profiles?.username == user?.user_metadata.username ? <EditIcon /> : ''}
+                        {comment.profiles?.username == user?.user_metadata.username ? <DeleteForeverIcon /> : ''}
+                      </Typography>
+                    </Box>
+                    <Typography variant="body2" sx={{ mb: 1, textAlign: lang === "ar" ? "right" : "left", fontSize: '1.3rem' }}>
+                      {comment.content}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <IconButton
+                        size="small"
+
+                        sx={{ color: '#534e46' }}
+                      >
+                        <ThumbUpIcon fontSize="small" />
+                        <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>0</span>
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        sx={{ color: '#534e46' }}
+                      >
+                        <ThumbDownIcon fontSize="small" />
+                        <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>0</span>
+                      </IconButton>
+                    </Box>
+                  </Box>
                 </ListItem>
               ))}
             </List>
