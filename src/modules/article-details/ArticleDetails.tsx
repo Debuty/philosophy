@@ -34,6 +34,7 @@ import { detect } from 'tinyld';
 import { getCurrentUser } from '../../utils/auth';
 import type { User } from '@supabase/supabase-js';
 import EditIcon from '@mui/icons-material/Edit';
+import { toast, ToastContainer } from 'react-toastify';
 
 // Define the comment type
 // interface Comment {
@@ -167,6 +168,7 @@ const ArticleDetails: React.FC = () => {
       );
     if (error) {
       console.error(error);
+      toast.error("Logged in to like");
     }
     else {
       console.log(data);
@@ -184,6 +186,7 @@ const ArticleDetails: React.FC = () => {
       );
     if (error) {
       console.error(error);
+      toast.error("Logged in to dislike");
     }
     else {
       console.log(data);
@@ -204,7 +207,8 @@ const ArticleDetails: React.FC = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-      // You could show a toast notification here
+  
+      toast.error("Copied to clipboard");
     }
   };
 
@@ -477,7 +481,7 @@ const ArticleDetails: React.FC = () => {
         </Grid>
 
       </Grid>
-
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
     </div>
   );
 };

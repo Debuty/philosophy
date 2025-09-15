@@ -2,7 +2,8 @@
 
     .articles-card-paper {
         padding: 2rem;
-        background-color:  rgb(193, 188, 181) !important;
+        background-color: rgb(193, 188, 181) !important;
+
         .articles-card-grid {
             .articles-card-grid-item {
                 .articles-card-title {
@@ -21,37 +22,43 @@
                 }
 
                 .articles-card-box {
-                   
+
                     .articles-card-avatar-container {
                         .articles-card-avatar {
                             width: 100px;
                             height: 100px;
                         }
                     }
+
                     .articles-card-avatar-info-container {
                         .articles-card-avatar-name {
                             font-size: 2rem;
                             font-weight: 600;
                         }
+
                         .articles-card-avatar-field {
                             font-size: 2rem;
                             font-weight: 500;
                         }
                     }
                 }
+
                 .articles-card-time {
                     font-size: 2rem;
                     font-weight: 500;
                 }
+
                 .articles-card-category {
                     font-size: 2rem;
                     font-weight: 500;
                 }
+
                 .articles-card-button-container {
                     .articles-card-button-like {
                         font-size: 2rem;
                         font-weight: 500;
                     }
+
                     .articles-card-button-dislike {
                         font-size: 2rem;
                         font-weight: 500;
@@ -60,27 +67,30 @@
             }
         }
     }
-  
+
 }
 
 @media (max-width: 900px) {
-    .articles-card{
-.articles-card-grid{
-    gap: 2rem;
-}
+    .articles-card {
+        .articles-card-grid {
+            gap: 2rem;
+        }
 
-    .article-info{
-        order: 2;
-    }
-    .author-info{
-        text-align: center;
-        border-bottom: 1px solid #534e46;
-        border-left: none;
-        padding-bottom: 2rem;
-    }
-    .articles-card-box{
-        flex-direction: column;
+        .article-info {
+            order: 2;
+        }
 
+        .author-info {
+            text-align: center;
+            border-bottom: 1px solid #534e46;
+            border-left: none;
+            padding-bottom: 2rem;
+        }
+
+        .articles-card-box {
+            flex-direction: column;
+
+        }
     }
-    }
+   
 }

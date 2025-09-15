@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../../supabaseClient';
 import Loading from '../../../shared/loading/Loading';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 interface ArticleData {
     title: string;
@@ -71,7 +73,7 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
         <div className="articles-card">
             <Paper className="articles-card-paper">
                 <Grid container className="articles-card-grid">
-                    <Grid size={{ xs: 12, md: 9 }} className="articles-card-grid-item article-info" sx={{ display: "flex", flexDirection: "column", gap: "1rem", paddingRight: "3.5rem", textAlign: 'justify' }} >
+                    <Grid size={{ xs: 12, md: 9 }} className="articles-card-grid-item article-info" sx={{ display: "flex", flexDirection: "column", gap: "1rem", paddingRight: "3.5rem", textAlign: 'left' }} >
                         <Typography className="articles-card-title">
                             { article.title}
                         </Typography>
@@ -101,13 +103,13 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
                             Time: {article.created_at ? new Date(article.created_at).toLocaleDateString() : "Wrong Date"}
                         </Typography>
                         <Typography className="articles-card-category">{lang == "ar" ? "الفئة" : "Category"} : {article.category}</Typography>
-                        <Box className="articles-card-button-container" sx={{ display: "flex", gap: "1rem" }}>
-                            <Button className="articles-card-button-like" variant='outlined'>
-                                like {counts?counts.likes:0}
-                            </Button>
-                            <Button className="articles-card-button-dislike" variant='outlined'>
-                                dislike {counts?counts.dislikes:0}
-                            </Button>
+                        <Box className="articles-card-button-container" sx={{ display: "flex", gap: "2rem", marginTop: "2rem" }}>
+                            <div className="articles-card-button-like" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
+                                 <ThumbUpIcon sx={{ fontSize: '2rem' }} /> {counts?counts.likes:0}
+                            </div>
+                            <div className="articles-card-button-dislike" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
+                                <ThumbDownIcon sx={{ fontSize: '2rem' }} /> {counts?counts.dislikes:0}
+                            </div>
                         </Box>
                     </Grid>
                 </Grid>
