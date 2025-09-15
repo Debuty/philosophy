@@ -264,7 +264,7 @@ const ArticleDetails: React.FC = () => {
         variant="outlined"
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate(ROUTES.ARTICLS)}
-        sx={{ mb: 3 }}
+        sx={{ mb: 3,direction:"ltr" }}
       >
         {lang === "ar" ? "العودة للمقالات" : "Back to Articles"}
       </Button>
@@ -319,17 +319,17 @@ const ArticleDetails: React.FC = () => {
                 variant="outlined"
                 startIcon={<ThumbUpIcon />}
                 onClick={handleLike}
-                sx={{ minWidth: 100 }}
+                sx={{ direction:"ltr"}}
               >
-                {counts?.likes} {lang === "ar" ? "إعجاب" : "Like"}
+                {counts?.likes}
               </Button>
               <Button
                 variant="outlined"
                 startIcon={<ThumbDownIcon />}
                 onClick={handleDislike}
-                sx={{ minWidth: 100, whiteSpace: 'nowrap' }}
+                sx={{whiteSpace: 'nowrap' ,direction:"ltr" }}
               >
-                {counts?.dislikes} {lang === "ar" ? "عدم إعجاب" : "Dislike"}
+                {counts?.dislikes} 
               </Button>
               <div className="article-details-actions">
                 <IconButton onClick={handleBookmark} color={isBookmarked ? "primary" : "default"}>
@@ -391,7 +391,7 @@ const ArticleDetails: React.FC = () => {
             {/* Comments List */}
             <List className="article-details-comments-list">
               {comments?.map((comment: any) => (
-                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2, padding: '1rem', borderRadius: '1rem', backgroundColor: ' #b8b4ad' }}>
+                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2, padding: '1rem', borderRadius: '1rem', backgroundColor: ' #b8b4ad' , direction:detect(comment.content) === "ar" ? "rtl" : "ltr" }}>
                   <ListItemAvatar>
                     <Avatar sx={{ bgcolor: '#534e46' }}>
                       {comment?.profiles?.username?.charAt(0)?.toUpperCase() || '?'}
@@ -410,21 +410,21 @@ const ArticleDetails: React.FC = () => {
                         {comment.profiles?.username == commentAuthorProfile?.username ? <DeleteForeverIcon /> : ''}
                       </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{ mb: 1, textAlign: lang === "ar" ? "right" : "left", fontSize: '1.3rem' }}>
+                    <Typography variant="body2" sx={{ mb: 1, textAlign: detect(comment.content) === "ar" ? "right" : "left", fontSize: '1.3rem' }}>
                       {comment.content}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <IconButton
                         size="small"
 
-                        sx={{ color: '#534e46' }}
+                        sx={{ color: '#534e46' ,direction:"ltr"}}
                       >
                         <ThumbUpIcon fontSize="small" />
                         <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>0</span>
                       </IconButton>
                       <IconButton
                         size="small"
-                        sx={{ color: '#534e46' }}
+                        sx={{ color: '#534e46' ,direction:"ltr"}}
                       >
                         <ThumbDownIcon fontSize="small" />
                         <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>0</span>
