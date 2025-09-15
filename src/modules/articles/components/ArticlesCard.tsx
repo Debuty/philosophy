@@ -46,7 +46,7 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
         const { data, error } = await supabase.from('article_reaction_counts').select('*').eq('article_id', article.id).single();
         if (error) throw error;
         return data;
-    }   
+    }
 
     const { data: counts } = useQuery({
         queryKey: ['article_reaction_counts', article.id],
@@ -62,10 +62,10 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
     })
     console.log(authorProfile)
 
-    if(isLoading) {
+    if (isLoading) {
         return <Loading message="Loading article..." />
     }
-    if(error) {
+    if (error) {
         return <div>Error loading article</div>
     }
 
@@ -75,20 +75,20 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
                 <Grid container className="articles-card-grid">
                     <Grid size={{ xs: 12, md: 9 }} className="articles-card-grid-item article-info" sx={{ display: "flex", flexDirection: "column", gap: "1rem", paddingRight: "3.5rem", textAlign: 'left' }} >
                         <Typography className="articles-card-title">
-                            { article.title}
+                            {article.title}
                         </Typography>
                         <Typography className="articles-card-description" sx={{ color: "#777065 !important" }}>
-                            { article.subtitle}
+                            {article.subtitle}
                         </Typography>
 
-                        <Button onClick={() => navigate(`/articles/${article.id}`, { state: { article } })}  className="articles-card-button" sx={{ alignSelf: "flex-start" }}>
+                        <Button onClick={() => navigate(`/articles/${article.id}`, { state: { article } })} className="articles-card-button" sx={{ alignSelf: "flex-start" }}>
                             {lang == "ar" ? "اقرأ المزيد" : "Read More"}
                         </Button>
                     </Grid>
                     <Grid size={{ xs: 12, md: 3 }} className="articles-card-grid-item author-info" sx={lang == "ar" ? { borderRight: "1px solid #534e46", paddingRight: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" } : { borderLeft: "1px solid #534e46", paddingLeft: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" }} >
                         <Box className="articles-card-box " sx={{ display: "flex", gap: "1rem" }}>
                             <div className="articles-card-avatar-container">
-                                    <Avatar className="articles-card-avatar"  />
+                                <Avatar className="articles-card-avatar" />
                             </div>
                             <div className="articles-card-avatar-info-container">
                                 <Typography className="articles-card-avatar-name">
@@ -105,10 +105,10 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
                         <Typography className="articles-card-category">{lang == "ar" ? "الفئة" : "Category"} : {article.category}</Typography>
                         <Box className="articles-card-button-container" sx={{ display: "flex", gap: "2rem", marginTop: "2rem" }}>
                             <div className="articles-card-button-like" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
-                                 <ThumbUpIcon sx={{ fontSize: '2rem' }} /> {counts?counts.likes:0}
+                                <ThumbUpIcon sx={{ fontSize: '2rem' }} /> {counts ? counts.likes : 0}
                             </div>
                             <div className="articles-card-button-dislike" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }} >
-                                <ThumbDownIcon sx={{ fontSize: '2rem' }} /> {counts?counts.dislikes:0}
+                                <ThumbDownIcon sx={{ fontSize: '2rem' }} /> {counts ? counts.dislikes : 0}
                             </div>
                         </Box>
                     </Grid>

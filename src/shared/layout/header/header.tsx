@@ -15,7 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 // @ts-ignore
 import { supabase } from '../../../supabaseClient';
 import { AppBar, Toolbar, Avatar, IconButton, Typography, Menu, MenuItem, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
-import { AccountCircle, Home, People, Article, Timeline, School, MenuBook, Logout, Login } from "@mui/icons-material";
+import { AccountCircle, Home, People, Article, School,  Logout, Login } from "@mui/icons-material";
 const Header: React.FC = () => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ const Header: React.FC = () => {
   };
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if(window.location.pathname === "/reset-password") {
+      if (window.location.pathname === "/reset-password") {
         return;
       }
       setSession(session || null)
@@ -69,9 +69,9 @@ const Header: React.FC = () => {
     { text: t("nav.home", { ns: "header" }), icon: <Home />, path: ROUTES.HOME },
     { text: t("nav.philosophers", { ns: "header" }), icon: <People />, path: ROUTES.PHILOSOPHERS },
     { text: t("nav.articles", { ns: "header" }), icon: <Article />, path: ROUTES.ARTICLS },
-    { text: t("nav.timeline", { ns: "header" }), icon: <Timeline />, path: ROUTES.TIMELINE },
+    // { text: t("nav.timeline", { ns: "header" }), icon: <Timeline />, path: ROUTES.TIMELINE },
     { text: t("nav.schools", { ns: "header" }), icon: <School />, path: ROUTES.SCHOOLS },
-    { text: t("nav.books", { ns: "header" }), icon: <MenuBook />, path: ROUTES.BOOKS },
+    // { text: t("nav.books", { ns: "header" }), icon: <MenuBook />, path: ROUTES.BOOKS },
   ]
 
   const handleNavigation = (path: string) => {
@@ -187,7 +187,7 @@ const Header: React.FC = () => {
                 {t("nav.schools", { ns: "header" })}
               </Link>
             </li>
-            <li className="header__item">
+            {/* <li className="header__item">
               <Link style={{ display: "contents" }} to={ROUTES.BOOKS}>
                 {t("nav.books", { ns: "header" })}
               </Link>
@@ -196,7 +196,7 @@ const Header: React.FC = () => {
               <Link to={ROUTES.TIMELINE} style={{ display: "contents" }}>
                 {t("nav.timeline", { ns: "header" })}
               </Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
         <div className="header__image-wraper">
@@ -219,8 +219,9 @@ const Header: React.FC = () => {
         <div style={{ padding: '20px' }}>
 
           <div>
+
             <div className="header__lang-button-container" style={{ display: "flex", justifyContent: "space-between", marginBottom: "2rem", alignItems: "center" }}>
-              <IconButton
+              {session?.user.user_metadata.username && <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -230,7 +231,7 @@ const Header: React.FC = () => {
               >
                 <AccountCircle sx={{ fontSize: "3rem" }} />
 
-              </IconButton>
+              </IconButton>}
 
               {lang == "ar" ? (
                 <Button
