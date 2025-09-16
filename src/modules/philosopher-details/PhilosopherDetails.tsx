@@ -10,6 +10,7 @@ import { supabase } from '../../supabaseClient';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../../shared/loading/Loading';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { debugLog } from '../../utils/debug';
 
 const PhilosopherDetails: React.FC = () => {
   const { philosopher } = useLocation().state;
@@ -36,7 +37,7 @@ const PhilosopherDetails: React.FC = () => {
     queryFn: () => getPhilosopherBio(philosopher.id)
   })
 
-  console.log(philosopherBio)
+  debugLog(philosopherBio)
 
   useEffect(() => {
     window.scrollTo(0, 0);

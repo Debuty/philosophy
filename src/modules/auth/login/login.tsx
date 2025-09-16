@@ -19,6 +19,7 @@ import { ROUTES } from '../../../routes/pathes';
 import './login.scss';
 import { useMutation } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
+import { debugLog } from '../../../utils/debug';
 
 // Zod validation schema
 const loginSchema = z.object({
@@ -44,7 +45,7 @@ const Login: React.FC = () => {
   });
 
   const handelsignIn = async (data: LoginFormData) => {
-  console.log("handelsignIn");
+  debugLog("handelsignIn");
     const { data: dataSignIn, error } = await supabase.auth.signInWithPassword(data);
     if (error) {
       throw error;
@@ -55,7 +56,7 @@ const Login: React.FC = () => {
   }
 
   const handleForgotPassword = async (email: string) => {
-    console.log("handleForgotPassword");
+    debugLog("handleForgotPassword");
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
@@ -64,11 +65,11 @@ const Login: React.FC = () => {
     }
   }
 
-  console.log(window.location.origin);
+  debugLog(window.location.origin);
   const { mutate, isPending} = useMutation({
     mutationFn: handelsignIn,
     onSuccess: (data) => {
-      console.log(data);
+      debugLog(data);
       navigate(ROUTES.PROFILE);
       toast.success('Login successful');
     },

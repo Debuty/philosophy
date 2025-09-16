@@ -16,6 +16,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { supabase } from '../../../supabaseClient';
 import { AppBar, Toolbar, Avatar, IconButton, Typography, Menu, MenuItem, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import { AccountCircle, Home, People, Article, School,  Logout, Login } from "@mui/icons-material";
+import { debugLog } from "../../../utils/debug";
 const Header: React.FC = () => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ const Header: React.FC = () => {
     document.documentElement.setAttribute("lang", "ar");
     document.documentElement.setAttribute("dir", "rtl");
     dispatch(changeLang({ dir: "rtl", lang: "ar" }));
-    console.log(store.getState().locale);
+    debugLog(store.getState().locale);
   };
 
   const SetLangEn = () => {
@@ -55,7 +56,7 @@ const Header: React.FC = () => {
     if (error) {
       console.error('Error signing out:', error.message);
     } else {
-      console.log('User signed out successfully');
+      debugLog('User signed out successfully');
     }
     setSidebarOpen(false)
   }

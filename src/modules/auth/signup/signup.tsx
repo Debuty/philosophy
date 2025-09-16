@@ -23,6 +23,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import './signup.scss'; 
 import { ROUTES } from '../../../routes/pathes';
 import { useNavigate } from 'react-router-dom';
+import { debugLog } from '../../../utils/debug';
 
 // Zod validation schema
 const signupSchema = z.object({
@@ -54,7 +55,7 @@ const Signup: React.FC = () => {
   });
 
   const onSubmit = async (dataForm: SignupFormData) => {
-    console.log('Signup data:', dataForm);
+    debugLog('Signup data:', dataForm);
     const { data, error } = await supabase.auth.signUp({...dataForm, options: {
       data: {
         username: dataForm.username,
@@ -65,9 +66,9 @@ const Signup: React.FC = () => {
     if (error) {
       console.error('Error signing up:', error.message)
     } else {
-      console.log(data);
+      debugLog(data);
       if (data.user?.identities?.length === 0) {
-        console.log('User already exists');
+        debugLog('User already exists');
         setOpenErrorModal(true);
       }
       else {

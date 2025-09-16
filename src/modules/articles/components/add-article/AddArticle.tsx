@@ -24,12 +24,13 @@ import { toast, ToastContainer } from 'react-toastify';
 import { detect} from "tinyld";
 import { ROUTES } from '../../../../routes/pathes';
 import { useNavigate } from 'react-router-dom';
+import { debugLog } from '../../../../utils/debug';
 
 const code = detect("هذا نص عربي");     // -> "ar"
 const top3 = detect("Hello world ");
 //  const english = code || top3;
-console.log(code)
-console.log(top3)
+debugLog(code)
+debugLog(top3)
 
 const addArticleSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -46,7 +47,7 @@ const AddArticle: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  console.log(user)
+  debugLog(user)
   useEffect(() => {
     getCurrentUser().then((data: User | null) => setUser(data))
   }, [])
@@ -85,7 +86,7 @@ const AddArticle: React.FC = () => {
   const { mutate, } = useMutation({
     mutationFn: addArticle,
     onSuccess: (data) => {
-      console.log(data);
+      debugLog(data);
       toast.success('Article added successfully', {
         position: "top-right",
         autoClose: 5000,
@@ -120,7 +121,7 @@ const AddArticle: React.FC = () => {
     }
    
     const code = detect(dataForm.content);
-    console.log(code)
+    debugLog(code)
     mutate(dataForm);
     navigate(ROUTES.ARTICLS);
   };

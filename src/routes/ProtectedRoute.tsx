@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Loading from '../shared/loading/Loading';
+import { debugLog } from '../utils/debug';
 
 interface ProtectedRouteProps {
   redirectPath: string;
@@ -58,7 +59,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
 
   if (!isAuthenticated) {
-    console.log('Not authenticated, redirecting to:', redirectPath);
+    debugLog('Not authenticated, redirecting to:', redirectPath);
     return <Navigate to={redirectPath} replace />;
   }
 
