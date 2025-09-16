@@ -2,6 +2,17 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Environment variables
+
+This project expects Supabase credentials to be available at build time. Create a `.env` file (or `.env.local`) in the project root with the following variables:
+
+```
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+The `VITE_` prefix makes these values available via `import.meta.env` in the client bundle.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
