@@ -35,6 +35,7 @@ import { getCurrentUser } from '../../utils/auth';
 import type { User } from '@supabase/supabase-js';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast, ToastContainer } from 'react-toastify';
+import { debugLog } from '../../utils/debug';
 
 // Define the comment type
 // interface Comment {
@@ -83,7 +84,7 @@ const ArticleDetails: React.FC = () => {
       return null;
     }
 
-    console.log("data in fetchComments", data)
+    debugLog("data in fetchComments", data)
     return data || null;
   };
 
@@ -171,7 +172,7 @@ const ArticleDetails: React.FC = () => {
       toast.error("Logged in to like");
     }
     else {
-      console.log(data);
+      debugLog(data);
       queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article.id] });
     }
   };
@@ -189,7 +190,7 @@ const ArticleDetails: React.FC = () => {
       toast.error("Logged in to dislike");
     }
     else {
-      console.log(data);
+      debugLog(data);
       queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article.id] });
     }
   };
@@ -250,13 +251,13 @@ const ArticleDetails: React.FC = () => {
     if (error) {
       console.error('Error adding comment:', error.message);
     } else {
-      console.log(data);
+      debugLog(data);
     }
     setNewComment('');
     queryClient.invalidateQueries({ queryKey: ['comments', article.id] });
   };
-  console.log("user in section", user)
-  console.log("comments in section", comments)
+  debugLog("user in section", user)
+  debugLog("comments in section", comments)
   return (
     <div className="article-details">
       {/* Back Button */}

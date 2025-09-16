@@ -22,6 +22,7 @@ import { supabase } from '../../supabaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../../store/reducers/paginationSlice';
 import type { AppDispatch, RootState } from '../../store';
+import { debugLog } from '../../utils/debug';
 // Define the philosopher type based on your Supabase table structure
 async function getPhilosophersPage(page: number, pageSize: number = 12) {
   const from = (page - 1) * pageSize;
@@ -67,7 +68,7 @@ const philosophers: React.FC = () => {
   // Fetch philosophers from Supabase
   const { data: PhilosophersData, isLoading, error } = usePhilosophers(currentPage, cardsPerPage);
 
-  console.log(PhilosophersData);
+  debugLog(PhilosophersData);
 
   // Calculate total pages based on filtered data
 

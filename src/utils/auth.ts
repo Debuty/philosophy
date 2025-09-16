@@ -1,5 +1,6 @@
 import { supabase } from '../supabaseClient';
 import type { Session, User } from '@supabase/supabase-js';
+import { debugLog } from './debug';
 
 /**
  * Checks the current user session and returns session data if available
@@ -16,7 +17,7 @@ export async function checkSession(): Promise<Session | null> {
     if (data.session) {
         return data.session;
     } else {
-        console.log("No active session (user not logged in).");
+        debugLog("No active session (user not logged in).");
         return null;
     }
 }

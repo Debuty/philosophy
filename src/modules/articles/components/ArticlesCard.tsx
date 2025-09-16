@@ -9,6 +9,7 @@ import { supabase } from '../../../supabaseClient';
 import Loading from '../../../shared/loading/Loading';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { debugLog } from '../../../utils/debug';
 
 interface ArticleData {
     title: string;
@@ -60,7 +61,7 @@ const ArticlesCard = ({ article }: { article: ArticleData }) => {
         queryFn: () => getAuthorProfile(),
         refetchOnWindowFocus: false
     })
-    console.log(authorProfile)
+    debugLog(authorProfile)
 
     if (isLoading) {
         return <Loading message="Loading article..." />

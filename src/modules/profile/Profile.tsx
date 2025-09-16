@@ -8,6 +8,7 @@ import Loading from '../../shared/loading/Loading';
 import {ToastContainer } from 'react-toastify';
 import EditIcon from '@mui/icons-material/Edit';
 import { getCurrentUser} from '../../utils/auth';
+import { debugLog } from '../../utils/debug';
 const Profile: React.FC = () => {
 
     // state
@@ -116,7 +117,7 @@ const Profile: React.FC = () => {
     if(error || profile == null) {
         return <div>Error loading profile</div>
     }
-    console.log(profile?.full_name)
+    debugLog(profile?.full_name)
     return (
         <div className="profile">
             <Grid container spacing={2} className="profile__grid">

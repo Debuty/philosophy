@@ -11,6 +11,7 @@ import type { User } from '@supabase/supabase-js';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../supabaseClient';
 import Loading from '../../shared/loading/Loading';
+import { debugLog } from '../../utils/debug';
 
 const Articles: React.FC = () => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ const { data: articles, isLoading } = useQuery({
   queryFn: () => getArticles(),
 })
 
- console.log(articles)
+  debugLog(articles)
   return (
     <div className="articles">
       {user && (
