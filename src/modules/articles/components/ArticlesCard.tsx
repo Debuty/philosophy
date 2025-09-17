@@ -75,19 +75,19 @@ const ArticlesCard: React.FC<ArticlesCardProps> = ({ article, author, reactionCo
             sx={
               lang === 'ar'
                 ? {
-                    borderRight: '1px solid #534e46',
-                    paddingRight: '1.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                  }
+                  borderRight: '1px solid #534e46',
+                  paddingRight: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                }
                 : {
-                    borderLeft: '1px solid #534e46',
-                    paddingLeft: '1.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                  }
+                  borderLeft: '1px solid #534e46',
+                  paddingLeft: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                }
             }
           >
             <Box className="articles-card-box " sx={{ display: 'flex', gap: '1rem' }}>
@@ -100,7 +100,7 @@ const ArticlesCard: React.FC<ArticlesCardProps> = ({ article, author, reactionCo
               </div>
             </Box>
             <Typography className="articles-card-time ">
-              Time: {article.created_at ? new Date(article.created_at).toLocaleDateString() : 'Wrong Date'}
+              published at : {article.created_at ? new Date(article.created_at).toLocaleDateString() : 'Wrong Date'}
             </Typography>
             <Typography className="articles-card-category">
               {lang === 'ar' ? 'الفئة' : 'Category'} : {article.category}

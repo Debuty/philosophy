@@ -208,7 +208,7 @@ const ArticleDetails: React.FC = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
-  
+
       toast.error("Copied to clipboard");
     }
   };
@@ -265,7 +265,7 @@ const ArticleDetails: React.FC = () => {
         variant="outlined"
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate(ROUTES.ARTICLS)}
-        sx={{ mb: 3,direction:"ltr" }}
+        sx={{ mb: 3, direction: "ltr" }}
       >
         {lang === "ar" ? "العودة للمقالات" : "Back to Articles"}
       </Button>
@@ -278,21 +278,21 @@ const ArticleDetails: React.FC = () => {
             <Box sx={{ mb: 4 }} dir={code === "ar" ? "rtl" : "ltr"}>
               <Chip
                 label={article.category}
-                sx={{ mb: 2 }}
+                sx={{ mb: 2, fontSize: '1.1rem' }}
               />
               <Typography variant="h3" component="h1" gutterBottom>
                 {article.title}
               </Typography>
-              <Typography variant="h5" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography variant="h5" color="text.secondary" sx={{ mb: 3, fontSize: '1.7rem' }}>
                 {article.subtitle}
               </Typography>
 
               {/* Article Meta */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
                   {new Date(article.created_at).toLocaleDateString()}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
                   • {article.state}
                 </Typography>
               </Box>
@@ -307,7 +307,7 @@ const ArticleDetails: React.FC = () => {
                 sx={{
                   fontSize: '1.7rem',
                   textAlign: 'justify',
-                  whiteSpace: 'pre-wrap'
+                  whiteSpace: 'pre-wrap',
                 }}
               >
                 {article.content}
@@ -320,7 +320,7 @@ const ArticleDetails: React.FC = () => {
                 variant="outlined"
                 startIcon={<ThumbUpIcon />}
                 onClick={handleLike}
-                sx={{ direction:"ltr"}}
+                sx={{ direction: "ltr" }}
               >
                 {counts?.likes}
               </Button>
@@ -328,9 +328,9 @@ const ArticleDetails: React.FC = () => {
                 variant="outlined"
                 startIcon={<ThumbDownIcon />}
                 onClick={handleDislike}
-                sx={{whiteSpace: 'nowrap' ,direction:"ltr" }}
+                sx={{ whiteSpace: 'nowrap', direction: "ltr" }}
               >
-                {counts?.dislikes} 
+                {counts?.dislikes}
               </Button>
               <div className="article-details-actions">
                 <IconButton onClick={handleBookmark} color={isBookmarked ? "primary" : "default"}>
@@ -392,7 +392,7 @@ const ArticleDetails: React.FC = () => {
             {/* Comments List */}
             <List className="article-details-comments-list">
               {comments?.map((comment: any) => (
-                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2, padding: '1rem', borderRadius: '1rem', backgroundColor: ' #b8b4ad' , direction:detect(comment.content) === "ar" ? "rtl" : "ltr" }}>
+                <ListItem key={comment.id} sx={{ alignItems: 'flex-start', mb: 2, padding: '1rem', borderRadius: '1rem', backgroundColor: ' #b8b4ad', direction: "ltr" }}>
                   <ListItemAvatar>
                     <Avatar sx={{ bgcolor: '#534e46' }}>
                       {comment?.profiles?.username?.charAt(0)?.toUpperCase() || '?'}
@@ -411,21 +411,21 @@ const ArticleDetails: React.FC = () => {
                         {comment.profiles?.username == commentAuthorProfile?.username ? <DeleteForeverIcon /> : ''}
                       </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{ mb: 1, textAlign: detect(comment.content) === "ar" ? "right" : "left", fontSize: '1.3rem' }}>
+                    <Typography variant="body2" sx={{ mb: 1, fontSize: '1.3rem' }}>
                       {comment.content}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <IconButton
                         size="small"
 
-                        sx={{ color: '#534e46' ,direction:"ltr"}}
+                        sx={{ color: '#534e46', direction: "ltr" }}
                       >
                         <ThumbUpIcon fontSize="small" />
                         <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>0</span>
                       </IconButton>
                       <IconButton
                         size="small"
-                        sx={{ color: '#534e46' ,direction:"ltr"}}
+                        sx={{ color: '#534e46', direction: "ltr" }}
                       >
                         <ThumbDownIcon fontSize="small" />
                         <span style={{ fontSize: '1.3rem', marginLeft: '0.5rem' }}>0</span>
@@ -451,10 +451,10 @@ const ArticleDetails: React.FC = () => {
                   src={authorProfile.avatar_url}
                   sx={{ width: 80, height: 80, mb: 2 }}
                 />
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom sx={{ fontSize: '1.7rem', fontWeight: 'bold' }}>
                   {authorProfile.username}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: '1.3rem' }}>
                   {authorProfile.bio}
                 </Typography>
                 <Button

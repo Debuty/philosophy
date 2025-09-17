@@ -40,7 +40,7 @@ const getArticles = async (): Promise<Article[]> => {
   const { data, error } = await supabase
     .from('articles')
     .select(
-      'id,title,subtitle,category,created_at,author_id,profiles(username,bio),article_reaction_counts(likes,dislikes)'
+      'id,title,subtitle,content,category,created_at,author_id,profiles(username,bio),article_reaction_counts(likes,dislikes)'
     )
     .eq('state', 'published');
 
