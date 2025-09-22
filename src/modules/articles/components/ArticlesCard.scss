@@ -25,11 +25,11 @@
                 }
 
                 .articles-card-box {
-
+       gap: 4rem;
                     .articles-card-avatar-container {
                         .articles-card-avatar {
-                            width: 100px;
-                            height: 100px;
+                            width: 75px;
+                            height: 75px;
                             border: 3px solid rgba(83, 78, 70, 0.3);
                             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                             transition: all 0.3s ease;
