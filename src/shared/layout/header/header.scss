@@ -1,3 +1,11 @@
+// Import component styles
+@import './components/LanguageSwitcher.scss';
+@import './components/NavigationItems.scss';
+@import './components/AuthSection.scss';
+@import './components/MobileHeader.scss';
+@import './components/DesktopHeader.scss';
+@import './components/Sidebar.scss';
+
 .header {
   display: flex;
   align-items: center;
@@ -5,8 +13,7 @@
   padding: 3rem;
   direction: rtl;
   
-  
-  &__image-wraper {
+  &__image-wrapper {
     width: 10rem;
 
     @media(max-width: 1200px) {

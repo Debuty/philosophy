@@ -1,0 +1,55 @@
+.profile__sidebar {
+  margin-bottom: 16px;
+}
+
+.profile__sidebar-paper {
+  padding: 24px;
+  margin-bottom: 16px;
+  
+  &--additional {
+    margin-bottom: 0;
+  }
+}
+
+.profile__sidebar-title {
+  margin-bottom: 16px;
+}
+
+.profile__sidebar-description {
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.profile__widget {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.profile__widget-title {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.profile__widget-list {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.profile__widget-item {
+  margin-bottom: 4px;
+}
+
+.profile__additional-content {
+  margin-top: 16px;
+}
+
+.profile__additional-title {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.profile__additional-text {
+  color: #666;
+}

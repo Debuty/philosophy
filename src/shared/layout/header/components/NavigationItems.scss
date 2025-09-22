@@ -1,0 +1,38 @@
+.header__item {
+  list-style: none;
+}
+
+.header__link {
+  display: contents;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: #666;
+  }
+}
+
+.navigation-item-mobile {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #e0e0e0;
+  }
+  
+  &__icon {
+    color: #534e46;
+    margin-right: 16px;
+  }
+  
+  &__text {
+    color: #333;
+    font-weight: 500;
+  }
+}

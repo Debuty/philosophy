@@ -58,7 +58,7 @@ const AddArticle: React.FC = () => {
       title: '',
       subtitle: '',
       content: '',
-      category: '',
+      category: 'Philosophy of Mind',
     },
 
   });
@@ -192,7 +192,7 @@ const AddArticle: React.FC = () => {
               <Grid size={{ xs: 12, md: 6 }}>
                 <InputLabel>{t('add_article_page.form.category')}</InputLabel>
                 <Select
-                  value="Philosophy of Mind"
+                  defaultValue="Philosophy of Mind"
                   label=""
                   fullWidth
                   {...register('category')}

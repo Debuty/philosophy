@@ -1,0 +1,12 @@
+.header-sm-screen {
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.mobile-app-bar {
+  background-color: transparent !important;
+  direction: ltr;
+}

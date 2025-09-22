@@ -1,0 +1,36 @@
+.sidebar-drawer {
+  .MuiDrawer-paper {
+    width: 280px;
+    background-color: #b1aea9;
+  }
+}
+
+.sidebar-content {
+  padding: 20px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.sidebar-profile-button {
+  margin-right: 1rem;
+}
+
+.sidebar-language-switcher {
+  height: 3rem;
+}
+
+.sidebar-navigation {
+  .MuiListItem-root {
+    border-radius: 8px;
+    margin-bottom: 8px;
+    
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+}

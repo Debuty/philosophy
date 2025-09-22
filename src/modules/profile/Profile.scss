@@ -1,6 +1,9 @@
-.profile {
-  
+// Import component styles
+@import './components/StatsCard.scss';
+@import './components/ProfileHeader.scss';
+@import './components/ProfileSidebar.scss';
 
+.profile {
   &__main-paper {
     padding: 2rem !important;
     background-color: #cac8c4 !important;
@@ -92,7 +95,14 @@
   &__content {
     margin-top: 20px;
   }
-  
+
+  &__content-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+     margin-top: 20px;
+  }
+
   &__content-title {
     color: #495057;
     margin-bottom: 15px;

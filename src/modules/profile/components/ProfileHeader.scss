@@ -1,0 +1,48 @@
+.profile__header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.profile__avatar {
+  flex-shrink: 0;
+}
+
+.profile__user-info {
+  flex: 1;
+}
+
+.profile__title {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile__email {
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.profile__bio {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile__edit-button-container {
+  margin-top: 16px;
+}
+
+.profile__edit-icon {
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
