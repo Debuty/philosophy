@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
 import { ROUTES } from '../../routes/pathes';
@@ -53,17 +53,37 @@ import { debugLog } from '../../utils/debug';
 
 
 const ArticleDetails: React.FC = () => {
-  const { article } = useLocation().state;
-  // const { id } = useParams();
+  // const { article } = useLocation().state;
+   const { id } = useParams();
   const navigate = useNavigate();
   const lang = useSelector((state: RootState) => state.locale.lang);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [user, setUser] = useState<User | null>(null);
   const queryClient = useQueryClient();
+
+
+  const fetchArticleDetails = async (): Promise<any> => {
+    const { data, error } = await supabase
+      .from("articles")
+      .select("*")
+      .eq("id", id)
+      .single();
+  
+      if (error) { throw error; }
+      return data;
+  }
+  
+    const { data: article , isLoading : isArticleLoading, error: isArticleError } = useQuery({
+      queryKey: ['article', id],
+      queryFn: fetchArticleDetails,
+      refetchOnWindowFocus: false,
+      enabled: !!id
+    });
+
   useEffect(() => {
     getCurrentUser().then(data => setUser(data))
-  }, [article.id, user?.id]);
+  }, [article?.id, user?.id]);
 
   const code = detect(article?.content);     // -> "ar"
 
@@ -72,11 +92,14 @@ const ArticleDetails: React.FC = () => {
   }, []);
 
 
+
+  debugLog("article", article)
+
   const fetchComments = async (): Promise<any> => {
     const { data, error } = await supabase
       .from("comments")
       .select("id, content, created_at, user_id, profiles!comments_user_id_fkey1(username)")
-      .eq("article_id", article.id)
+      .eq("article_id", article?.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -88,11 +111,12 @@ const ArticleDetails: React.FC = () => {
     return data || null;
   };
 
+
   const { data: comments } = useQuery<any>({
-    queryKey: ['comments', article.id],
+    queryKey: ['comments', article?.id],
     queryFn: fetchComments,
     refetchOnWindowFocus: false,
-    enabled: !!article.id
+    enabled: !!article?.id
   });
 
 
@@ -101,7 +125,7 @@ const ArticleDetails: React.FC = () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', article.author_id)
+        .eq('id', article?.author_id)
         .single();
       if (error) throw error;
       return data;
@@ -109,7 +133,7 @@ const ArticleDetails: React.FC = () => {
     return null;
   };
 
-  const { data: authorProfile, isLoading, error } = useQuery({
+  const { data: authorProfile, isLoading: isAuthorProfileLoading, error: isAuthorProfileError } = useQuery({
     queryKey: ['profile', article?.author_id],
     queryFn: getAuthorProfile,
     refetchOnWindowFocus: false,
@@ -142,7 +166,7 @@ const ArticleDetails: React.FC = () => {
     const { data: cnt } = await supabase
       .from("article_reaction_counts")
       .select("likes, dislikes")
-      .eq("article_id", article.id)
+      .eq("article_id", article?.id)
       .maybeSingle();
 
     return {
@@ -153,10 +177,10 @@ const ArticleDetails: React.FC = () => {
   }
 
   const { data: counts } = useQuery({
-    queryKey: ['article_reaction_counts', article.id],
+    queryKey: ['article_reaction_counts', article?.id],
     queryFn: getCounts,
     refetchOnWindowFocus: false,
-    enabled: !!article.id
+    enabled: !!article?.id
   });
 
   const handleLike = async () => {
@@ -164,7 +188,7 @@ const ArticleDetails: React.FC = () => {
     const { error, data } = await supabase
       .from("article_reactions")
       .upsert(
-        [{ article_id: article.id, user_id: user?.id, reaction: "like" }],
+        [{ article_id: article?.id, user_id: user?.id, reaction: "like" }],
         { onConflict: "article_id,user_id" }
       );
     if (error) {
@@ -173,7 +197,7 @@ const ArticleDetails: React.FC = () => {
     }
     else {
       debugLog(data);
-      queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article.id] });
+      queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article?.id] });
     }
   };
 
@@ -182,7 +206,7 @@ const ArticleDetails: React.FC = () => {
     const { error, data } = await supabase
       .from("article_reactions")
       .upsert(
-        [{ article_id: article.id, user_id: user?.id, reaction: "dislike" }],
+        [{ article_id: article?.id, user_id: user?.id, reaction: "dislike" }],
         { onConflict: "article_id,user_id" }
       );
     if (error) {
@@ -191,7 +215,7 @@ const ArticleDetails: React.FC = () => {
     }
     else {
       debugLog(data);
-      queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article.id] });
+      queryClient.invalidateQueries({ queryKey: ['article_reaction_counts', article?.id] });
     }
   };
 
@@ -202,7 +226,7 @@ const ArticleDetails: React.FC = () => {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: article?.title,
+        title: article.title,
         text: article?.subtitle,
         url: window.location.href,
       });
@@ -216,11 +240,11 @@ const ArticleDetails: React.FC = () => {
 
 
 
-  if (isLoading) {
+  if (isArticleLoading || !article || isAuthorProfileLoading || isAuthorProfileError) {
     return <Loading message="Loading article..." />;
   }
 
-  if (error || !article) {
+  if (isArticleError || isAuthorProfileError ) {
     return (
       <div className="article-details">
         <Paper sx={{ p: 4, textAlign: 'center' }}>
@@ -245,7 +269,7 @@ const ArticleDetails: React.FC = () => {
     const comment = (e.target as HTMLFormElement).comment.value;
     const { data, error } = await supabase
       .from("comments")
-      .insert([{ article_id: article.id, content: comment, user_id: user?.id }])
+      .insert([{ article_id: article?.id, content: comment, user_id: user?.id }])
       .select();
 
     if (error) {
@@ -254,7 +278,7 @@ const ArticleDetails: React.FC = () => {
       debugLog(data);
     }
     setNewComment('');
-    queryClient.invalidateQueries({ queryKey: ['comments', article.id] });
+    queryClient.invalidateQueries({ queryKey: ['comments', article?.id] });
   };
   debugLog("user in section", user)
   debugLog("comments in section", comments)
@@ -277,23 +301,23 @@ const ArticleDetails: React.FC = () => {
             {/* Article Header */}
             <Box sx={{ mb: 4 }} dir={code === "ar" ? "rtl" : "ltr"}>
               <Chip
-                label={article.category}
+                label={article?.category}
                 sx={{ mb: 2, fontSize: '1.1rem' }}
               />
               <Typography variant="h3" component="h1" gutterBottom>
-                {article.title}
+                {article?.title}
               </Typography>
               <Typography variant="h5" color="text.secondary" sx={{ mb: 3, fontSize: '1.7rem' }}>
-                {article.subtitle}
+                {article?.subtitle}
               </Typography>
 
               {/* Article Meta */}
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
-                  {new Date(article.created_at).toLocaleDateString()}
+                  {new Date(article?.created_at).toLocaleDateString()}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.3rem' }}>
-                  • {article.state}
+                  • {article?.state}
                 </Typography>
               </Box>
             </Box>
@@ -310,7 +334,7 @@ const ArticleDetails: React.FC = () => {
                   whiteSpace: 'pre-wrap',
                 }}
               >
-                {article.content}
+                {article?.content}
               </Typography>
             </Box>
             <Divider sx={{ mb: 4 }} />
@@ -460,7 +484,7 @@ const ArticleDetails: React.FC = () => {
                 <Button
                   variant="outlined"
                   size="small"
-                  onClick={() => navigate(`/profile/${article.author_id}`)}
+                  onClick={() => navigate(`/profile/${article?.author_id}`)}
                   sx={{ border: "none" }}
                 >
                   {lang === "ar" ? "عرض الملف الشخصي" : "View Profile"}
