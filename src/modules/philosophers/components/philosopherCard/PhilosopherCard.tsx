@@ -31,7 +31,6 @@ interface SupabasePhilosopher {
 export const PhilosopherCard = ({ philosopher }: { philosopher: SupabasePhilosopher }) => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const navigate = useNavigate();
-  // console.log(philosopher);
 
   return (
     <Card sx={{ padding: "2rem", minHeight: "65rem", maxWidth: 500, backgroundColor: "rgb(193, 188, 181) !important", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>

@@ -135,6 +135,7 @@ const Login: React.FC = () => {
           <Grid size={{ xs: 12, md: 12 }}>
             <Link
               component="button"
+              type="button"
               variant="body2"
               onClick={() => {
                 const email = document.getElementById('email') as HTMLInputElement;

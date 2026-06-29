@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './PhilosopherDetails.scss';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Avatar, Button, Grid, Paper,Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
@@ -13,11 +13,17 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { debugLog } from '../../utils/debug';
 
 const PhilosopherDetails: React.FC = () => {
-  const { philosopher } = useLocation().state;
+  //  const { philosopher } = useLocation().state;
+   const philosopher = useLocation().state?.philosopher;
   const navigate = useNavigate();
+  const { id } = useParams();
   const lang = useSelector((state: RootState) => state.locale.lang);
-  // const [philosopherBio, setPhilosopherBio] = useState<any>(null);
+ 
 
+  
+
+
+  
   const getPhilosopherBio = async (philosopherId: string) => {
     const { data, error } = await supabase
       .from('philosopher_bio')
@@ -32,9 +38,10 @@ const PhilosopherDetails: React.FC = () => {
     return data
   }
 
+
   const { data: philosopherBio, isLoading, error } = useQuery({
-    queryKey: ['philosopherBio', philosopher.id],
-    queryFn: () => getPhilosopherBio(philosopher.id)
+    queryKey: ['philosopherBio', id],
+    queryFn: () => getPhilosopherBio(id || '')
   })
 
   debugLog(philosopherBio)
@@ -43,7 +50,7 @@ const PhilosopherDetails: React.FC = () => {
     window.scrollTo(0, 0);
 
   }, [])
-  // console.log(philosopher.id);
+
   return (
     <div className="philosopher-details">
       <Button variant="contained" color="primary" sx={{ marginBottom: "1rem" }} onClick={() => navigate(ROUTES.PHILOSOPHERS)} startIcon={<KeyboardReturnIcon />}>{lang == "ar" ? "العودة إلى الفلاسفة" : "Return to Philosophes"}</Button>
@@ -52,8 +59,8 @@ const PhilosopherDetails: React.FC = () => {
         <Grid size={{ xs: 12, md: 9 }}>
           <Paper sx={{ padding: "4rem", backgroundColor: "rgb(174 171 165) !important" }}>
             <div className='philosopher-details-info-container'>
-              <Avatar src={philosopher.image} sx={{ marginBottom: "1rem", width: "140px", height: "200px" }} />
-              <h1>{lang == "ar" ? philosopher.name_ar : philosopher.name_en}</h1>
+              <Avatar src={philosopher?.image} sx={{ marginBottom: "1rem", width: "140px", height: "200px" }} />
+              <h1>{lang == "ar" ? philosopherBio?.name_ar : philosopherBio?.name_en}</h1>
 
               {isLoading ? <Loading message="Loading philosopher bio..." /> : error ? <div>Error: {error.message}</div> : philosopherBio && (
                 <div className="philosopher-bio-sections">
@@ -68,7 +75,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.intro_ar : philosopherBio.intro_en}
+                        {lang === "ar" ? philosopherBio?.intro_ar : philosopherBio?.intro_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -84,7 +91,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.early_life_ar : philosopherBio.early_life_en}
+                        {lang === "ar" ? philosopherBio?.early_life_ar : philosopherBio?.early_life_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -101,7 +108,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.education_ar : philosopherBio.education_en}
+                        {lang === "ar" ? philosopherBio?.education_ar : philosopherBio?.education_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -119,7 +126,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.books_ar : philosopherBio.books_en}
+                        {lang === "ar" ? philosopherBio?.books_ar : philosopherBio?.books_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion> 
@@ -137,7 +144,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.school_ar : philosopherBio.school_en}
+                        {lang === "ar" ? philosopherBio?.school_ar : philosopherBio?.school_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -154,7 +161,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.metaphysics_ar : philosopherBio.metaphysics_en}
+                        {lang === "ar" ? philosopherBio?.metaphysics_ar : philosopherBio?.metaphysics_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -171,7 +178,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.epistemology_ar : philosopherBio.epistemology_en}
+                        {lang === "ar" ? philosopherBio?.epistemology_ar : philosopherBio?.epistemology_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -189,7 +196,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.ethics_ar : philosopherBio.ethics_en}
+                        {lang === "ar" ? philosopherBio?.ethics_ar : philosopherBio?.ethics_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -207,7 +214,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.politics_ar : philosopherBio.politics_en}
+                        {lang === "ar" ? philosopherBio?.politics_ar : philosopherBio?.politics_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -225,7 +232,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.influence_legacy_ar : philosopherBio.influence_legacy_en}
+                        {lang === "ar" ? philosopherBio?.influence_legacy_ar : philosopherBio?.influence_legacy_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -242,7 +249,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.influence_legacy_ar : philosopherBio.influence_legacy_en}
+                        {lang === "ar" ? philosopherBio?.influence_legacy_ar : philosopherBio?.influence_legacy_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -260,7 +267,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.personal_life_ar : philosopherBio.personal_life_en}
+                        {lang === "ar" ? philosopherBio?.personal_life_ar : philosopherBio?.personal_life_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -278,7 +285,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.death_ar : philosopherBio.death_en}
+                        {lang === "ar" ? philosopherBio?.death_ar : philosopherBio?.death_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -295,7 +302,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>  
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.further_reading_ar : philosopherBio.further_reading_en}
+                        {lang === "ar" ? philosopherBio?.further_reading_ar : philosopherBio?.further_reading_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -312,7 +319,7 @@ const PhilosopherDetails: React.FC = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography className='philosopher-bio-sections-text'>
-                        {lang === "ar" ? philosopherBio.references_ar : philosopherBio.references_en}
+                        {lang === "ar" ? philosopherBio?.references_ar : philosopherBio?.references_en}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -326,12 +333,12 @@ const PhilosopherDetails: React.FC = () => {
         <Grid size={{ xs: 12, md: 3 }}>
           <Paper sx={{ padding: "1rem", backgroundColor: "rgb(174 171 165) !important" }}>
             <h1> {lang == "ar" ? "المعلومات السريعة" : "Quick Facts"}</h1>
-            <p className='quick-facts-item'> {lang == "ar" ? "المولد" : "Born"} : {philosopher.birth}</p>
-            <p className='quick-facts-item'> {lang == "ar" ? "الوفاة" : "Death"} : {philosopher.death}</p>
-            <p className='quick-facts-item'> {lang == "ar" ? "الجنسية" : "Nationality"} : {lang == "ar" ? philosopher.nationality_ar : philosopher.nationality_en}</p>
+            <p className='quick-facts-item'> {lang == "ar" ? "المولد" : "Born"} : {philosopherBio?.birth}</p>
+            <p className='quick-facts-item'> {lang == "ar" ? "الوفاة" : "Death"} : {philosopherBio?.death}</p>
+            <p className='quick-facts-item'> {lang == "ar" ? "الجنسية" : "Nationality"} : {lang == "ar" ? philosopherBio?.nationality_ar : philosopherBio?.nationality_en}</p>
 
-            <p className='quick-facts-item'> {lang == "ar" ? "العصر" : "Era"} : {lang == "ar" ? philosopher.era_ar : philosopher.era_en}</p>
-            <p className='quick-facts-item'> {lang == "ar" ? "المدرسة" : "School"} : {lang == "ar" ? philosopher.school_ar : philosopher.school_en}</p>
+            <p className='quick-facts-item'> {lang == "ar" ? "العصر" : "Era"} : {lang == "ar" ? philosopherBio?.era_ar : philosopherBio?.era_en}</p>
+            <p className='quick-facts-item'> {lang == "ar" ? "المدرسة" : "School"} : {lang == "ar" ? philosopherBio?.school_ar : philosopherBio?.school_en}</p>
 
           </Paper>
         </Grid>

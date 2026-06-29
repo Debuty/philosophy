@@ -3,21 +3,13 @@ import {
   Grid,
   Pagination,
   Box,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  Paper,
-  Typography,
   CircularProgress,
   Alert
 } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import './Philosophers.scss';
 import { PhilosopherCard } from './components/philosopherCard/PhilosopherCard';
+import { FilterBar } from './components/FilterBar/FilterBar';
 import { supabase } from '../../supabaseClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPage } from '../../store/reducers/paginationSlice';
@@ -56,7 +48,6 @@ const usePhilosophers = (currentPage: number, cardsPerPage: number) => {
 };
 
 const philosophers: React.FC = () => {
-  const { t } = useTranslation('philosophers');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEra, setSelectedEra] = useState('');
   const [selectedSchool, setSelectedSchool] = useState('');
@@ -80,113 +71,40 @@ const philosophers: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    dispatch(setCurrentPage(1));
+  };
+
+  const handleEraChange = (value: string) => {
+    setSelectedEra(value);
+    dispatch(setCurrentPage(1));
+  };
+
+  const handleSchoolChange = (value: string) => {
+    setSelectedSchool(value);
+    dispatch(setCurrentPage(1));
+  };
+
   const handleClearFilters = () => {
     setSearchTerm('');
     setSelectedEra('');
     setSelectedSchool('');
-    setCurrentPage(1);
+    dispatch(setCurrentPage(1));
   };
 
   return (
     <div className="philosophers">
       {/* Filter Bar */}
-      <Paper className="filter-bar" elevation={2} sx={{ backgroundColor: "	#bfbdb9 !important" }}>
-
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
-          <Typography variant="h6" className="filter-title">
-            {t('Philosophers.filter.title')}
-          </Typography>
-
-          <Button
-            variant="outlined"
-            onClick={handleClearFilters}
-            style={{ margin: "1rem" }}
-          >
-            {t('Philosophers.filter.clearFilters')}
-          </Button>
-        </div>
-        <Grid container spacing={3} alignItems="center">
-          {/* Search Field */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <TextField
-              fullWidth
-              label={t('Philosophers.filter.search')}
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              variant="outlined"
-            />
-          </Grid>
-
-          {/* Era Filter */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <FormControl fullWidth>
-              <InputLabel>{t('Philosophers.filter.eras.title')}</InputLabel>
-              <Select
-                value={selectedEra}
-                onChange={(e) => {
-                  setSelectedEra(e.target.value);
-                  setCurrentPage(1);
-                }}
-                label={t('Philosophers.filter.eras.title')}
-              >
-                <MenuItem value="">{t('Philosophers.filter.eras.title')}</MenuItem>
-                <MenuItem value="ancient">{t('Philosophers.filter.eras.ancient')}</MenuItem>
-                <MenuItem value="medieval">{t('Philosophers.filter.eras.medieval')}</MenuItem>
-                <MenuItem value="earlyModern">{t('Philosophers.filter.eras.earlyModern')}</MenuItem>
-                <MenuItem value="modern">{t('Philosophers.filter.eras.modern')}</MenuItem>
-                <MenuItem value="contemporary">{t('Philosophers.filter.eras.contemporary')}</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* School Filter */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <FormControl fullWidth>
-              <InputLabel>{t('Philosophers.filter.schools.title')}</InputLabel>
-              <Select
-                value={selectedSchool}
-                onChange={(e) => {
-                  setSelectedSchool(e.target.value);
-                  setCurrentPage(1);
-                }}
-                label={t('Philosophers.filter.schools.title')}
-              >
-                <MenuItem value="">{t('Philosophers.filter.schools.title')}</MenuItem>
-                <MenuItem value="idealism">{t('Philosophers.filter.schools.idealism')}</MenuItem>
-                <MenuItem value="materialism">{t('Philosophers.filter.schools.materialism')}</MenuItem>
-                <MenuItem value="existentialism">{t('Philosophers.filter.schools.existentialism')}</MenuItem>
-                <MenuItem value="stoicism">{t('Philosophers.filter.schools.stoicism')}</MenuItem>
-                <MenuItem value="epicureanism">{t('Philosophers.filter.schools.epicureanism')}</MenuItem>
-                <MenuItem value="rationalism">{t('Philosophers.filter.schools.rationalism')}</MenuItem>
-                <MenuItem value="empiricism">{t('Philosophers.filter.schools.empiricism')}</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Clear Filters Button */}
-          {/* <Grid size={{ xs: 12, md: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={handleClearFilters}
-              fullWidth
-
-            >
-              {t('Philosophers.filter.clearFilters')}
-            </Button>
-          </Grid> */}
-        </Grid>
-
-        {/* Results Count */}
-        <Box className="results-info">
-          <Typography variant="body2">
-
-            Test
-          </Typography>
-        </Box>
-      </Paper>
+      <FilterBar
+        searchTerm={searchTerm}
+        selectedEra={selectedEra}
+        selectedSchool={selectedSchool}
+        onSearchChange={handleSearchChange}
+        onEraChange={handleEraChange}
+        onSchoolChange={handleSchoolChange}
+        onClearFilters={handleClearFilters}
+      />
 
       {/* Philosopher Cards */}
       {isLoading ? (

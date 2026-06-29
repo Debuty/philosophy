@@ -1,5 +1,23 @@
 {
   "welcome": "Welcome to Philos",
   "subtitle": "Explore the world of philosophy and discover great thinkers",
-  "explore": "Explore Now"
+  "explore": "Explore Philosophers",
+  "hero_description": "Journey through centuries of philosophical thought. From ancient wisdom to modern insights, discover the ideas that shaped our world.",
+  "features_title": "Why Explore Philosophy?",
+  "feature_1_title": "Rich History",
+  "feature_1_desc": "Dive into thousands of years of philosophical thought from around the world",
+  "feature_2_title": "Great Thinkers",
+  "feature_2_desc": "Learn from the minds that shaped civilization and human understanding",
+  "feature_3_title": "Timeless Wisdom",
+  "feature_3_desc": "Apply ancient wisdom and modern philosophy to contemporary life",
+  "featured_title": "Featured Philosophers",
+  "featured_subtitle": "Discover some of the greatest minds in philosophical history",
+  "view_all": "View All Philosophers",
+  "cta_title": "Start Your Philosophical Journey",
+  "cta_subtitle": "Join us in exploring the depths of human thought and wisdom",
+  "get_started": "Get Started",
+  "learn_more": "Learn More",
+  "explore_articles": "Explore Articles",
+  "explore_schools": "Schools of Thought",
+  "explore_timeline": "Timeline"
 }

@@ -1,0 +1,1 @@
+export { AuthorSidebar } from './AuthorSidebar';

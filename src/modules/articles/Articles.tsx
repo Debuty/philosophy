@@ -10,6 +10,7 @@ import './Articles.scss';
 import { ROUTES } from '../../routes/pathes';
 import Loading from '../../shared/loading/Loading';
 import { debugLog } from '../../utils/debug';
+import { EmptyState } from '../../shared/components/EmptyState/EmptyState';
 
 
 const Articles: React.FC = () => {
@@ -45,7 +46,7 @@ const Articles: React.FC = () => {
           />
         ))
       ) : (
-        <div className="no-articles-found">No articles found</div>
+        <EmptyState DataName = {"Articles"} />
       )}
     </div>
   );

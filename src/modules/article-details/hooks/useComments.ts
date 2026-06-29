@@ -1,0 +1,43 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+import { toast } from 'react-toastify';
+import { fetchComments, addComment as addCommentService } from '../services/commentService';
+
+// Define types locally for now
+interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  user_id: string;
+  article_id: string;
+  profiles: { username: string } | null;
+}
+
+export const useComments = (articleId: string) => {
+  const queryClient = useQueryClient();
+  
+  const { data: comments } = useQuery({
+    queryKey: ['comments', articleId],
+    queryFn: () => fetchComments(articleId),
+    enabled: !!articleId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+
+  const addComment = useCallback(async (content: string, userId: string) => {
+    try {
+      await addCommentService(articleId, content, userId);
+      
+      queryClient.invalidateQueries({ 
+        queryKey: ['comments', articleId] 
+      });
+    } catch (error) {
+      toast.error('Failed to add comment');
+      throw error;
+    }
+  }, [articleId, queryClient]);
+
+  return { 
+    comments: comments || [], 
+    addComment 
+  };
+};
