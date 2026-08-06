@@ -3,12 +3,6 @@ import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { getReactionCounts, addReaction } from '../services/articleService';
 
-// Define types locally for now
-interface ReactionCounts {
-  likes: number | null;
-  dislikes: number | null;
-}
-
 export const useArticleReactions = (articleId: string, userId: string | null) => {
   const queryClient = useQueryClient();
   

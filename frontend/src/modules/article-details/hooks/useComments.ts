@@ -3,16 +3,6 @@ import { useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { fetchComments, addComment as addCommentService } from '../services/commentService';
 
-// Define types locally for now
-interface Comment {
-  id: string;
-  content: string;
-  created_at: string;
-  user_id: string;
-  article_id: string;
-  profiles: { username: string } | null;
-}
-
 export const useComments = (articleId: string) => {
   const queryClient = useQueryClient();
   
