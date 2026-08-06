@@ -46,7 +46,7 @@ const usePhilosophers = (currentPage: number, cardsPerPage: number) => {
     queryFn: () => getPhilosophersPage(currentPage, cardsPerPage)
   });
 };
-
+ 
 const philosophers: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedEra, setSelectedEra] = useState('');

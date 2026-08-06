@@ -3,8 +3,8 @@
 REST API for the Philos app. Designed to replace Supabase PostgREST + Auth when migrating to **Next.js + SQL Server**.
 
 **Base URL:** `/api/v1`  
-**Database schema:** [`database/schema.sql`](../database/schema.sql)  
-**Tech stack guide:** [`docs/STACK.md`](./STACK.md) — Drizzle, TanStack Query, axios, auth options
+**Database schema:** [`schema.sql`](./schema.sql)  
+**Tech stack guide:** [`docs/STACK.md`](../docs/STACK.md)
 
 ---
 
@@ -18,7 +18,7 @@ REST API for the Philos app. Designed to replace Supabase PostgREST + Auth when 
 | Backend framework | Next.js App Router (`app/api/v1/`) |
 | Database | SQL Server |
 | Validation | Zod |
-| Auth | Custom JWT via `/api/v1/auth/*` *(recommended for Vite + axios)* — see [STACK.md](./STACK.md#auth-authjs-v5-vs-custom-jwt) |
+| Auth | JWT via `/api/v1/auth/*` — see [STACK.md](../docs/STACK.md) |
 
 ---
 
