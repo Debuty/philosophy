@@ -1,0 +1,26 @@
+export type ErrorCode =
+  | "VALIDATION_ERROR"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "NOT_FOUND"
+  | "CONFLICT"
+  | "INTERNAL_ERROR";
+
+export class AppError extends Error {
+  readonly statusCode: number;
+  readonly code: ErrorCode;
+  readonly details?: { field: string; message: string }[];
+
+  constructor(
+    statusCode: number,
+    code: ErrorCode,
+    message: string,
+    details?: { field: string; message: string }[],
+  ) {
+    super(message);
+    this.name = "AppError";
+    this.statusCode = statusCode;
+    this.code = code;
+    this.details = details;
+  }
+}

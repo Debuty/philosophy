@@ -47,11 +47,11 @@ REST API for the Philos app. Replaces Supabase PostgREST + Auth with our own bac
 |------|-------|
 | Protocol | HTTPS |
 | Format | JSON (`Content-Type: application/json`) |
-| Auth | JWT in `httpOnly` cookie **or** `Authorization: Bearer <token>` |
+| Auth | JWT via `Authorization: Bearer <token>` |
 | Versioning | URL prefix `/api/v1` |
 | Pagination | `page` + `pageSize` query params |
 | Dates | ISO 8601 UTC (`2025-06-10T12:00:00.000Z`) |
-| IDs | `UNIQUEIDENTIFIER` (UUID) for users/articles; `INT` for philosophers/books/schools |
+| IDs | UUID for users/articles/comments; `INTEGER` for philosophers/books/schools |
 
 ---
 
@@ -61,15 +61,14 @@ REST API for the Philos app. Replaces Supabase PostgREST + Auth with our own bac
 No token required. Examples: list philosophers, list published articles, login, signup.
 
 ### Protected endpoints
-Require a valid session. Return `401 Unauthorized` if missing or expired.
+Require a valid Bearer JWT. Return `401 Unauthorized` if missing or expired.
 
 | Header | Example |
 |--------|---------|
-| Cookie | `session=<jwt>` (preferred) |
 | Authorization | `Bearer eyJhbGciOiJIUzI1NiIs...` |
 
-### Roles (future)
-Currently all authenticated users share the same role. Admin-only endpoints can be added later.
+### Roles
+Stored on `users.role` and embedded in the JWT (`user` \| `admin`). Guest has no account. Admin-only endpoints can be added later using `requireAuth` + role checks.
 
 ---
 
@@ -170,16 +169,22 @@ Register a new user.
   "data": {
     "user": {
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      "email": "user@example.com"
-    }
+      "email": "user@example.com",
+      "username": "plato_fan",
+      "avatarUrl": null,
+      "role": "user"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIs..."
   },
-  "message": "Account created. Please confirm your email."
+  "message": "Account created successfully"
 }
 ```
 
 **Errors:** `409` if email or username already exists.
 
 **Replaces:** `signupService.signupUser` → `supabase.auth.signUp`
+
+**Notes:** Sets `email_confirmed = false` until email confirmation is implemented. Creates the user and profile in a single DB transaction (upserts profile username if the signup trigger already inserted a row). Returns an `accessToken` so the client can treat signup as an immediate login.
 
 ---
 
@@ -207,15 +212,17 @@ Sign in with email and password.
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "email": "user@example.com",
       "username": "plato_fan",
-      "avatarUrl": null
-    }
+      "avatarUrl": null,
+      "role": "user"
+    },
+    "accessToken": "eyJhbGciOiJIUzI1NiIs..."
   }
 }
 ```
 
-**Headers:** `Set-Cookie: session=<jwt>; HttpOnly; Secure; SameSite=Lax`
+Store `accessToken` on the client (e.g. `localStorage`) and send it as `Authorization: Bearer <token>` on later requests. Token expiry: **7 days**.
 
-**Errors:** `401` invalid credentials, `403` email not confirmed.
+**Errors:** `401` invalid credentials.
 
 **Replaces:** `login.tsx` → `supabase.auth.signInWithPassword`
 
@@ -223,11 +230,11 @@ Sign in with email and password.
 
 ### POST `/api/v1/auth/logout`
 
-Invalidate the current session.
+Client-side logout helper. JWT is stateless — server does not revoke the token.
 
-**Auth:** Required
+**Auth:** Required (Bearer)
 
-**Response `204`:** No body. Clears session cookie.
+**Response `204`:** No body. Client must delete the stored token.
 
 **Replaces:** `useAuth.signOut` → `supabase.auth.signOut`
 
@@ -237,7 +244,7 @@ Invalidate the current session.
 
 Return the current authenticated user, or `401` if not logged in.
 
-**Auth:** Optional (returns `401` when absent)
+**Auth:** Required (Bearer)
 
 **Response `200`:**
 
@@ -248,7 +255,8 @@ Return the current authenticated user, or `401` if not logged in.
       "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       "email": "user@example.com",
       "username": "plato_fan",
-      "avatarUrl": null
+      "avatarUrl": null,
+      "role": "user"
     }
   }
 }
@@ -258,9 +266,11 @@ Return the current authenticated user, or `401` if not logged in.
 
 ---
 
-### POST `/api/v1/auth/forgot-password`
+### POST `/api/v1/auth/forgot-password` *(Deferred)*
 
 Send a password reset email.
+
+**Status:** Not implemented in this phase (no `password_reset_tokens` table / email provider yet).
 
 **Auth:** Public
 
@@ -286,9 +296,11 @@ Always returns `200` to avoid email enumeration.
 
 ---
 
-### POST `/api/v1/auth/reset-password`
+### POST `/api/v1/auth/reset-password` *(Deferred)*
 
 Set a new password using a reset token from the email link.
+
+**Status:** Not implemented in this phase.
 
 **Auth:** Reset token (query `?token=...` or body)
 

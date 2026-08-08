@@ -3,6 +3,8 @@ import express from "express";
 import { sql } from "drizzle-orm";
 import { env } from "./config/env.js";
 import { db } from "./db/index.js";
+import { errorHandler } from "./middleware/errorHandler.js";
+import { authRoutes } from "./modules/auth/auth.routes.js";
 
 export const app = express();
 
@@ -23,3 +25,6 @@ app.get("/health", async (_req, res) => {
     res.status(503).json({ ok: false, db: false });
   }
 });
+
+app.use("/api/v1/auth", authRoutes);
+app.use(errorHandler);
