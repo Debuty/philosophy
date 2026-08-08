@@ -1,6 +1,6 @@
 # Philos API Documentation
 
-REST API for the Philos app. Designed to replace Supabase PostgREST + Auth when migrating to **Next.js + SQL Server**.
+REST API for the Philos app. Replaces Supabase PostgREST + Auth with our own backend.
 
 **Base URL:** `/api/v1`  
 **Database schema:** [`schema.sql`](./schema.sql)  
@@ -12,11 +12,11 @@ REST API for the Philos app. Designed to replace Supabase PostgREST + Auth when 
 
 | Layer | Tool |
 |-------|------|
-| Frontend HTTP | **axios** (`withCredentials: true` for session cookie) |
+| Frontend HTTP | **axios** (`Authorization: Bearer <token>`) |
 | Frontend data fetching | **TanStack Query** (`useQuery` / `useMutation` wrapping axios) |
-| Backend ORM | **Drizzle** (queries inside Next.js `route.ts` handlers) |
-| Backend framework | Next.js App Router (`app/api/v1/`) |
-| Database | SQL Server |
+| Backend framework | Express |
+| Backend ORM | Drizzle |
+| Database | PostgreSQL (Neon) |
 | Validation | Zod |
 | Auth | JWT via `/api/v1/auth/*` — see [STACK.md](../docs/STACK.md) |
 

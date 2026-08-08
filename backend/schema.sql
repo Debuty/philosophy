@@ -1,404 +1,283 @@
 -- =============================================================================
--- Philos - SQL Server Database Schema
--- Replaces Supabase (PostgreSQL) tables: Users/profiles, Philosophers,
--- philosopher_bio, articles, article_reactions, article_reaction_counts, comments
+-- Philos - PostgreSQL Database Schema (Neon)
 -- =============================================================================
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- -----------------------------------------------------------------------------
 -- 1. Users & Authentication
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE Users (
-    Id              UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    Email           NVARCHAR(320)  NOT NULL,
-    PasswordHash    NVARCHAR(255)  NOT NULL,
-    EmailConfirmed  BIT            NOT NULL DEFAULT 0,
-    Phone           NVARCHAR(20)   NULL,
-    CreatedAt       DATETIME2      NOT NULL DEFAULT SYSUTCDATETIME(),
-    UpdatedAt       DATETIME2      NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT UQ_Users_Email UNIQUE (Email)
+CREATE TABLE users (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email           VARCHAR(320) NOT NULL,
+    password_hash   VARCHAR(255) NOT NULL,
+    email_confirmed BOOLEAN      NOT NULL DEFAULT FALSE,
+    role            VARCHAR(20)  NOT NULL DEFAULT 'user',
+    phone           VARCHAR(20)  NULL,
+    created_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_users_email UNIQUE (email),
+    CONSTRAINT ck_users_role CHECK (role IN ('user', 'admin'))
 );
 
-CREATE TABLE Profiles (
-    Id                  UNIQUEIDENTIFIER PRIMARY KEY,
-    Username            NVARCHAR(50)   NOT NULL,
-    FullName            NVARCHAR(200)  NULL,
-    Bio                 NVARCHAR(MAX)  NULL,
-    AvatarUrl           NVARCHAR(500)  NULL,
-    ArticlesCount       INT            NOT NULL DEFAULT 0,
-    BooksToReadCount    INT            NOT NULL DEFAULT 0,
-    BooksReadingCount   INT            NOT NULL DEFAULT 0,
-    BooksReadCount      INT            NOT NULL DEFAULT 0,
-    BooksFavoritesCount INT            NOT NULL DEFAULT 0,
-    CreatedAt           DATETIME2      NOT NULL DEFAULT SYSUTCDATETIME(),
-    UpdatedAt           DATETIME2      NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_Profiles_Users FOREIGN KEY (Id) REFERENCES Users(Id) ON DELETE CASCADE,
-    CONSTRAINT UQ_Profiles_Username UNIQUE (Username)
+CREATE TABLE profiles (
+    id          UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    username    VARCHAR(50)  NOT NULL,
+    full_name   VARCHAR(200) NULL,
+    bio         TEXT         NULL,
+    avatar_url  VARCHAR(500) NULL,
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_profiles_username UNIQUE (username)
 );
 
-CREATE TABLE PasswordResetTokens (
-    Id        UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    UserId    UNIQUEIDENTIFIER NOT NULL,
-    Token     NVARCHAR(255)    NOT NULL,
-    ExpiresAt DATETIME2        NOT NULL,
-    UsedAt    DATETIME2        NULL,
-    CONSTRAINT FK_PasswordResetTokens_Users FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
-    CONSTRAINT UQ_PasswordResetTokens_Token UNIQUE (Token)
-);
-
-CREATE TABLE RefreshTokens (
-    Id        UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    UserId    UNIQUEIDENTIFIER NOT NULL,
-    Token     NVARCHAR(500)    NOT NULL,
-    ExpiresAt DATETIME2        NOT NULL,
-    RevokedAt DATETIME2        NULL,
-    CONSTRAINT FK_RefreshTokens_Users FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
-    CONSTRAINT UQ_RefreshTokens_Token UNIQUE (Token)
-);
+-- later
+-- CREATE TABLE password_reset_tokens ( ... );
+-- CREATE TABLE refresh_tokens ( ... );
 
 -- -----------------------------------------------------------------------------
 -- 2. Philosophers
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE Philosophers (
-    Id                 INT IDENTITY(1,1) PRIMARY KEY,
-    NameEn             NVARCHAR(200) NOT NULL,
-    NameAr             NVARCHAR(200) NOT NULL,
-    Birth              INT           NULL,
-    Death              INT           NULL,
-    EraEn              NVARCHAR(100) NULL,
-    EraAr              NVARCHAR(100) NULL,
-    EraSlug            NVARCHAR(50)  NULL,  -- ancient, medieval, earlyModern, modern, contemporary
-    NationalityEn      NVARCHAR(100) NULL,
-    NationalityAr      NVARCHAR(100) NULL,
-    SchoolEn           NVARCHAR(100) NULL,
-    SchoolAr           NVARCHAR(100) NULL,
-    SchoolSlug         NVARCHAR(50)  NULL,  -- idealism, materialism, existentialism, etc.
-    QuoteEn            NVARCHAR(500) NULL,
-    QuoteAr            NVARCHAR(500) NULL,
-    ShortDescriptionEn NVARCHAR(MAX) NULL,
-    ShortDescriptionAr NVARCHAR(MAX) NULL,
-    ImageUrl           NVARCHAR(500) NULL,
-    CreatedAt          DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME()
+CREATE TABLE philosophers (
+    id                   INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    name_en              VARCHAR(200) NOT NULL,
+    name_ar              VARCHAR(200) NOT NULL,
+    birth                INTEGER      NULL,
+    death                INTEGER      NULL,
+    era_en               VARCHAR(100) NULL,
+    era_ar               VARCHAR(100) NULL,
+    era_slug             VARCHAR(50)  NULL,  -- ancient, medieval, earlyModern, modern, contemporary
+    nationality_en       VARCHAR(100) NULL,
+    nationality_ar       VARCHAR(100) NULL,
+    quote_en             VARCHAR(500) NULL,
+    quote_ar             VARCHAR(500) NULL,
+    short_description_en TEXT         NULL,
+    short_description_ar TEXT         NULL,
+    image_url            VARCHAR(500) NULL,
+    created_at           TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IX_Philosophers_EraSlug    ON Philosophers(EraSlug);
-CREATE INDEX IX_Philosophers_SchoolSlug ON Philosophers(SchoolSlug);
-CREATE INDEX IX_Philosophers_NameEn     ON Philosophers(NameEn);
-CREATE INDEX IX_Philosophers_NameAr     ON Philosophers(NameAr);
+CREATE INDEX ix_philosophers_era_slug ON philosophers(era_slug);
+CREATE INDEX ix_philosophers_name_en  ON philosophers(name_en);
+CREATE INDEX ix_philosophers_name_ar  ON philosophers(name_ar);
 
 -- -----------------------------------------------------------------------------
--- 3. Philosopher Bios (replaces philosopher_bio)
+-- 3. Philosopher Bios
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE PhilosopherBios (
-    PhilosopherId     INT PRIMARY KEY,
-    NameEn            NVARCHAR(200) NULL,
-    NameAr            NVARCHAR(200) NULL,
-    Birth             INT           NULL,
-    Death             INT           NULL,
-    NationalityEn     NVARCHAR(100) NULL,
-    NationalityAr     NVARCHAR(100) NULL,
-    EraEn             NVARCHAR(100) NULL,
-    EraAr             NVARCHAR(100) NULL,
-    SchoolEn          NVARCHAR(100) NULL,
-    SchoolAr          NVARCHAR(100) NULL,
-    IntroEn           NVARCHAR(MAX) NULL,
-    IntroAr           NVARCHAR(MAX) NULL,
-    EarlyLifeEn       NVARCHAR(MAX) NULL,
-    EarlyLifeAr       NVARCHAR(MAX) NULL,
-    EducationEn       NVARCHAR(MAX) NULL,
-    EducationAr       NVARCHAR(MAX) NULL,
-    BooksEn           NVARCHAR(MAX) NULL,
-    BooksAr           NVARCHAR(MAX) NULL,
-    MetaphysicsEn     NVARCHAR(MAX) NULL,
-    MetaphysicsAr     NVARCHAR(MAX) NULL,
-    EpistemologyEn    NVARCHAR(MAX) NULL,
-    EpistemologyAr    NVARCHAR(MAX) NULL,
-    EthicsEn          NVARCHAR(MAX) NULL,
-    EthicsAr          NVARCHAR(MAX) NULL,
-    PoliticsEn        NVARCHAR(MAX) NULL,
-    PoliticsAr        NVARCHAR(MAX) NULL,
-    InfluenceLegacyEn NVARCHAR(MAX) NULL,
-    InfluenceLegacyAr NVARCHAR(MAX) NULL,
-    PersonalLifeEn    NVARCHAR(MAX) NULL,
-    PersonalLifeAr    NVARCHAR(MAX) NULL,
-    DeathSectionEn    NVARCHAR(MAX) NULL,
-    DeathSectionAr    NVARCHAR(MAX) NULL,
-    FurtherReadingEn  NVARCHAR(MAX) NULL,
-    FurtherReadingAr  NVARCHAR(MAX) NULL,
-    ReferencesEn      NVARCHAR(MAX) NULL,
-    ReferencesAr      NVARCHAR(MAX) NULL,
-    CONSTRAINT FK_PhilosopherBios_Philosophers FOREIGN KEY (PhilosopherId) REFERENCES Philosophers(Id) ON DELETE CASCADE
+CREATE TABLE philosopher_bios (
+    philosopher_id      INTEGER PRIMARY KEY REFERENCES philosophers(id) ON DELETE CASCADE,
+    intro_en            TEXT NULL,
+    intro_ar            TEXT NULL,
+    early_life_en       TEXT NULL,
+    early_life_ar       TEXT NULL,
+    education_en        TEXT NULL,
+    education_ar        TEXT NULL,
+    books_en            TEXT NULL,
+    books_ar            TEXT NULL,
+    metaphysics_en      TEXT NULL,
+    metaphysics_ar      TEXT NULL,
+    epistemology_en     TEXT NULL,
+    epistemology_ar     TEXT NULL,
+    ethics_en           TEXT NULL,
+    ethics_ar           TEXT NULL,
+    politics_en         TEXT NULL,
+    politics_ar         TEXT NULL,
+    influence_legacy_en TEXT NULL,
+    influence_legacy_ar TEXT NULL,
+    personal_life_en    TEXT NULL,
+    personal_life_ar    TEXT NULL,
+    death_section_en    TEXT NULL,
+    death_section_ar    TEXT NULL,
+    further_reading_en  TEXT NULL,
+    further_reading_ar  TEXT NULL,
+    references_en       TEXT NULL,
+    references_ar       TEXT NULL
 );
 
 -- -----------------------------------------------------------------------------
 -- 4. Articles
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE Articles (
-    Id        UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    Title     NVARCHAR(300)    NOT NULL,
-    Subtitle  NVARCHAR(500)    NOT NULL,
-    Content   NVARCHAR(MAX)    NOT NULL,
-    Category  NVARCHAR(100)    NOT NULL,
-    State     NVARCHAR(20)     NOT NULL DEFAULT 'draft',
-    AuthorId  UNIQUEIDENTIFIER NOT NULL,
-    CreatedAt DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    UpdatedAt DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT CK_Articles_State CHECK (State IN ('draft', 'published')),
-    CONSTRAINT FK_Articles_Users FOREIGN KEY (AuthorId) REFERENCES Users(Id)
+CREATE TABLE articles (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title      VARCHAR(300) NOT NULL,
+    subtitle   VARCHAR(500) NOT NULL,
+    content    TEXT         NOT NULL,
+    category   VARCHAR(100) NOT NULL,
+    state      VARCHAR(20)  NOT NULL DEFAULT 'draft',
+    author_id  UUID         NOT NULL REFERENCES users(id),
+    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    CONSTRAINT ck_articles_state CHECK (state IN ('draft', 'published'))
 );
 
-CREATE INDEX IX_Articles_State     ON Articles(State);
-CREATE INDEX IX_Articles_AuthorId  ON Articles(AuthorId);
-CREATE INDEX IX_Articles_CreatedAt ON Articles(CreatedAt DESC);
+CREATE INDEX ix_articles_state      ON articles(state);
+CREATE INDEX ix_articles_author_id  ON articles(author_id);
+CREATE INDEX ix_articles_created_at ON articles(created_at DESC);
 
 -- -----------------------------------------------------------------------------
--- 5. Article Reactions (replaces article_reactions)
+-- 5. Article Reactions
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE ArticleReactions (
-    ArticleId UNIQUEIDENTIFIER NOT NULL,
-    UserId    UNIQUEIDENTIFIER NOT NULL,
-    Reaction  NVARCHAR(10)     NOT NULL,
-    CreatedAt DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    UpdatedAt DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT PK_ArticleReactions PRIMARY KEY (ArticleId, UserId),
-    CONSTRAINT CK_ArticleReactions_Reaction CHECK (Reaction IN ('like', 'dislike')),
-    CONSTRAINT FK_ArticleReactions_Articles FOREIGN KEY (ArticleId) REFERENCES Articles(Id) ON DELETE CASCADE,
-    CONSTRAINT FK_ArticleReactions_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+CREATE TABLE article_reactions (
+    article_id UUID        NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+    user_id    UUID        NOT NULL REFERENCES users(id),
+    reaction   VARCHAR(10) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT pk_article_reactions PRIMARY KEY (article_id, user_id),
+    CONSTRAINT ck_article_reactions_reaction CHECK (reaction IN ('like', 'dislike'))
 );
 
--- Replaces Supabase article_reaction_counts view
-CREATE VIEW ArticleReactionCounts AS
+CREATE VIEW article_reaction_counts AS
 SELECT
-    a.Id AS ArticleId,
-    ISNULL(SUM(CASE WHEN r.Reaction = 'like'    THEN 1 ELSE 0 END), 0) AS Likes,
-    ISNULL(SUM(CASE WHEN r.Reaction = 'dislike' THEN 1 ELSE 0 END), 0) AS Dislikes
-FROM Articles a
-LEFT JOIN ArticleReactions r ON r.ArticleId = a.Id
-GROUP BY a.Id;
+    a.id AS article_id,
+    COALESCE(SUM(CASE WHEN r.reaction = 'like'    THEN 1 ELSE 0 END), 0)::INTEGER AS likes,
+    COALESCE(SUM(CASE WHEN r.reaction = 'dislike' THEN 1 ELSE 0 END), 0)::INTEGER AS dislikes
+FROM articles a
+LEFT JOIN article_reactions r ON r.article_id = a.id
+GROUP BY a.id;
 
 -- -----------------------------------------------------------------------------
--- 6. Comments
+-- 6. Comments (nested via parent_id; depth 0..5)
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE Comments (
-    Id        UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
-    ArticleId UNIQUEIDENTIFIER NOT NULL,
-    UserId    UNIQUEIDENTIFIER NOT NULL,
-    Content   NVARCHAR(MAX)    NOT NULL,
-    CreatedAt DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_Comments_Articles FOREIGN KEY (ArticleId) REFERENCES Articles(Id) ON DELETE CASCADE,
-    CONSTRAINT FK_Comments_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+CREATE TABLE comments (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    article_id UUID        NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+    user_id    UUID        NOT NULL REFERENCES users(id),
+    parent_id  UUID        NULL REFERENCES comments(id),
+    content    TEXT        NOT NULL,
+    depth      INTEGER     NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT ck_comments_depth CHECK (depth >= 0 AND depth <= 5)
 );
 
-CREATE INDEX IX_Comments_ArticleId ON Comments(ArticleId, CreatedAt DESC);
+CREATE INDEX ix_comments_article_id ON comments(article_id, created_at DESC);
+CREATE INDEX ix_comments_parent_id  ON comments(parent_id, created_at ASC);
 
 -- -----------------------------------------------------------------------------
--- 7. Article Bookmarks (replaces local-only React state)
+-- 6b. Comment Reactions
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE ArticleBookmarks (
-    UserId    UNIQUEIDENTIFIER NOT NULL,
-    ArticleId UNIQUEIDENTIFIER NOT NULL,
-    CreatedAt DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT PK_ArticleBookmarks PRIMARY KEY (UserId, ArticleId),
-    CONSTRAINT FK_ArticleBookmarks_Users FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
-    CONSTRAINT FK_ArticleBookmarks_Articles FOREIGN KEY (ArticleId) REFERENCES Articles(Id) ON DELETE CASCADE
+CREATE TABLE comment_reactions (
+    comment_id UUID        NOT NULL REFERENCES comments(id) ON DELETE CASCADE,
+    user_id    UUID        NOT NULL REFERENCES users(id),
+    reaction   VARCHAR(10) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT pk_comment_reactions PRIMARY KEY (comment_id, user_id),
+    CONSTRAINT ck_comment_reactions_reaction CHECK (reaction IN ('like', 'dislike'))
 );
 
--- -----------------------------------------------------------------------------
--- 8. Schools (future: /schools, /schools/:id)
--- -----------------------------------------------------------------------------
-
-CREATE TABLE Schools (
-    Id            INT IDENTITY(1,1) PRIMARY KEY,
-    NameEn        NVARCHAR(200) NOT NULL,
-    NameAr        NVARCHAR(200) NOT NULL,
-    Slug          NVARCHAR(100) NOT NULL,
-    DescriptionEn NVARCHAR(MAX) NULL,
-    DescriptionAr NVARCHAR(MAX) NULL,
-    FoundedPeriod NVARCHAR(100) NULL,
-    ImageUrl      NVARCHAR(500) NULL,
-    CONSTRAINT UQ_Schools_Slug UNIQUE (Slug)
-);
-
-CREATE TABLE PhilosopherSchools (
-    PhilosopherId INT NOT NULL,
-    SchoolId      INT NOT NULL,
-    CONSTRAINT PK_PhilosopherSchools PRIMARY KEY (PhilosopherId, SchoolId),
-    CONSTRAINT FK_PhilosopherSchools_Philosophers FOREIGN KEY (PhilosopherId) REFERENCES Philosophers(Id) ON DELETE CASCADE,
-    CONSTRAINT FK_PhilosopherSchools_Schools FOREIGN KEY (SchoolId) REFERENCES Schools(Id) ON DELETE CASCADE
-);
+CREATE VIEW comment_reaction_counts AS
+SELECT
+    c.id AS comment_id,
+    COALESCE(SUM(CASE WHEN r.reaction = 'like'    THEN 1 ELSE 0 END), 0)::INTEGER AS likes,
+    COALESCE(SUM(CASE WHEN r.reaction = 'dislike' THEN 1 ELSE 0 END), 0)::INTEGER AS dislikes
+FROM comments c
+LEFT JOIN comment_reactions r ON r.comment_id = c.id
+GROUP BY c.id;
 
 -- -----------------------------------------------------------------------------
--- 9. Books (future: /books, /books/:id, profile stats)
+-- 7. Article Bookmarks
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE Books (
-    Id            INT IDENTITY(1,1) PRIMARY KEY,
-    TitleEn       NVARCHAR(300) NOT NULL,
-    TitleAr       NVARCHAR(300) NOT NULL,
-    AuthorEn      NVARCHAR(200) NULL,
-    AuthorAr      NVARCHAR(200) NULL,
-    DescriptionEn NVARCHAR(MAX) NULL,
-    DescriptionAr NVARCHAR(MAX) NULL,
-    CoverImageUrl NVARCHAR(500) NULL,
-    PublishedYear INT           NULL
-);
-
-CREATE TABLE UserBookLists (
-    UserId   UNIQUEIDENTIFIER NOT NULL,
-    BookId   INT              NOT NULL,
-    ListType NVARCHAR(20)     NOT NULL,
-    AddedAt  DATETIME2        NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT PK_UserBookLists PRIMARY KEY (UserId, BookId, ListType),
-    CONSTRAINT CK_UserBookLists_ListType CHECK (ListType IN ('to_read', 'reading', 'read', 'favorite')),
-    CONSTRAINT FK_UserBookLists_Users FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE,
-    CONSTRAINT FK_UserBookLists_Books FOREIGN KEY (BookId) REFERENCES Books(Id) ON DELETE CASCADE
+CREATE TABLE article_bookmarks (
+    user_id    UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    article_id UUID        NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT pk_article_bookmarks PRIMARY KEY (user_id, article_id)
 );
 
 -- -----------------------------------------------------------------------------
--- 10. Timeline (future: /timeline)
+-- 8. Schools
 -- -----------------------------------------------------------------------------
 
-CREATE TABLE TimelineEvents (
-    Id            INT IDENTITY(1,1) PRIMARY KEY,
-    [Year]        INT           NOT NULL,
-    TitleEn       NVARCHAR(300) NOT NULL,
-    TitleAr       NVARCHAR(300) NOT NULL,
-    DescriptionEn NVARCHAR(MAX) NULL,
-    DescriptionAr NVARCHAR(MAX) NULL,
-    PhilosopherId INT           NULL,
-    SchoolId      INT           NULL,
-    CONSTRAINT FK_TimelineEvents_Philosophers FOREIGN KEY (PhilosopherId) REFERENCES Philosophers(Id),
-    CONSTRAINT FK_TimelineEvents_Schools FOREIGN KEY (SchoolId) REFERENCES Schools(Id)
+CREATE TABLE schools (
+    id              INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    name_en         VARCHAR(200) NOT NULL,
+    name_ar         VARCHAR(200) NOT NULL,
+    slug            VARCHAR(100) NOT NULL,
+    description_en  TEXT         NULL,
+    description_ar  TEXT         NULL,
+    founded_period  VARCHAR(100) NULL,
+    image_url       VARCHAR(500) NULL,
+    CONSTRAINT uq_schools_slug UNIQUE (slug)
 );
 
-CREATE INDEX IX_TimelineEvents_Year ON TimelineEvents([Year]);
+CREATE TABLE philosopher_schools (
+    philosopher_id INTEGER NOT NULL REFERENCES philosophers(id) ON DELETE CASCADE,
+    school_id      INTEGER NOT NULL REFERENCES schools(id) ON DELETE CASCADE,
+    CONSTRAINT pk_philosopher_schools PRIMARY KEY (philosopher_id, school_id)
+);
+
+-- -----------------------------------------------------------------------------
+-- 9. Books
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE books (
+    id               INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    title_en         VARCHAR(300) NOT NULL,
+    title_ar         VARCHAR(300) NOT NULL,
+    author_en        VARCHAR(200) NULL,
+    author_ar        VARCHAR(200) NULL,
+    description_en   TEXT         NULL,
+    description_ar   TEXT         NULL,
+    cover_image_url  VARCHAR(500) NULL,
+    published_year   INTEGER      NULL
+);
+
+CREATE TABLE user_book_lists (
+    user_id    UUID        NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    book_id    INTEGER     NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+    list_type  VARCHAR(20) NOT NULL,
+    added_at   TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT pk_user_book_lists PRIMARY KEY (user_id, book_id, list_type),
+    CONSTRAINT ck_user_book_lists_list_type CHECK (list_type IN ('to_read', 'reading', 'read', 'favorite'))
+);
+
+-- -----------------------------------------------------------------------------
+-- 10. Timeline — deferred to a later phase
+-- -----------------------------------------------------------------------------
+
+-- CREATE TABLE timeline_events (
+--     id              INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+--     year            INTEGER      NOT NULL,
+--     title_en        VARCHAR(300) NOT NULL,
+--     title_ar        VARCHAR(300) NOT NULL,
+--     description_en  TEXT         NULL,
+--     description_ar  TEXT         NULL,
+--     philosopher_id  INTEGER      NULL REFERENCES philosophers(id),
+--     school_id       INTEGER      NULL REFERENCES schools(id)
+-- );
+-- CREATE INDEX ix_timeline_events_year ON timeline_events(year);
 
 -- -----------------------------------------------------------------------------
 -- Triggers
 -- -----------------------------------------------------------------------------
 
 -- Auto-create profile when a user signs up
-GO
-CREATE TRIGGER TR_Users_AfterInsert
-ON Users
-AFTER INSERT
-AS
+CREATE OR REPLACE FUNCTION trg_users_after_insert_create_profile()
+RETURNS TRIGGER AS $$
 BEGIN
-    SET NOCOUNT ON;
-
-    INSERT INTO Profiles (Id, Username)
-    SELECT
-        i.Id,
-        LEFT(REPLACE(i.Email, '@', '_'), 50)
-    FROM inserted i;
+    INSERT INTO profiles (id, username)
+    VALUES (
+        NEW.id,
+        LEFT(REPLACE(NEW.email, '@', '_'), 50)
+    );
+    RETURN NEW;
 END;
-GO
+$$ LANGUAGE plpgsql;
 
--- Keep ArticlesCount in sync when article state changes
-CREATE TRIGGER TR_Articles_AfterInsert
-ON Articles
-AFTER INSERT
-AS
-BEGIN
-    SET NOCOUNT ON;
+CREATE TRIGGER tr_users_after_insert
+AFTER INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION trg_users_after_insert_create_profile();
 
-    UPDATE p
-    SET
-        p.ArticlesCount = p.ArticlesCount + 1,
-        p.UpdatedAt = SYSUTCDATETIME()
-    FROM Profiles p
-    INNER JOIN inserted i ON i.AuthorId = p.Id
-    WHERE i.State = 'published';
-END;
-GO
-
-CREATE TRIGGER TR_Articles_AfterUpdate
-ON Articles
-AFTER UPDATE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    -- draft -> published
-    UPDATE p
-    SET
-        p.ArticlesCount = p.ArticlesCount + 1,
-        p.UpdatedAt = SYSUTCDATETIME()
-    FROM Profiles p
-    INNER JOIN inserted i ON i.AuthorId = p.Id
-    INNER JOIN deleted d ON d.Id = i.Id
-    WHERE d.State = 'draft' AND i.State = 'published';
-
-    -- published -> draft
-    UPDATE p
-    SET
-        p.ArticlesCount = CASE WHEN p.ArticlesCount > 0 THEN p.ArticlesCount - 1 ELSE 0 END,
-        p.UpdatedAt = SYSUTCDATETIME()
-    FROM Profiles p
-    INNER JOIN inserted i ON i.AuthorId = p.Id
-    INNER JOIN deleted d ON d.Id = i.Id
-    WHERE d.State = 'published' AND i.State = 'draft';
-END;
-GO
-
-CREATE TRIGGER TR_Articles_AfterDelete
-ON Articles
-AFTER DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE p
-    SET
-        p.ArticlesCount = CASE WHEN p.ArticlesCount > 0 THEN p.ArticlesCount - 1 ELSE 0 END,
-        p.UpdatedAt = SYSUTCDATETIME()
-    FROM Profiles p
-    INNER JOIN deleted d ON d.AuthorId = p.Id
-    WHERE d.State = 'published';
-END;
-GO
-
--- Keep book list counts in sync on Profiles
-CREATE TRIGGER TR_UserBookLists_AfterInsert
-ON UserBookLists
-AFTER INSERT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE p
-    SET
-        p.BooksToReadCount    = p.BooksToReadCount    + CASE WHEN i.ListType = 'to_read'   THEN 1 ELSE 0 END,
-        p.BooksReadingCount   = p.BooksReadingCount   + CASE WHEN i.ListType = 'reading'   THEN 1 ELSE 0 END,
-        p.BooksReadCount      = p.BooksReadCount      + CASE WHEN i.ListType = 'read'      THEN 1 ELSE 0 END,
-        p.BooksFavoritesCount = p.BooksFavoritesCount + CASE WHEN i.ListType = 'favorite'  THEN 1 ELSE 0 END,
-        p.UpdatedAt = SYSUTCDATETIME()
-    FROM Profiles p
-    INNER JOIN inserted i ON i.UserId = p.Id;
-END;
-GO
-
-CREATE TRIGGER TR_UserBookLists_AfterDelete
-ON UserBookLists
-AFTER DELETE
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE p
-    SET
-        p.BooksToReadCount    = CASE WHEN p.BooksToReadCount    > 0 THEN p.BooksToReadCount    - CASE WHEN d.ListType = 'to_read'   THEN 1 ELSE 0 END ELSE 0 END,
-        p.BooksReadingCount   = CASE WHEN p.BooksReadingCount   > 0 THEN p.BooksReadingCount   - CASE WHEN d.ListType = 'reading'   THEN 1 ELSE 0 END ELSE 0 END,
-        p.BooksReadCount      = CASE WHEN p.BooksReadCount      > 0 THEN p.BooksReadCount      - CASE WHEN d.ListType = 'read'      THEN 1 ELSE 0 END ELSE 0 END,
-        p.BooksFavoritesCount = CASE WHEN p.BooksFavoritesCount > 0 THEN p.BooksFavoritesCount - CASE WHEN d.ListType = 'favorite'  THEN 1 ELSE 0 END ELSE 0 END,
-        p.UpdatedAt = SYSUTCDATETIME()
-    FROM Profiles p
-    INNER JOIN deleted d ON d.UserId = p.Id;
-END;
-GO
+-- Note: article/book count sync triggers removed — counts are derived via COUNT/views
+-- from articles and user_book_lists (no denormalized counters on profiles).

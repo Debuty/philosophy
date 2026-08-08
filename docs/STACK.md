@@ -9,14 +9,15 @@ Monolith repo: `frontend/` + `backend/`. Supabase is replaced by our own backend
 ```
 philosophy/
 ├── frontend/          # Vite + React — separate package.json
-├── backend/           # Express API (code later) — docs/sql for now
+├── backend/           # Express + Drizzle — separate package.json
+│   ├── src/           # app entry, config, db schema (APIs later)
 │   ├── API.md
 │   └── schema.sql
 └── docs/
     └── STACK.md
 ```
 
-One repo, separate package per folder when backend code is added (no shared workspace / no shared Zod package).
+One repo, separate package per folder (no shared workspace / no shared Zod package).
 
 ---
 
