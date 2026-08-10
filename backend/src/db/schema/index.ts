@@ -38,6 +38,17 @@ export const profiles = pgTable("profiles", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const schools = pgTable("schools", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  nameEn: varchar("name_en", { length: 200 }).notNull(),
+  nameAr: varchar("name_ar", { length: 200 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  descriptionEn: text("description_en"),
+  descriptionAr: text("description_ar"),
+  foundedPeriod: varchar("founded_period", { length: 100 }),
+  imageUrl: varchar("image_url", { length: 500 }),
+});
+
 export const philosophers = pgTable("philosophers", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   nameEn: varchar("name_en", { length: 200 }).notNull(),
@@ -54,6 +65,7 @@ export const philosophers = pgTable("philosophers", {
   shortDescriptionEn: text("short_description_en"),
   shortDescriptionAr: text("short_description_ar"),
   imageUrl: varchar("image_url", { length: 500 }),
+  schoolId: integer("school_id").references(() => schools.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -176,30 +188,6 @@ export const articleBookmarks = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.userId, table.articleId] })],
-);
-
-export const schools = pgTable("schools", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  nameEn: varchar("name_en", { length: 200 }).notNull(),
-  nameAr: varchar("name_ar", { length: 200 }).notNull(),
-  slug: varchar("slug", { length: 100 }).notNull().unique(),
-  descriptionEn: text("description_en"),
-  descriptionAr: text("description_ar"),
-  foundedPeriod: varchar("founded_period", { length: 100 }),
-  imageUrl: varchar("image_url", { length: 500 }),
-});
-
-export const philosopherSchools = pgTable(
-  "philosopher_schools",
-  {
-    philosopherId: integer("philosopher_id")
-      .notNull()
-      .references(() => philosophers.id, { onDelete: "cascade" }),
-    schoolId: integer("school_id")
-      .notNull()
-      .references(() => schools.id, { onDelete: "cascade" }),
-  },
-  (table) => [primaryKey({ columns: [table.philosopherId, table.schoolId] })],
 );
 
 export const books = pgTable("books", {

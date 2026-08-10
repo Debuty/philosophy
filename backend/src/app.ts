@@ -5,6 +5,11 @@ import { env } from "./config/env.js";
 import { db } from "./db/index.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { authRoutes } from "./modules/auth/auth.routes.js";
+import {
+  articlesRoutes,
+  bookmarksRoutes,
+} from "./modules/articles/articles.routes.js";
+import { philosophersRoutes } from "./modules/philosophers/philosophers.routes.js";
 
 export const app = express();
 
@@ -27,4 +32,7 @@ app.get("/health", async (_req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/philosophers", philosophersRoutes);
+app.use("/api/v1/articles", articlesRoutes);
+app.use("/api/v1/users/me/bookmarks", bookmarksRoutes);
 app.use(errorHandler);

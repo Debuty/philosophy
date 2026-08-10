@@ -15,6 +15,11 @@ dist-ssr
 .env.*
 !.env.example
 
+# Docs & schema (local only)
+backend/API.md
+docs/STACK.md
+backend/schema.sql
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
