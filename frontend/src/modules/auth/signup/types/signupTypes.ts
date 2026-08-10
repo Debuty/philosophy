@@ -22,26 +22,6 @@ export interface FormFieldProps {
   register: any;
 }
 
-// Success modal props
-export interface SuccessModalProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  message: string;
-  okButtonText: string;
-}
-
-// Error modal props
-export interface ErrorModalProps {
-  open: boolean;
-  onClose: () => void;
-  onLogin: () => void;
-  title: string;
-  message: string;
-  okButtonText: string;
-  loginButtonText: string;
-}
-
 // Signup hook return type
 export interface UseSignupReturn {
   form: {
@@ -50,15 +30,5 @@ export interface UseSignupReturn {
     formState: { errors: any };
   };
   isLoading: boolean;
-  handleSignup: (data: SignupFormData) => Promise<void>;
-  modals: {
-    successModal: {
-      open: boolean;
-      close: () => void;
-    };
-    errorModal: {
-      open: boolean;
-      close: () => void;
-    };
-  };
+  handleSignup: (data: SignupFormData) => void;
 }

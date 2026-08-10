@@ -12,16 +12,3 @@ export const PROFILE_CONSTANTS = {
   MAIN_SIZE: { xs: 12, md: 9 },
   AVATAR_SIZE: 80,
 } as const;
-
-export const TOAST_PROPS = {
-  position: "top-right" as const,
-  autoClose: 5000,
-  hideProgressBar: false,
-  newestOnTop: false,
-  closeOnClick: true,
-  rtl: false,
-  pauseOnFocusLoss: true,
-  draggable: true,
-  pauseOnHover: true,
-  theme: "light" as const,
-};

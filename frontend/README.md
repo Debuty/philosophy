@@ -1,80 +1,53 @@
-# React + TypeScript + Vite
+# Philos Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vite + React + TypeScript. UI: MUI + SCSS. Server state: TanStack Query. Client UI state: Redux (locale, pagination).
 
-## Environment variables
+## Environment
 
-This project expects Supabase credentials to be available at build time. Create a `.env` file (or `.env.local`) in the project root with the following variables:
+Create `frontend/.env`:
 
 ```
-VITE_SUPABASE_URL=your-supabase-project-url
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_API_URL=http://localhost:3000/api/v1
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
 ```
 
-The `VITE_` prefix makes these values available via `import.meta.env` in the client bundle.
+- **`VITE_API_URL`** — Express backend (auth and future modules).
+- Supabase env vars remain until philosophers/articles are migrated off Supabase.
 
-Currently, two official plugins are available:
+## Auth
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- JWT stored in `localStorage` (`philos_access_token`).
+- axios (`src/api/client.ts`) attaches `Authorization: Bearer <token>`.
+- Session via React Query: `queryKeys.auth.session()` → `GET /auth/session`.
+- Hooks: `useLogin`, `useSignupMutation`, `useLogout`, `useAuthSession`, `useIsAuthenticated`, `useIsAdmin`.
 
-## Expanding the ESLint configuration
+## Adding a feature API (React Query convention)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Keys** — extend `src/api/queryKeys.ts` (never hard-code key arrays in hooks).
+2. **API fn** — plain async in `modules/<feature>/api/*.ts` using `apiClient` (no React).
+3. **Hooks** — `useQuery` / `useMutation` in `modules/<feature>/hooks/`; on success `invalidateQueries` / `setQueryData`.
+4. **UI** — call hooks only; keep MUI + existing SCSS modules.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Example:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+```ts
+// queryKeys.ts
+articles: {
+  all: ["articles"] as const,
+  list: (filters: ListFilters) => [...queryKeys.articles.all, "list", filters] as const,
+}
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+// useArticles.ts
+useQuery({
+  queryKey: queryKeys.articles.list(filters),
+  queryFn: () => articlesApi.list(filters),
+});
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```

@@ -19,7 +19,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { session, handleLogout } = useAuth();
+  const { user, isAuthenticated, handleLogout } = useAuth();
 
   const handleLogoutClick = () => {
     handleLogout();
@@ -36,7 +36,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({
     if (onAction) onAction();
   };
 
-  if (!session) {
+  if (!isAuthenticated) {
     if (variant === 'mobile') {
       return (
         <div className="auth-section-mobile" onClick={handleLoginClick}>
@@ -85,7 +85,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({
       </Button>
       <Avatar 
         onClick={handleProfileClick}
-        src={session.user.user_metadata.avatar_url} 
+        src={user?.avatarUrl ?? undefined} 
         sx={{ 
           backgroundColor: HEADER_CONSTANTS.COLORS.PRIMARY, 
           margin: "auto 1rem", 

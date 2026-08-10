@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Paper,
   TextField,
@@ -15,11 +15,10 @@ import './AddArticle.scss';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type { User } from '@supabase/supabase-js';
-import { getCurrentUser } from '../../../../utils/auth';
+import { useAuthUser } from '../../../../modules/auth/hooks';
 import { supabase } from '../../../../supabaseClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { detect} from "tinyld";
 import { ROUTES } from '../../../../routes/pathes';
@@ -44,13 +43,10 @@ type AddArticleFormData = z.infer<typeof addArticleSchema>;
 const AddArticle: React.FC = () => {
   const { t } = useTranslation('articles');
   const [status, setStatus] = useState('draft');
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuthUser();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   debugLog(user)
-  useEffect(() => {
-    getCurrentUser().then((data: User | null) => setUser(data))
-  }, [])
 
   const { register, handleSubmit, formState: { errors } } = useForm<AddArticleFormData>({
     resolver: zodResolver(addArticleSchema),
@@ -254,18 +250,6 @@ const AddArticle: React.FC = () => {
         </Box>
 
       </Paper>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
     </div>
   );
 };

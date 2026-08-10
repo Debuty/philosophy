@@ -30,21 +30,49 @@ function toUserDto(row: {
   };
 }
 
+/** Drizzle wraps pg errors as DrizzleQueryError; the Postgres code lives on `.cause`. */
+function unwrapDbError(error: unknown): unknown {
+  let current: unknown = error;
+  for (let i = 0; i < 3; i++) {
+    if (
+      typeof current === "object" &&
+      current !== null &&
+      "code" in current &&
+      (current as { code?: string }).code === "23505"
+    ) {
+      return current;
+    }
+    if (
+      typeof current === "object" &&
+      current !== null &&
+      "cause" in current &&
+      (current as { cause?: unknown }).cause != null
+    ) {
+      current = (current as { cause: unknown }).cause;
+      continue;
+    }
+    break;
+  }
+  return error;
+}
+
 function isUniqueViolation(error: unknown): boolean {
+  const dbError = unwrapDbError(error);
   return (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    (error as { code?: string }).code === "23505"
+    typeof dbError === "object" &&
+    dbError !== null &&
+    "code" in dbError &&
+    (dbError as { code?: string }).code === "23505"
   );
 }
 
 function uniqueViolationTarget(error: unknown): "email" | "username" | "unknown" {
   if (!isUniqueViolation(error)) return "unknown";
 
+  const dbError = unwrapDbError(error);
   const constraint =
-    typeof error === "object" && error !== null && "constraint" in error
-      ? String((error as { constraint?: string }).constraint ?? "").toLowerCase()
+    typeof dbError === "object" && dbError !== null && "constraint" in dbError
+      ? String((dbError as { constraint?: string }).constraint ?? "").toLowerCase()
       : "";
 
   if (constraint.includes("username")) return "username";

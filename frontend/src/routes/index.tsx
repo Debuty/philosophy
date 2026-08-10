@@ -3,6 +3,7 @@ import { createBrowserRouter, Outlet } from 'react-router-dom';
 import { ROUTES } from './pathes';
 import Layout from '../shared/layout/Layout';
 import ProtectedRoute from './ProtectedRoute';
+import GuestRoute from './GuestRoute';
 import Loading from '../shared/loading/Loading';
 import Profile from '../modules/profile/Profile';
 
@@ -106,7 +107,9 @@ export const router = createBrowserRouter([
         path: ROUTES.LOGIN,
         element: (
           <Suspense fallback={<Loading />}>
-            <Login />
+            <GuestRoute redirectPath={ROUTES.PROFILE}>
+              <Login />
+            </GuestRoute>
           </Suspense>
         ),
       },
@@ -114,7 +117,9 @@ export const router = createBrowserRouter([
         path: ROUTES.SIGNUP,
         element: (
           <Suspense fallback={<Loading />}>
-            <Signup />
+            <GuestRoute>
+              <Signup />
+            </GuestRoute>
           </Suspense>
         ),
       },

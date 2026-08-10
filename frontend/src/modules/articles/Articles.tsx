@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import ArticlesCard from './components/ArticlesCard';
-import { useUser } from './hooks/useUser';
+import { useAuthUser } from '../auth/hooks';
 import { useArticles } from './hooks/useArticles';
 import { useArticleData } from './hooks/useArticleData';
 import './Articles.scss';
@@ -16,7 +16,7 @@ import { EmptyState } from '../../shared/components/EmptyState/EmptyState';
 const Articles: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const user = useUser();
+  const { user } = useAuthUser();
   const { data: articles, isLoading } = useArticles();
   const processedArticles = useArticleData(articles);
 

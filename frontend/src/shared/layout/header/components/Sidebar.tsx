@@ -18,7 +18,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
     const lang = useSelector((state: RootState) => state.locale.lang);
     const navigate = useNavigate();
-    const { session } = useAuth();
+    const { user } = useAuth();
 
     const handleProfileClick = () => {
         navigate(ROUTES.PROFILE);
@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
         >
             <div className="sidebar-content">
                 <div className="sidebar-header">
-                    {session?.user.user_metadata.username && (
+                    {user?.username && (
                         <IconButton
                             size="large"
                             aria-label="account of current user"

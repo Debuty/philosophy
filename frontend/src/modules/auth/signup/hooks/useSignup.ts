@@ -1,52 +1,42 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { signupSchema, defaultFormValues } from '../constants/signupConstants';
-import { signupUser, checkUserExists } from '../services/signupService';
-import type { SignupFormData, UseSignupReturn } from '../types/signupTypes';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import { isApiError } from "../../../../api/types";
+import { signupSchema, defaultFormValues } from "../constants/signupConstants";
+import type { SignupFormData, UseSignupReturn } from "../types/signupTypes";
+import { useSignupMutation } from "../../hooks/useSignupMutation";
 
 export const useSignup = (): UseSignupReturn => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [errorModalOpen, setErrorModalOpen] = useState(false);
+  const signupMutation = useSignupMutation();
 
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: defaultFormValues,
   });
 
-  const handleSignup = async (data: SignupFormData) => {
-    setIsLoading(true);
-    
-    try {
-      const result = await signupUser(data);
-      
-      if (checkUserExists(result)) {
-        setErrorModalOpen(true);
-      } else {
-        setSuccessModalOpen(true);
-      }
-    } catch (error) {
-      console.error('Error signing up:', error);
-      setErrorModalOpen(true);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSignup = (data: SignupFormData) => {
+    signupMutation.mutate(
+      {
+        email: data.email,
+        password: data.password,
+        username: data.username,
+        phone: data.phone || undefined,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Account created successfully");
+        },
+        onError: (error) => {
+          console.error("Error signing up:", error);
+          toast.error(isApiError(error) ? error.message : "Signup failed");
+        },
+      },
+    );
   };
 
   return {
     form,
-    isLoading,
+    isLoading: signupMutation.isPending,
     handleSignup,
-    modals: {
-      successModal: {
-        open: successModalOpen,
-        close: () => setSuccessModalOpen(false),
-      },
-      errorModal: {
-        open: errorModalOpen,
-        close: () => setErrorModalOpen(false),
-      },
-    },
   };
 };

@@ -1,37 +1,40 @@
-import { useEffect, useState } from 'react';
-import type { Session } from '@supabase/supabase-js';
-import { supabase } from '../../../../supabaseClient';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../../routes/pathes';
-import { debugLog } from '../../../../utils/debug';
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../../routes/pathes";
+import { useAuthUser } from "../../../../modules/auth/hooks";
+import { useLogout } from "../../../../modules/auth/hooks";
 
+/** Header auth adapter — JWT session via React Query (replaces Supabase onAuthStateChange). */
 export const useAuth = () => {
-  const [session, setSession] = useState<Session | null>(null);
   const navigate = useNavigate();
+  const { user, isLoading } = useAuthUser();
+  const logoutMutation = useLogout();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (window.location.pathname === "/reset-password") {
-        return;
-      }
-      setSession(session || null);
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onError: (error) => {
+        console.error("Error signing out:", error);
+      },
     });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    navigate(ROUTES.LOGIN);
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error.message);
-    } else {
-      debugLog('User signed out successfully');
-    }
   };
 
   return {
-    session,
+    user,
+    isAuthenticated: Boolean(user),
+    isLoading,
+    /** @deprecated use `user` — kept for gradual migration */
+    session: user
+      ? {
+          user: {
+            id: user.id,
+            email: user.email,
+            user_metadata: {
+              username: user.username,
+              avatar_url: user.avatarUrl,
+            },
+          },
+        }
+      : null,
     handleLogout,
+    navigateToLogin: () => navigate(ROUTES.LOGIN),
   };
 };
