@@ -2,7 +2,6 @@
   "Philosophers": {
     "title": "Meet the Philosophers Who Shaped Human Thought",
     "subtitle": "Explore the lives and ideas of the greatest thinkers in history",
-    
     "filter": {
       "title": "Filter Philosophers",
       "search": "Search for a philosopher...",
@@ -27,7 +26,9 @@
       "clearFilters": "Clear Filters",
       "noResults": "No results found"
     },
-    
+    "errorLoading": "Error fetching philosophers",
+    "emptyFiltered": "No philosophers match these criteria",
+    "empty": "No philosophers available",
     "philosopherCard": {
       "readMore": "Read More",
       "era": "Era",
@@ -38,36 +39,31 @@
       "mainWorks": "Main Works"
     }
   },
-
   "PhilosopherDetails": {
-    "biography": "Biography",
-    "philosophy": "Philosophy",
-    "mainIdeas": "Main Ideas",
-    "influences": "Influences",
-    "legacy": "Philosophical Legacy",
-    "famousQuotes": "Famous Quotes",
-    "works": "Works",
-    "timeline": "Timeline",
-    "relatedPhilosophers": "Related Philosophers",
-    "backToList": "Back to Philosophers List",
-    "share": "Share",
-    "print": "Print",
-    "download": "Download",
+    "backToList": "Return to Philosophers",
+    "loadingBio": "Loading philosopher bio...",
+    "errorLoading": "Error loading philosopher bio",
+    "quickFacts": "Quick Facts",
+    "born": "Born",
+    "death": "Death",
+    "nationality": "Nationality",
+    "era": "Era",
+    "school": "School",
     "sections": {
+      "intro": "Introduction",
       "earlyLife": "Early Life",
       "education": "Education",
-      "career": "Career",
-      "majorWorks": "Major Works",
-      "philosophicalViews": "Philosophical Views",
-      "controversies": "Controversies",
+      "books": "Books",
+      "school": "School",
+      "metaphysics": "Metaphysics",
+      "epistemology": "Epistemology",
+      "ethics": "Ethics",
+      "politics": "Politics",
+      "influenceLegacy": "Influence & Legacy",
+      "personalLife": "Personal Life",
       "death": "Death",
-      "posthumousInfluence": "Posthumous Influence"
-    },
-    "actions": {
-      "edit": "Edit",
-      "delete": "Delete",
-      "favorite": "Favorite",
-      "bookmark": "Bookmark"
+      "furtherReading": "Further Reading",
+      "references": "References"
     }
   }
 }

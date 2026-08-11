@@ -12,8 +12,8 @@ VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
 ```
 
-- **`VITE_API_URL`** — Express backend (auth and future modules).
-- Supabase env vars remain until philosophers/articles are migrated off Supabase.
+- **`VITE_API_URL`** — Express backend (auth, philosophers, and future modules).
+- Supabase env vars remain until **articles** (and any leftover modules) are migrated off Supabase.
 
 ## Auth
 
@@ -21,6 +21,12 @@ VITE_SUPABASE_ANON_KEY=...
 - axios (`src/api/client.ts`) attaches `Authorization: Bearer <token>`.
 - Session via React Query: `queryKeys.auth.session()` → `GET /auth/session`.
 - Hooks: `useLogin`, `useSignupMutation`, `useLogout`, `useAuthSession`, `useIsAuthenticated`, `useIsAdmin`.
+
+## Philosophers
+
+- List / featured / bio use `VITE_API_URL` via `modules/philosophers/api/philosophersApi.ts`.
+- Hooks: `usePhilosophersList`, `useFeaturedPhilosophers`, `usePhilosopherBio`.
+- Query keys: `queryKeys.philosophers.*`.
 
 ## Adding a feature API (React Query convention)
 
