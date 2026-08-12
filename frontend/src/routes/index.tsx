@@ -6,6 +6,7 @@ import ProtectedRoute from './ProtectedRoute';
 import GuestRoute from './GuestRoute';
 import Loading from '../shared/loading/Loading';
 import Profile from '../modules/profile/Profile';
+import UserProfile from '../modules/profile/UserProfile';
 
 // Lazy load components
 const Home = React.lazy(() => import('../modules/home/Home'));
@@ -68,6 +69,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<Loading />}>
             <ArticleDetails />
+          </Suspense>
+        ),
+      },
+      {
+        path: ROUTES.USER_PROFILE,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <UserProfile />
           </Suspense>
         ),
       },

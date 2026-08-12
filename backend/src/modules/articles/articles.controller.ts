@@ -19,7 +19,7 @@ import * as reactionsService from "./reactions.service.js";
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
     const query = listArticlesQuerySchema.parse(req.query);
-    const result = await articlesService.listArticles(query);
+    const result = await articlesService.listArticles(query, req.user?.id);
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -77,7 +77,7 @@ export async function related(req: Request, res: Response, next: NextFunction) {
 export async function getReactions(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = articleIdParamSchema.parse(req.params);
-    const data = await reactionsService.getReactions(id);
+    const data = await reactionsService.getReactions(id, req.user?.id);
     res.status(200).json({ data });
   } catch (error) {
     next(error);

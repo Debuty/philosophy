@@ -10,6 +10,7 @@ export const ROUTES = {
   SIGNUP: "/signup",
   RESET_PASSWORD: "/reset-password",
   PROFILE: "/profile/:id",
+  USER_PROFILE: "/users/:id",
   SCHOOLS: "/schools",
   SCHOOL_DETAILS: "/schools/:id",
   BOOKS: "/books",

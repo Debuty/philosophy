@@ -1,12 +1,56 @@
-import { and, count, desc, eq, ne, sql, type SQL } from "drizzle-orm";
+import { and, count, desc, eq, inArray, ne, sql, type SQL } from "drizzle-orm";
 import { db } from "../../db/index.js";
-import { articles, articleReactions, profiles } from "../../db/schema/index.js";
+import {
+  articleBookmarks,
+  articles,
+  articleReactions,
+  profiles,
+} from "../../db/schema/index.js";
 import { AppError } from "../../lib/errors.js";
 import type {
   CreateArticleInput,
   ListArticlesQuery,
   UpdateArticleInput,
 } from "./articles.schemas.js";
+
+async function getBookmarkedArticleIds(
+  viewerId: string,
+  articleIds: string[],
+): Promise<Set<string>> {
+  if (articleIds.length === 0) {
+    return new Set();
+  }
+
+  const rows = await db
+    .select({ articleId: articleBookmarks.articleId })
+    .from(articleBookmarks)
+    .where(
+      and(
+        eq(articleBookmarks.userId, viewerId),
+        inArray(articleBookmarks.articleId, articleIds),
+      ),
+    );
+
+  return new Set(rows.map((row) => row.articleId));
+}
+
+async function isArticleBookmarked(
+  articleId: string,
+  viewerId: string,
+): Promise<boolean> {
+  const [row] = await db
+    .select({ articleId: articleBookmarks.articleId })
+    .from(articleBookmarks)
+    .where(
+      and(
+        eq(articleBookmarks.articleId, articleId),
+        eq(articleBookmarks.userId, viewerId),
+      ),
+    )
+    .limit(1);
+
+  return Boolean(row);
+}
 
 async function getArticleReactionCounts(articleId: string) {
   const [row] = await db
@@ -36,7 +80,10 @@ function buildListFilters(query: ListArticlesQuery): SQL {
   return and(...parts)!;
 }
 
-export async function listArticles(query: ListArticlesQuery) {
+export async function listArticles(
+  query: ListArticlesQuery,
+  viewerId?: string,
+) {
   const where = buildListFilters(query);
   const offset = (query.page - 1) * query.pageSize;
 
@@ -86,6 +133,12 @@ export async function listArticles(query: ListArticlesQuery) {
   ]);
 
   const total = totalRow?.total ?? 0;
+  const bookmarkedIds = viewerId
+    ? await getBookmarkedArticleIds(
+        viewerId,
+        rows.map((row) => row.id),
+      )
+    : null;
 
   return {
     data: rows.map((row) => ({
@@ -106,6 +159,9 @@ export async function listArticles(query: ListArticlesQuery) {
         likes: row.likes ?? 0,
         dislikes: row.dislikes ?? 0,
       },
+      ...(bookmarkedIds
+        ? { is_bookmarked: bookmarkedIds.has(row.id) }
+        : {}),
     })),
     pagination: {
       page: query.page,
@@ -146,6 +202,9 @@ export async function getArticleById(id: string, viewerId?: string) {
   }
 
   const reactionCounts = await getArticleReactionCounts(id);
+  const is_bookmarked = viewerId
+    ? await isArticleBookmarked(id, viewerId)
+    : undefined;
 
   return {
     id: row.id,
@@ -163,6 +222,7 @@ export async function getArticleById(id: string, viewerId?: string) {
       avatar_url: row.avatarUrl,
     },
     article_reaction_counts: reactionCounts,
+    ...(is_bookmarked !== undefined ? { is_bookmarked } : {}),
   };
 }
 

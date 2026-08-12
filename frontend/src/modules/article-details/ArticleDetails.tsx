@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
@@ -9,15 +9,14 @@ import "./ArticleDetails.scss";
 import { toast } from "react-toastify";
 import { useAuthUser } from "../auth/hooks";
 
-// Custom hooks
 import {
   useArticleDetails,
   useArticleReactions,
   useComments,
   useArticleAuthor,
+  useArticleBookmark,
 } from "./hooks";
 
-// Components
 import {
   BackButton,
   ArticleHeader,
@@ -33,41 +32,40 @@ const ArticleDetails: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const lang = useSelector((state: RootState) => state.locale.lang);
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const { user } = useAuthUser();
+  const articleId = id || "";
 
-  // Custom hooks
-  const { article, isLoading, error, detectedLanguage } = useArticleDetails(
-    id || "",
-  );
-  const { counts, handleReaction } = useArticleReactions(
-    id || "",
+  const { article, isLoading, error, detectedLanguage } =
+    useArticleDetails(articleId);
+  const { counts, myReaction, handleReaction } = useArticleReactions(
+    articleId,
     user?.id || null,
   );
-  const { comments, addComment } = useComments(id || "");
-  const { authorProfile } = useArticleAuthor(article?.author_id);
+  const { comments, addComment } = useComments(articleId);
+  const { authorProfile } = useArticleAuthor(article);
+  const { isBookmarked, handleBookmark } = useArticleBookmark(
+    articleId,
+    user?.id || null,
+    article?.is_bookmarked ?? false,
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Handlers
-  const handleBookmark = () => setIsBookmarked((prev) => !prev);
-
   const handleShare = () => {
     if (navigator.share) {
-      navigator.share({
+      void navigator.share({
         title: article?.title,
         text: article?.subtitle,
         url: window.location.href,
       });
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      void navigator.clipboard.writeText(window.location.href);
       toast.success("Copied to clipboard");
     }
   };
 
-  // Loading and error states
   if (isLoading) return <Loading message="Loading article..." />;
   if (error || !article)
     return <ErrorState onRetry={() => navigate(ROUTES.ARTICLS)} lang={lang} />;
@@ -103,10 +101,12 @@ const ArticleDetails: React.FC = () => {
               onBookmark={handleBookmark}
               onShare={handleShare}
               isBookmarked={isBookmarked}
+              myReaction={myReaction}
             />
           </Paper>
 
           <CommentsSection
+            articleId={articleId}
             comments={comments}
             onAddComment={addComment}
             user={user}
@@ -120,7 +120,7 @@ const ArticleDetails: React.FC = () => {
             article={article}
             lang={lang}
           />
-          <RelatedArticles />
+          <RelatedArticles articleId={articleId} />
         </Grid>
       </Grid>
     </div>

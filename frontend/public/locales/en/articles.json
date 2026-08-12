@@ -18,6 +18,11 @@
   "no_articles": "No articles found",
   "loading": "Loading articles...",
   "error": "Error loading articles",
+  "related": {
+    "title": "Related Articles",
+    "empty": "No related articles yet.",
+    "loading": "Loading..."
+  },
   "categories": {
     "all": "All",
     "ethics": "Ethics",

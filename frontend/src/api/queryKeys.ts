@@ -20,10 +20,30 @@ export const queryKeys = {
       [...queryKeys.philosophers.all, "featured", limit] as const,
     bio: (id: number) => [...queryKeys.philosophers.all, "bio", id] as const,
   },
-  // Future modules (examples — wire when migrating off Supabase):
-  // articles: {
-  //   all: ["articles"] as const,
-  //   list: (filters: unknown) => [...queryKeys.articles.all, "list", filters] as const,
-  //   detail: (id: string) => [...queryKeys.articles.all, "detail", id] as const,
-  // },
+  articles: {
+    all: ["articles"] as const,
+    list: (filters: unknown) =>
+      [...queryKeys.articles.all, "list", filters] as const,
+    detail: (id: string) => [...queryKeys.articles.all, "detail", id] as const,
+    reactions: (id: string) =>
+      [...queryKeys.articles.all, "reactions", id] as const,
+    comments: (id: string) =>
+      [...queryKeys.articles.all, "comments", id] as const,
+    commentReplies: (articleId: string, commentId: string) =>
+      [
+        ...queryKeys.articles.all,
+        "comments",
+        articleId,
+        "replies",
+        commentId,
+      ] as const,
+    related: (id: string, limit: number) =>
+      [...queryKeys.articles.all, "related", id, limit] as const,
+    bookmarks: (filters: unknown) =>
+      [...queryKeys.articles.all, "bookmarks", filters] as const,
+  },
+  users: {
+    all: ["users"] as const,
+    profile: (id: string) => [...queryKeys.users.all, "profile", id] as const,
+  },
 } as const;

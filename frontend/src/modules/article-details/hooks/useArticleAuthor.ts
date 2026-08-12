@@ -1,17 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
-import { getProfileById } from '../services/profileService';
+import type { ArticleDetail } from "../../articles/types";
 
-export const useArticleAuthor = (authorId: string | undefined) => {
-  const { data: authorProfile, isLoading, error } = useQuery({
-    queryKey: ['profile', authorId],
-    queryFn: () => getProfileById(authorId!),
-    enabled: !!authorId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-  });
+/** Maps embedded article.profiles to the AuthorSidebar shape (no extra fetch). */
+export function useArticleAuthor(article: ArticleDetail | undefined) {
+  if (!article?.profiles) {
+    return { authorProfile: null, isLoading: false, error: null };
+  }
 
-  return { 
-    authorProfile: authorProfile || null, 
-    isLoading, 
-    error 
+  return {
+    authorProfile: {
+      id: article.author_id,
+      username: article.profiles.username,
+      bio: article.profiles.bio,
+      avatar_url: article.profiles.avatar_url,
+    },
+    isLoading: false,
+    error: null,
   };
-};
+}

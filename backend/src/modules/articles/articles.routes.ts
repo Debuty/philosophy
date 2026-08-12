@@ -4,12 +4,16 @@ import * as articlesController from "./articles.controller.js";
 
 export const articlesRoutes = Router();
 
-articlesRoutes.get("/", articlesController.list);
+articlesRoutes.get("/", optionalAuth, articlesController.list);
 articlesRoutes.post("/", requireAuth, articlesController.create);
 
 articlesRoutes.get("/:id/related", articlesController.related);
 
-articlesRoutes.get("/:id/reactions", articlesController.getReactions);
+articlesRoutes.get(
+  "/:id/reactions",
+  optionalAuth,
+  articlesController.getReactions,
+);
 articlesRoutes.put(
   "/:id/reactions",
   requireAuth,

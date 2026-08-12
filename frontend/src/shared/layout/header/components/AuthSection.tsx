@@ -27,7 +27,9 @@ const AuthSection: React.FC<AuthSectionProps> = ({
   };
 
   const handleProfileClick = () => {
-    navigate(ROUTES.PROFILE);
+    if (user?.id) {
+      navigate(`/profile/${user.id}`);
+    }
     if (onAction) onAction();
   };
 

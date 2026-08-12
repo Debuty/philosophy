@@ -1,3 +1,5 @@
+import type { CommentDto } from "../../articles/types";
+
 // Define types locally for now
 interface Article {
   id: string;
@@ -8,15 +10,6 @@ interface Article {
   state?: string;
   author_id: string;
   created_at: string;
-}
-
-interface Comment {
-  id: string;
-  content: string;
-  created_at: string;
-  user_id: string;
-  article_id: string;
-  profiles: { username: string } | null;
 }
 
 interface ReactionCounts {
@@ -59,11 +52,17 @@ export interface ArticleActionsProps {
   onBookmark: () => void;
   onShare: () => void;
   isBookmarked: boolean;
+  myReaction?: "like" | "dislike" | null;
 }
 
 export interface CommentsSectionProps {
-  comments: Comment[];
-  onAddComment: (content: string, userId: string) => Promise<void>;
+  articleId: string;
+  comments: CommentDto[];
+  onAddComment: (
+    content: string,
+    userId?: string,
+    parentId?: string,
+  ) => Promise<void>;
   user: User | null;
   lang: string;
 }
@@ -80,10 +79,19 @@ export interface CommentFormProps {
   onChange: (value: string) => void;
   user: User | null;
   lang: string;
+  submitLabel?: string;
 }
 
 export interface CommentsListProps {
-  comments: Comment[];
+  articleId: string;
+  comments: CommentDto[];
+  onAddComment: (
+    content: string,
+    userId?: string,
+    parentId?: string,
+  ) => Promise<void>;
+  user: User | null;
+  lang: string;
 }
 
 export interface BackButtonProps {

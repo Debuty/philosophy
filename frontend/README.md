@@ -12,8 +12,8 @@ VITE_SUPABASE_URL=...
 VITE_SUPABASE_ANON_KEY=...
 ```
 
-- **`VITE_API_URL`** — Express backend (auth, philosophers, and future modules).
-- Supabase env vars remain until **articles** (and any leftover modules) are migrated off Supabase.
+- **`VITE_API_URL`** — Express backend (auth, philosophers, articles).
+- Supabase env vars may remain unused until `supabaseClient` is removed entirely in a later cleanup.
 
 ## Auth
 
@@ -28,28 +28,25 @@ VITE_SUPABASE_ANON_KEY=...
 - Hooks: `usePhilosophersList`, `useFeaturedPhilosophers`, `usePhilosopherBio`.
 - Query keys: `queryKeys.philosophers.*`.
 
+## Articles
+
+- List / create / detail / reactions / comments / related / bookmarks use `VITE_API_URL` via `modules/articles/api/articlesApi.ts`.
+- Hooks: `useArticlesList`, `useCreateArticle`, plus detail hooks under `modules/article-details/hooks/`.
+- Query keys: `queryKeys.articles.*`.
+
+## Users / profiles
+
+- Public author profile: `GET /users/:id/profile` via `modules/profile/api/usersApi.ts`.
+- Page route: `/users/:id` (`UserProfile`) — username, avatar, bio (no auth required).
+- Own account profile remains `/profile/:id` (protected).
+- Query keys: `queryKeys.users.profile(id)`.
+
 ## Adding a feature API (React Query convention)
 
 1. **Keys** — extend `src/api/queryKeys.ts` (never hard-code key arrays in hooks).
 2. **API fn** — plain async in `modules/<feature>/api/*.ts` using `apiClient` (no React).
 3. **Hooks** — `useQuery` / `useMutation` in `modules/<feature>/hooks/`; on success `invalidateQueries` / `setQueryData`.
 4. **UI** — call hooks only; keep MUI + existing SCSS modules.
-
-Example:
-
-```ts
-// queryKeys.ts
-articles: {
-  all: ["articles"] as const,
-  list: (filters: ListFilters) => [...queryKeys.articles.all, "list", filters] as const,
-}
-
-// useArticles.ts
-useQuery({
-  queryKey: queryKeys.articles.list(filters),
-  queryFn: () => articlesApi.list(filters),
-});
-```
 
 ## Scripts
 

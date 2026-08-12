@@ -4,7 +4,6 @@ import { Drawer, List, Divider, IconButton } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import type { RootState } from '../../../../store';
-import { ROUTES } from '../../../../routes/pathes';
 import { HEADER_CONSTANTS } from '../constants';
 import { useAuth } from '../hooks/useAuth';
 import { LanguageSwitcher, NavigationItems, AuthSection } from './index';
@@ -21,7 +20,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
     const { user } = useAuth();
 
     const handleProfileClick = () => {
-        navigate(ROUTES.PROFILE);
+        if (user?.id) {
+            navigate(`/profile/${user.id}`);
+        }
         onClose();
     };
 
