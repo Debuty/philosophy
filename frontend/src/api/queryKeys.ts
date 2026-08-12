@@ -29,14 +29,9 @@ export const queryKeys = {
       [...queryKeys.articles.all, "reactions", id] as const,
     comments: (id: string) =>
       [...queryKeys.articles.all, "comments", id] as const,
+    // Separate prefix from `comments` so invalidating roots never refetches replies.
     commentReplies: (articleId: string, commentId: string) =>
-      [
-        ...queryKeys.articles.all,
-        "comments",
-        articleId,
-        "replies",
-        commentId,
-      ] as const,
+      [...queryKeys.articles.all, "comment-replies", articleId, commentId] as const,
     related: (id: string, limit: number) =>
       [...queryKeys.articles.all, "related", id, limit] as const,
     bookmarks: (filters: unknown) =>

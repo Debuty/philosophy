@@ -15,6 +15,17 @@
   "share": "Share",
   "bookmark": "Bookmark",
   "add_article": "Add Article",
+  "edit_article": "Edit Article",
+  "edit_article_page": {
+    "title": "Edit Article",
+    "subtitle": "Update your article content and publishing state.",
+    "buttons": {
+      "cancel": "Cancel",
+      "save_draft": "Save as Draft",
+      "publish": "Save & Publish",
+      "saving": "Saving..."
+    }
+  },
   "no_articles": "No articles found",
   "loading": "Loading articles...",
   "error": "Error loading articles",

@@ -6,3 +6,4 @@ export * from './AuthorSidebar';
 export * from './BackButton';
 export * from './ErrorState';
 export * from './RelatedArticles';
+export * from './EditArticleModal';

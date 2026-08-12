@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ListItem,
   ListItemAvatar,
@@ -8,15 +8,17 @@ import {
   IconButton,
   Button,
   Collapse,
+  TextField,
+  CircularProgress,
 } from "@mui/material";
 import {
   ThumbUp as ThumbUpIcon,
   ThumbDown as ThumbDownIcon,
   Edit as EditIcon,
-  DeleteForever as DeleteForeverIcon,
 } from "@mui/icons-material";
 import type { CommentDto } from "../../../articles/types";
 import { useCommentReplies } from "../../hooks/useCommentReplies";
+import { useUpdateComment } from "../../hooks/useUpdateComment";
 import { CommentForm } from "./CommentForm";
 import Loading from "../../../../shared/loading/Loading";
 
@@ -42,6 +44,17 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const [expanded, setExpanded] = useState(false);
   const [showReply, setShowReply] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.content);
+
+  const updateComment = useUpdateComment(articleId);
+  const isOwner = Boolean(user?.id && user.id === comment.user_id);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setEditText(comment.content);
+    }
+  }, [comment.content, isEditing]);
 
   const {
     data: replies = [],
@@ -65,6 +78,38 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     } catch {
       // Error toast handled in hook
     }
+  };
+
+  const handleStartEdit = () => {
+    setEditText(comment.content);
+    setIsEditing(true);
+    setShowReply(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditText(comment.content);
+    setIsEditing(false);
+  };
+
+  const handleSaveEdit = () => {
+    const next = editText.trim();
+    if (!next || next === comment.content) {
+      setIsEditing(false);
+      return;
+    }
+
+    updateComment.mutate(
+      {
+        commentId: comment.id,
+        content: next,
+        parentId: comment.parent_id,
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+      },
+    );
   };
 
   const repliesLabel =
@@ -112,25 +157,71 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 ? `${new Date(comment.created_at).toLocaleDateString()} ${new Date(comment.created_at).toLocaleTimeString()}`
                 : ""}
             </Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{
-                fontSize: "1.3rem",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <EditIcon />
-              <DeleteForeverIcon />
-            </Typography>
+            {isOwner && !isEditing && (
+              <IconButton
+                size="small"
+                onClick={handleStartEdit}
+                aria-label={lang === "ar" ? "تعديل التعليق" : "Edit comment"}
+                sx={{ color: "#534e46" }}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+            )}
           </Box>
-          <Typography variant="body2" sx={{ mb: 1, fontSize: "1.3rem" }}>
-            {comment.content}
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+
+          {isEditing ? (
+            <Box sx={{ mb: 1 }}>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                disabled={updateComment.isPending}
+                sx={{ mb: 1 }}
+              />
+              <Box sx={{ display: "flex", gap: 1 }}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={handleSaveEdit}
+                  disabled={updateComment.isPending || !editText.trim()}
+                  startIcon={
+                    updateComment.isPending ? (
+                      <CircularProgress size={16} color="inherit" />
+                    ) : undefined
+                  }
+                  sx={{
+                    backgroundColor: "#534e46",
+                    "&:hover": { backgroundColor: "#2c2820" },
+                  }}
+                >
+                  {updateComment.isPending
+                    ? lang === "ar"
+                      ? "جاري الحفظ..."
+                      : "Saving..."
+                    : lang === "ar"
+                      ? "حفظ"
+                      : "Save"}
+                </Button>
+                <Button
+                  size="small"
+                  onClick={handleCancelEdit}
+                  disabled={updateComment.isPending}
+                >
+                  {lang === "ar" ? "إلغاء" : "Cancel"}
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            <Typography variant="body2" sx={{ mb: 1, fontSize: "1.3rem" }}>
+              {comment.content}
+            </Typography>
+          )}
+
+          <Box
+            sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}
+          >
             <IconButton size="small" sx={{ color: "#534e46", direction: "ltr" }}>
               <ThumbUpIcon fontSize="small" />
               <span style={{ fontSize: "1.3rem", marginLeft: "0.5rem" }}>
@@ -143,13 +234,15 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 {comment.comment_reaction_counts?.dislikes ?? 0}
               </span>
             </IconButton>
-            <Button
-              size="small"
-              onClick={() => setShowReply((prev) => !prev)}
-              sx={{ textTransform: "none", color: "#534e46" }}
-            >
-              {lang === "ar" ? "رد" : "Reply"}
-            </Button>
+            {!isEditing && (
+              <Button
+                size="small"
+                onClick={() => setShowReply((prev) => !prev)}
+                sx={{ textTransform: "none", color: "#534e46" }}
+              >
+                {lang === "ar" ? "رد" : "Reply"}
+              </Button>
+            )}
             {comment.replies_count > 0 && (
               <Button
                 size="small"
@@ -161,7 +254,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
             )}
           </Box>
 
-          <Collapse in={showReply}>
+          <Collapse in={showReply && !isEditing}>
             <Box sx={{ mt: 2 }}>
               <CommentForm
                 onSubmit={handleReplySubmit}
@@ -180,7 +273,9 @@ export const CommentItem: React.FC<CommentItemProps> = ({
         <Box sx={{ mt: 2, ml: { xs: 1, sm: 4 } }}>
           {(repliesLoading || repliesFetching) && replies.length === 0 ? (
             <Loading
-              message={lang === "ar" ? "جاري تحميل الردود..." : "Loading replies..."}
+              message={
+                lang === "ar" ? "جاري تحميل الردود..." : "Loading replies..."
+              }
             />
           ) : replies.length === 0 ? (
             <Typography variant="body2" color="text.secondary">

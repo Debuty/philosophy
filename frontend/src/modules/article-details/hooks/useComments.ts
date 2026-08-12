@@ -23,8 +23,10 @@ export const useComments = (articleId: string) => {
     mutationFn: ({ content, parentId }: AddCommentInput) =>
       createComment(articleId, content, parentId),
     onSuccess: (_data, variables) => {
+      // Roots always — updates replies_count on the parent when adding a reply.
       void queryClient.invalidateQueries({
         queryKey: queryKeys.articles.comments(articleId),
+        exact: true,
       });
       if (variables.parentId) {
         void queryClient.invalidateQueries({

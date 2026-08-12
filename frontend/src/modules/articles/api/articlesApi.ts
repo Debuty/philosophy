@@ -128,6 +128,17 @@ export async function createComment(
   return data.data;
 }
 
+export async function updateComment(
+  articleId: string,
+  commentId: string,
+  content: string,
+): Promise<{ id: string; content: string; updated_at: string }> {
+  const { data } = await apiClient.patch<
+    ApiSuccess<{ id: string; content: string; updated_at: string }>
+  >(`/articles/${articleId}/comments/${commentId}`, { content });
+  return data.data;
+}
+
 export async function listRelatedArticles(
   articleId: string,
   limit = 3,
