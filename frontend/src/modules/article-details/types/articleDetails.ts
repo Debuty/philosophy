@@ -57,6 +57,7 @@ export interface ArticleActionsProps {
 
 export interface CommentsSectionProps {
   articleId: string;
+  articleAuthorId: string;
   comments: CommentDto[];
   onAddComment: (
     content: string,
@@ -84,6 +85,7 @@ export interface CommentFormProps {
 
 export interface CommentsListProps {
   articleId: string;
+  articleAuthorId: string;
   comments: CommentDto[];
   onAddComment: (
     content: string,

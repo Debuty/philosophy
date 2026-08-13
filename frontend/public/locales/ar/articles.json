@@ -96,7 +96,8 @@
       "save_draft": "حفظ كمسودة",
       "publish": "نشر المقال",
       "cancel": "إلغاء",
-      "preview": "معاينة"
+      "preview": "معاينة",
+      "back_to_articles": "العودة للمقالات"
     },
     "validation": {
       "title_required": "العنوان مطلوب",

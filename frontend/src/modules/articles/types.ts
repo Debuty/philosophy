@@ -76,7 +76,7 @@ export type CommentDto = {
   depth: number;
   replies_count: number;
   profiles: { username: string } | null;
-  comment_reaction_counts: ReactionCounts;
+  comment_reaction_counts: ArticleReactionsState;
 };
 
 export type RelatedArticle = {
@@ -85,6 +85,26 @@ export type RelatedArticle = {
   subtitle: string;
   category: string;
   created_at: string;
+};
+
+export type BookmarkedArticle = {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: string;
+  created_at: string;
+  bookmarked_at: string;
+  profiles: { username: string };
+};
+
+export type ListBookmarksParams = {
+  page?: number;
+  pageSize?: number;
+};
+
+export type BookmarksListResult = {
+  data: BookmarkedArticle[];
+  pagination: ArticlesPagination;
 };
 
 export type ProcessedArticle = {

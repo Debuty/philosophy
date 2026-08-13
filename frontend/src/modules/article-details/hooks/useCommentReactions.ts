@@ -1,16 +1,20 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useOptimistic, startTransition } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  useCallback,
+  useOptimistic,
+  useTransition,
+} from "react";
 import { toast } from "react-toastify";
 import { queryKeys } from "../../../api/queryKeys";
 import { isApiError } from "../../../api/types";
 import {
-  clearArticleReaction,
-  getArticleReactions,
-  setArticleReaction,
+  clearCommentReaction,
+  setCommentReaction,
 } from "../../articles/api/articlesApi";
 import type {
   ArticleReaction,
   ArticleReactionsState,
+  CommentDto,
 } from "../../articles/types";
 
 type ReactionState = {
@@ -39,22 +43,31 @@ function applyOptimisticReaction(
   };
 }
 
-export const useArticleReactions = (
-  articleId: string,
-  userId: string | null,
-) => {
-  const queryClient = useQueryClient();
+function patchCommentReactions(
+  comments: CommentDto[] | undefined,
+  commentId: string,
+  counts: ArticleReactionsState,
+): CommentDto[] | undefined {
+  if (!comments) return comments;
+  return comments.map((comment) =>
+    comment.id === commentId
+      ? { ...comment, comment_reaction_counts: counts }
+      : comment,
+  );
+}
 
-  const { data } = useQuery({
-    queryKey: queryKeys.articles.reactions(articleId),
-    queryFn: () => getArticleReactions(articleId),
-    enabled: !!articleId,
-  });
+export function useCommentReactions(
+  articleId: string,
+  comment: CommentDto,
+  userId: string | null,
+) {
+  const queryClient = useQueryClient();
+  const [isPending, startTransition] = useTransition();
 
   const serverState: ReactionState = {
-    likes: data?.likes ?? 0,
-    dislikes: data?.dislikes ?? 0,
-    my_reaction: data?.my_reaction ?? null,
+    likes: comment.comment_reaction_counts.likes ?? 0,
+    dislikes: comment.comment_reaction_counts.dislikes ?? 0,
+    my_reaction: comment.comment_reaction_counts.my_reaction ?? null,
   };
 
   const [optimisticState, setOptimisticReaction] = useOptimistic(
@@ -62,17 +75,24 @@ export const useArticleReactions = (
     applyOptimisticReaction,
   );
 
-  const syncReactionsCache = (payload: ArticleReactionsState) => {
-    queryClient.setQueryData(queryKeys.articles.reactions(articleId), payload);
-    void queryClient.invalidateQueries({
-      queryKey: [...queryKeys.articles.all, "list"],
-    });
+  const syncCommentCache = (payload: ArticleReactionsState) => {
+    if (comment.parent_id) {
+      queryClient.setQueryData<CommentDto[]>(
+        queryKeys.articles.commentReplies(articleId, comment.parent_id),
+        (old) => patchCommentReactions(old, comment.id, payload),
+      );
+    } else {
+      queryClient.setQueryData<CommentDto[]>(
+        queryKeys.articles.comments(articleId),
+        (old) => patchCommentReactions(old, comment.id, payload),
+      );
+    }
   };
 
   const handleReaction = useCallback(
     (reactionType: ArticleReaction) => {
       if (!userId) {
-        toast.error("Please log in to react to articles");
+        toast.error("Please log in to react to comments");
         return;
       }
 
@@ -85,15 +105,19 @@ export const useArticleReactions = (
         try {
           const result =
             nextReaction === null
-              ? await clearArticleReaction(articleId)
-              : await setArticleReaction(articleId, nextReaction);
+              ? await clearCommentReaction(articleId, comment.id)
+              : await setCommentReaction(
+                  articleId,
+                  comment.id,
+                  nextReaction,
+                );
 
-          syncReactionsCache(result);
+          syncCommentCache(result);
         } catch (error) {
           toast.error(
             isApiError(error)
               ? error.message
-              : "Failed to react to article",
+              : "Failed to react to comment",
           );
           // No cache update → useOptimistic rolls back when the transition ends
         }
@@ -103,6 +127,8 @@ export const useArticleReactions = (
       userId,
       optimisticState.my_reaction,
       articleId,
+      comment.id,
+      comment.parent_id,
       setOptimisticReaction,
       queryClient,
     ],
@@ -115,5 +141,6 @@ export const useArticleReactions = (
     },
     myReaction: optimisticState.my_reaction,
     handleReaction,
+    isPending,
   };
-};
+}

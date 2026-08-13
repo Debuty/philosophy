@@ -6,6 +6,7 @@ import type { CommentsSectionProps } from "../../types/articleDetails";
 
 export const CommentsSection: React.FC<CommentsSectionProps> = ({
   articleId,
+  articleAuthorId,
   comments,
   onAddComment,
   user,
@@ -46,6 +47,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
 
       <CommentsList
         articleId={articleId}
+        articleAuthorId={articleAuthorId}
         comments={comments}
         onAddComment={onAddComment}
         user={user}

@@ -108,7 +108,7 @@ export async function deleteReaction(req: Request, res: Response, next: NextFunc
 export async function listComments(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = articleIdParamSchema.parse(req.params);
-    const data = await commentsService.listComments(id);
+    const data = await commentsService.listComments(id, req.user?.id);
     res.status(200).json({ data });
   } catch (error) {
     next(error);
@@ -118,7 +118,11 @@ export async function listComments(req: Request, res: Response, next: NextFuncti
 export async function listCommentReplies(req: Request, res: Response, next: NextFunction) {
   try {
     const { id, commentId } = commentIdParamSchema.parse(req.params);
-    const data = await commentsService.listCommentReplies(id, commentId);
+    const data = await commentsService.listCommentReplies(
+      id,
+      commentId,
+      req.user?.id,
+    );
     res.status(200).json({ data });
   } catch (error) {
     next(error);

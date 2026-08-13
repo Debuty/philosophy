@@ -2,7 +2,12 @@ import React from 'react';
 import { Grid, Paper } from '@mui/material';
 import Loading from '../../shared/loading/Loading';
 import { useAuthUser } from '../auth/hooks';
-import { StatsCard, ProfileHeader, ProfileSidebar } from './components';
+import {
+  StatsCard,
+  ProfileHeader,
+  ProfileSidebar,
+  BookmarksSection,
+} from './components';
 import { PROFILE_CONSTANTS } from './constants';
 import './Profile.scss';
 
@@ -30,6 +35,8 @@ const Profile: React.FC = () => {
               <StatsCard key={key} value={0} label={label} />
             ))}
           </Grid>
+
+          <BookmarksSection enabled={!!user} />
         </Grid>
 
         <ProfileSidebar />

@@ -10,21 +10,32 @@ import {
   Collapse,
   TextField,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import {
   ThumbUp as ThumbUpIcon,
   ThumbDown as ThumbDownIcon,
   Edit as EditIcon,
+  DeleteForever as DeleteForeverIcon,
 } from "@mui/icons-material";
 import type { CommentDto } from "../../../articles/types";
 import { useCommentReplies } from "../../hooks/useCommentReplies";
+import { useCommentReactions } from "../../hooks/useCommentReactions";
 import { useUpdateComment } from "../../hooks/useUpdateComment";
+import { useDeleteComment } from "../../hooks/useDeleteComment";
 import { CommentForm } from "./CommentForm";
 import Loading from "../../../../shared/loading/Loading";
+
+const ACTIVE_REACTION_COLOR = "#8B5A2B";
 
 type CommentItemProps = {
   comment: CommentDto;
   articleId: string;
+  articleAuthorId: string;
   onAddComment: (
     content: string,
     userId?: string,
@@ -37,6 +48,7 @@ type CommentItemProps = {
 export const CommentItem: React.FC<CommentItemProps> = ({
   comment,
   articleId,
+  articleAuthorId,
   onAddComment,
   user,
   lang,
@@ -46,9 +58,22 @@ export const CommentItem: React.FC<CommentItemProps> = ({
   const [replyText, setReplyText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.content);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const updateComment = useUpdateComment(articleId);
+  const deleteComment = useDeleteComment(articleId);
+  const {
+    counts: reactionCounts,
+    myReaction,
+    handleReaction,
+    isPending: reactionPending,
+  } = useCommentReactions(articleId, comment, user?.id || null);
   const isOwner = Boolean(user?.id && user.id === comment.user_id);
+  const canDelete = Boolean(
+    user?.id && (user.id === comment.user_id || user.id === articleAuthorId),
+  );
+  const isBusy =
+    updateComment.isPending || deleteComment.isPending || reactionPending;
 
   useEffect(() => {
     if (!isEditing) {
@@ -112,6 +137,20 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     );
   };
 
+  const handleConfirmDelete = () => {
+    deleteComment.mutate(
+      {
+        commentId: comment.id,
+        parentId: comment.parent_id,
+      },
+      {
+        onSuccess: () => {
+          setDeleteOpen(false);
+        },
+      },
+    );
+  };
+
   const repliesLabel =
     lang === "ar"
       ? expanded
@@ -161,10 +200,22 @@ export const CommentItem: React.FC<CommentItemProps> = ({
               <IconButton
                 size="small"
                 onClick={handleStartEdit}
+                disabled={isBusy}
                 aria-label={lang === "ar" ? "تعديل التعليق" : "Edit comment"}
                 sx={{ color: "#534e46" }}
               >
                 <EditIcon fontSize="small" />
+              </IconButton>
+            )}
+            {canDelete && !isEditing && (
+              <IconButton
+                size="small"
+                onClick={() => setDeleteOpen(true)}
+                disabled={isBusy}
+                aria-label={lang === "ar" ? "حذف التعليق" : "Delete comment"}
+                sx={{ color: "#534e46" }}
+              >
+                <DeleteForeverIcon fontSize="small" />
               </IconButton>
             )}
           </Box>
@@ -185,7 +236,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                   size="small"
                   variant="contained"
                   onClick={handleSaveEdit}
-                  disabled={updateComment.isPending || !editText.trim()}
+                  disabled={isBusy || !editText.trim()}
                   startIcon={
                     updateComment.isPending ? (
                       <CircularProgress size={16} color="inherit" />
@@ -207,7 +258,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 <Button
                   size="small"
                   onClick={handleCancelEdit}
-                  disabled={updateComment.isPending}
+                  disabled={isBusy}
                 >
                   {lang === "ar" ? "إلغاء" : "Cancel"}
                 </Button>
@@ -220,18 +271,71 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           )}
 
           <Box
-            sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              flexWrap: "wrap",
+            }}
           >
-            <IconButton size="small" sx={{ color: "#534e46", direction: "ltr" }}>
+            <IconButton
+              size="small"
+              onClick={() => handleReaction("like")}
+              disabled={isBusy}
+              sx={{
+                color:
+                  myReaction === "like" ? ACTIVE_REACTION_COLOR : "#534e46",
+                direction: "ltr",
+                "& svg path": {
+                  fill:
+                    myReaction === "like"
+                      ? `${ACTIVE_REACTION_COLOR} !important`
+                      : "#534e46",
+                },
+              }}
+            >
               <ThumbUpIcon fontSize="small" />
-              <span style={{ fontSize: "1.3rem", marginLeft: "0.5rem" }}>
-                {comment.comment_reaction_counts?.likes ?? 0}
+              <span
+                style={{
+                  fontSize: "1.3rem",
+                  marginLeft: "0.5rem",
+                  color:
+                    myReaction === "like" ? ACTIVE_REACTION_COLOR : "#534e46",
+                  fontWeight: myReaction === "like" ? 700 : 400,
+                }}
+              >
+                {reactionCounts.likes}
               </span>
             </IconButton>
-            <IconButton size="small" sx={{ color: "#534e46", direction: "ltr" }}>
+            <IconButton
+              size="small"
+              onClick={() => handleReaction("dislike")}
+              disabled={isBusy}
+              sx={{
+                color:
+                  myReaction === "dislike" ? ACTIVE_REACTION_COLOR : "#534e46",
+                direction: "ltr",
+                "& svg path": {
+                  fill:
+                    myReaction === "dislike"
+                      ? `${ACTIVE_REACTION_COLOR} !important`
+                      : "#534e46",
+                },
+              }}
+            >
               <ThumbDownIcon fontSize="small" />
-              <span style={{ fontSize: "1.3rem", marginLeft: "0.5rem" }}>
-                {comment.comment_reaction_counts?.dislikes ?? 0}
+              <span
+                style={{
+                  fontSize: "1.3rem",
+                  marginLeft: "0.5rem",
+                  color:
+                    myReaction === "dislike"
+                      ? ACTIVE_REACTION_COLOR
+                      : "#534e46",
+                  fontWeight: myReaction === "dislike" ? 700 : 400,
+                }}
+              >
+                {reactionCounts.dislikes}
               </span>
             </IconButton>
             {!isEditing && (
@@ -287,6 +391,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
                 key={reply.id}
                 comment={reply}
                 articleId={articleId}
+                articleAuthorId={articleAuthorId}
                 onAddComment={onAddComment}
                 user={user}
                 lang={lang}
@@ -295,6 +400,51 @@ export const CommentItem: React.FC<CommentItemProps> = ({
           )}
         </Box>
       </Collapse>
+
+      <Dialog
+        open={deleteOpen}
+        onClose={
+          deleteComment.isPending ? undefined : () => setDeleteOpen(false)
+        }
+      >
+        <DialogTitle>
+          {lang === "ar" ? "حذف التعليق" : "Delete comment"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {lang === "ar"
+              ? "هل تريد حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء."
+              : "Do you want to delete this comment? This action cannot be undone."}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setDeleteOpen(false)}
+            disabled={deleteComment.isPending}
+          >
+            {lang === "ar" ? "لا" : "No"}
+          </Button>
+          <Button
+            onClick={handleConfirmDelete}
+            color="error"
+            variant="contained"
+            disabled={deleteComment.isPending}
+            startIcon={
+              deleteComment.isPending ? (
+                <CircularProgress size={16} color="inherit" />
+              ) : undefined
+            }
+          >
+            {deleteComment.isPending
+              ? lang === "ar"
+                ? "جاري الحذف..."
+                : "Deleting..."
+              : lang === "ar"
+                ? "نعم، احذف"
+                : "Yes, delete"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ListItem>
   );
 };

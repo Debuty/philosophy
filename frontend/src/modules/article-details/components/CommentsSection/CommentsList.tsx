@@ -5,6 +5,7 @@ import { CommentItem } from "./CommentItem";
 
 export const CommentsList: React.FC<CommentsListProps> = ({
   articleId,
+  articleAuthorId,
   comments,
   onAddComment,
   user,
@@ -17,6 +18,7 @@ export const CommentsList: React.FC<CommentsListProps> = ({
           key={comment.id}
           comment={comment}
           articleId={articleId}
+          articleAuthorId={articleAuthorId}
           onAddComment={onAddComment}
           user={user}
           lang={lang}

@@ -1,9 +1,11 @@
-import { and, asc, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNotNull, isNull, sql } from "drizzle-orm";
 import { db } from "../../db/index.js";
 import { commentReactions, comments, profiles } from "../../db/schema/index.js";
 import { AppError } from "../../lib/errors.js";
 import type { CreateCommentInput } from "./articles.schemas.js";
 import { assertArticleExists } from "./articles.service.js";
+
+type CommentReactionValue = "like" | "dislike";
 
 async function getCommentReactionCounts(commentId: string) {
   const [row] = await db
@@ -17,6 +19,59 @@ async function getCommentReactionCounts(commentId: string) {
   return {
     likes: row?.likes ?? 0,
     dislikes: row?.dislikes ?? 0,
+  };
+}
+
+async function getMyCommentReactions(
+  viewerId: string,
+  commentIds: string[],
+): Promise<Map<string, CommentReactionValue>> {
+  if (commentIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await db
+    .select({
+      commentId: commentReactions.commentId,
+      reaction: commentReactions.reaction,
+    })
+    .from(commentReactions)
+    .where(
+      and(
+        eq(commentReactions.userId, viewerId),
+        inArray(commentReactions.commentId, commentIds),
+      ),
+    );
+
+  return new Map(
+    rows.map((row) => [
+      row.commentId,
+      row.reaction as CommentReactionValue,
+    ]),
+  );
+}
+
+async function buildCommentReactionCounts(
+  commentId: string,
+  viewerId?: string,
+  knownReaction?: CommentReactionValue | null,
+) {
+  const counts = await getCommentReactionCounts(commentId);
+
+  if (!viewerId) {
+    return counts;
+  }
+
+  const my_reaction =
+    knownReaction !== undefined
+      ? knownReaction
+      : (
+          await getMyCommentReactions(viewerId, [commentId])
+        ).get(commentId) ?? null;
+
+  return {
+    ...counts,
+    my_reaction,
   };
 }
 
@@ -81,7 +136,10 @@ type CommentListRow = {
   repliesCount: number | null;
 };
 
-function toCommentDto(row: CommentListRow) {
+function toCommentDto(
+  row: CommentListRow,
+  myReactions?: Map<string, CommentReactionValue> | null,
+) {
   return {
     id: row.id,
     content: row.content,
@@ -97,12 +155,15 @@ function toCommentDto(row: CommentListRow) {
     comment_reaction_counts: {
       likes: row.likes ?? 0,
       dislikes: row.dislikes ?? 0,
+      ...(myReactions
+        ? { my_reaction: myReactions.get(row.id) ?? null }
+        : {}),
     },
   };
 }
 
 /** Root comments only (`parent_id` null), newest first, with direct `replies_count`. */
-export async function listComments(articleId: string) {
+export async function listComments(articleId: string, viewerId?: string) {
   await assertArticleExists(articleId);
 
   const reactionCounts = reactionCountsSubquery();
@@ -129,11 +190,22 @@ export async function listComments(articleId: string) {
     .where(and(eq(comments.articleId, articleId), isNull(comments.parentId)))
     .orderBy(desc(comments.createdAt));
 
-  return rows.map(toCommentDto);
+  const myReactions = viewerId
+    ? await getMyCommentReactions(
+        viewerId,
+        rows.map((row) => row.id),
+      )
+    : null;
+
+  return rows.map((row) => toCommentDto(row, myReactions));
 }
 
 /** Direct children of a comment (`parent_id = commentId`), oldest first, with `replies_count`. */
-export async function listCommentReplies(articleId: string, commentId: string) {
+export async function listCommentReplies(
+  articleId: string,
+  commentId: string,
+  viewerId?: string,
+) {
   await getCommentOrThrow(articleId, commentId);
 
   const reactionCounts = reactionCountsSubquery();
@@ -157,10 +229,19 @@ export async function listCommentReplies(articleId: string, commentId: string) {
     .innerJoin(profiles, eq(profiles.id, comments.userId))
     .leftJoin(reactionCounts, eq(reactionCounts.commentId, comments.id))
     .leftJoin(repliesCounts, eq(repliesCounts.parentId, comments.id))
-    .where(and(eq(comments.articleId, articleId), eq(comments.parentId, commentId)))
+    .where(
+      and(eq(comments.articleId, articleId), eq(comments.parentId, commentId)),
+    )
     .orderBy(asc(comments.createdAt));
 
-  return rows.map(toCommentDto);
+  const myReactions = viewerId
+    ? await getMyCommentReactions(
+        viewerId,
+        rows.map((row) => row.id),
+      )
+    : null;
+
+  return rows.map((row) => toCommentDto(row, myReactions));
 }
 
 export async function createComment(
@@ -226,6 +307,7 @@ export async function createComment(
     comment_reaction_counts: {
       likes: 0,
       dislikes: 0,
+      my_reaction: null,
     },
   };
 }
@@ -285,7 +367,7 @@ export async function upsertCommentReaction(
   articleId: string,
   commentId: string,
   userId: string,
-  reaction: "like" | "dislike",
+  reaction: CommentReactionValue,
 ) {
   await getCommentOrThrow(articleId, commentId);
 
@@ -304,7 +386,7 @@ export async function upsertCommentReaction(
       },
     });
 
-  return getCommentReactionCounts(commentId);
+  return buildCommentReactionCounts(commentId, userId, reaction);
 }
 
 export async function deleteCommentReaction(
@@ -328,5 +410,5 @@ export async function deleteCommentReaction(
     throw new AppError(404, "NOT_FOUND", "Reaction not found");
   }
 
-  return getCommentReactionCounts(commentId);
+  return buildCommentReactionCounts(commentId, userId, null);
 }

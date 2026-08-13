@@ -25,9 +25,14 @@ articlesRoutes.delete(
   articlesController.deleteReaction,
 );
 
-articlesRoutes.get("/:id/comments", articlesController.listComments);
+articlesRoutes.get(
+  "/:id/comments",
+  optionalAuth,
+  articlesController.listComments,
+);
 articlesRoutes.get(
   "/:id/comments/:commentId/replies",
+  optionalAuth,
   articlesController.listCommentReplies,
 );
 articlesRoutes.post(

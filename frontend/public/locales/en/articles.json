@@ -96,7 +96,8 @@
       "save_draft": "Save Draft",
       "publish": "Publish Article",
       "cancel": "Cancel",
-      "preview": "Preview"
+      "preview": "Preview",
+      "back_to_articles": "Back to Articles"
     },
     "validation": {
       "title_required": "Title is required",

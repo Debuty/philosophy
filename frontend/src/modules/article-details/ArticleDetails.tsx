@@ -138,6 +138,7 @@ const ArticleDetails: React.FC = () => {
 
           <CommentsSection
             articleId={articleId}
+            articleAuthorId={article.author_id}
             comments={comments}
             onAddComment={addComment}
             user={user}

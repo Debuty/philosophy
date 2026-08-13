@@ -11,12 +11,14 @@ import {
   Button,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import "./AddArticle.scss";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useCreateArticle } from "../../hooks/useCreateArticle";
 import type { ArticleState } from "../../types";
+import { ROUTES } from "../../../../routes/pathes";
 
 const addArticleSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -29,6 +31,7 @@ type AddArticleFormData = z.infer<typeof addArticleSchema>;
 
 const AddArticle: React.FC = () => {
   const { t } = useTranslation("articles");
+  const navigate = useNavigate();
   const [status, setStatus] = useState<ArticleState>("draft");
   const createArticle = useCreateArticle();
 
@@ -55,6 +58,23 @@ const AddArticle: React.FC = () => {
 
   return (
     <div className="add-article">
+      <Box sx={{ mb: 2 }}>
+        <Button
+          variant="text"
+          type="button"
+          disabled={createArticle.isPending}
+          onClick={() => navigate(ROUTES.ARTICLS)}
+          sx={{
+            textTransform: "none",
+            fontSize: "1rem",
+            fontWeight: 500,
+            color: "#534e46",
+          }}
+        >
+          {t("add_article_page.buttons.back_to_articles")}
+        </Button>
+      </Box>
+
       <Paper
         elevation={2}
         sx={{ p: 4, mx: "auto", backgroundColor: " rgb(193, 188, 181)" }}
@@ -192,6 +212,7 @@ const AddArticle: React.FC = () => {
               gap: 2,
               justifyContent: "flex-end",
               mt: 3,
+              flexWrap: "wrap",
             }}
           >
             <Button

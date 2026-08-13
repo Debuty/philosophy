@@ -7,9 +7,12 @@ import type {
   ArticleReactionsState,
   ArticlesListResult,
   ArticlesPagination,
+  BookmarkedArticle,
+  BookmarksListResult,
   CommentDto,
   CreateArticleInput,
   ListArticlesParams,
+  ListBookmarksParams,
   RelatedArticle,
   UpdateArticleInput,
 } from "../types";
@@ -139,6 +142,35 @@ export async function updateComment(
   return data.data;
 }
 
+export async function deleteComment(
+  articleId: string,
+  commentId: string,
+): Promise<void> {
+  await apiClient.delete(`/articles/${articleId}/comments/${commentId}`);
+}
+
+export async function setCommentReaction(
+  articleId: string,
+  commentId: string,
+  reaction: ArticleReaction,
+): Promise<ArticleReactionsState> {
+  const { data } = await apiClient.put<ApiSuccess<ArticleReactionsState>>(
+    `/articles/${articleId}/comments/${commentId}/reactions`,
+    { reaction },
+  );
+  return data.data;
+}
+
+export async function clearCommentReaction(
+  articleId: string,
+  commentId: string,
+): Promise<ArticleReactionsState> {
+  const { data } = await apiClient.delete<ApiSuccess<ArticleReactionsState>>(
+    `/articles/${articleId}/comments/${commentId}/reactions`,
+  );
+  return data.data;
+}
+
 export async function listRelatedArticles(
   articleId: string,
   limit = 3,
@@ -159,4 +191,30 @@ export async function addBookmark(articleId: string): Promise<{ article_id: stri
 
 export async function removeBookmark(articleId: string): Promise<void> {
   await apiClient.delete(`/articles/${articleId}/bookmark`);
+}
+
+type BookmarksListResponse = {
+  data: BookmarkedArticle[];
+  pagination?: ArticlesPagination;
+};
+
+export async function listMyBookmarks(
+  params: ListBookmarksParams = {},
+): Promise<BookmarksListResult> {
+  const page = params.page ?? 1;
+  const pageSize = params.pageSize ?? 20;
+  const { data } = await apiClient.get<BookmarksListResponse>(
+    "/users/me/bookmarks",
+    { params: { page, pageSize } },
+  );
+
+  return {
+    data: data.data,
+    pagination: data.pagination ?? {
+      page,
+      pageSize,
+      total: data.data.length,
+      totalPages: 1,
+    },
+  };
 }
