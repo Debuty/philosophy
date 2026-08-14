@@ -24,3 +24,17 @@ export async function bio(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+export async function updateImage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { id } = philosopherIdParamSchema.parse(req.params);
+    const data = await philosophersService.updatePhilosopherImage(id, req.file);
+    res.status(200).json({ data, message: "Philosopher image updated" });
+  } catch (error) {
+    next(error);
+  }
+}

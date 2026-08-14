@@ -25,6 +25,12 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // Let the browser set multipart boundary for file uploads
+  if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+    config.headers.delete("Content-Type");
+  }
+
   return config;
 });
 

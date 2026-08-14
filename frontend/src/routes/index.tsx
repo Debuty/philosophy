@@ -7,6 +7,7 @@ import GuestRoute from './GuestRoute';
 import Loading from '../shared/loading/Loading';
 import Profile from '../modules/profile/Profile';
 import UserProfile from '../modules/profile/UserProfile';
+import BookDetails from '../modules/book-details/BookDetails';
 
 // Lazy load components
 const Home = React.lazy(() => import('../modules/home/Home'));
@@ -111,6 +112,10 @@ export const router = createBrowserRouter([
             <Books />
           </Suspense>
         ),
+      },
+      {
+        path: ROUTES.BOOK_DETAILS,
+        element: <BookDetails />,
       },
       {
         path: ROUTES.LOGIN,

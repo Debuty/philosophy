@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../routes/pathes';
 import { NAVIGATION_ITEMS } from '../constants';
-import { Home, People, Article, School } from '@mui/icons-material';
+import { Home, People, Article, BookSharp } from '@mui/icons-material';
 import './NavigationItems.scss';
 
 interface NavigationItemsProps {
@@ -15,7 +15,7 @@ const iconMap = {
   home: <Home />,
   philosophers: <People />,
   articles: <Article />,
-  schools: <School />,
+  books:<BookSharp/>
 };
 
 const NavigationItems: React.FC<NavigationItemsProps> = ({ 

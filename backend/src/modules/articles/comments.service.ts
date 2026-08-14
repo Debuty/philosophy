@@ -131,6 +131,7 @@ type CommentListRow = {
   parentId: string | null;
   depth: number;
   username: string;
+  avatarUrl: string | null;
   likes: number | null;
   dislikes: number | null;
   repliesCount: number | null;
@@ -151,6 +152,7 @@ function toCommentDto(
     replies_count: row.repliesCount ?? 0,
     profiles: {
       username: row.username,
+      avatar_url: row.avatarUrl,
     },
     comment_reaction_counts: {
       likes: row.likes ?? 0,
@@ -179,6 +181,7 @@ export async function listComments(articleId: string, viewerId?: string) {
       parentId: comments.parentId,
       depth: comments.depth,
       username: profiles.username,
+      avatarUrl: profiles.avatarUrl,
       likes: reactionCounts.likes,
       dislikes: reactionCounts.dislikes,
       repliesCount: repliesCounts.repliesCount,
@@ -221,6 +224,7 @@ export async function listCommentReplies(
       parentId: comments.parentId,
       depth: comments.depth,
       username: profiles.username,
+      avatarUrl: profiles.avatarUrl,
       likes: reactionCounts.likes,
       dislikes: reactionCounts.dislikes,
       repliesCount: repliesCounts.repliesCount,
@@ -287,7 +291,10 @@ export async function createComment(
   }
 
   const [profile] = await db
-    .select({ username: profiles.username })
+    .select({
+      username: profiles.username,
+      avatarUrl: profiles.avatarUrl,
+    })
     .from(profiles)
     .where(eq(profiles.id, userId))
     .limit(1);
@@ -302,6 +309,7 @@ export async function createComment(
     depth: created.depth,
     profiles: {
       username: profile?.username ?? null,
+      avatar_url: profile?.avatarUrl ?? null,
     },
     replies_count: 0,
     comment_reaction_counts: {

@@ -6,6 +6,11 @@ import {
   schools,
 } from "../../db/schema/index.js";
 import { AppError } from "../../lib/errors.js";
+import {
+  CLOUDINARY_FOLDERS,
+  requireUploadedImage,
+  uploadImageBuffer,
+} from "../../lib/cloudinaryUpload.js";
 import type { ListPhilosophersQuery } from "./philosophers.schemas.js";
 
 export type PhilosopherCardDto = {
@@ -246,5 +251,42 @@ export async function getPhilosopherBio(id: number) {
     further_reading_ar: row.furtherReadingAr,
     references_en: row.referencesEn,
     references_ar: row.referencesAr,
+  };
+}
+
+export async function updatePhilosopherImage(
+  philosopherId: number,
+  file: Express.Multer.File | undefined,
+) {
+  const image = requireUploadedImage(file);
+
+  const [philosopher] = await db
+    .select({ id: philosophers.id })
+    .from(philosophers)
+    .where(eq(philosophers.id, philosopherId))
+    .limit(1);
+
+  if (!philosopher) {
+    throw new AppError(404, "NOT_FOUND", "Philosopher not found");
+  }
+
+  const uploaded = await uploadImageBuffer({
+    buffer: image.buffer,
+    folder: CLOUDINARY_FOLDERS.philosophers,
+    publicId: String(philosopherId),
+  });
+
+  const [updated] = await db
+    .update(philosophers)
+    .set({ imageUrl: uploaded.url })
+    .where(eq(philosophers.id, philosopherId))
+    .returning({
+      id: philosophers.id,
+      imageUrl: philosophers.imageUrl,
+    });
+
+  return {
+    id: updated.id,
+    image_url: updated.imageUrl,
   };
 }

@@ -1,0 +1,110 @@
+.book-card {
+  height: 100%;
+  width: 100%;
+  overflow: hidden !important;
+  background-color: rgb(193, 188, 181) !important;
+  border: none !important;
+  border-radius: 1.25rem !important;
+  box-shadow: 0 6px 18px rgba(83, 78, 70, 0.12) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(83, 78, 70, 0.18) !important;
+  }
+
+  &__action {
+    height: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  &__cover-wrap {
+    flex-shrink: 0;
+    padding: 1rem 1rem 0;
+  }
+
+  &__cover {
+    display: block;
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 0.9rem;
+    background: #aea99f;
+    box-shadow: 0 4px 12px rgba(83, 78, 70, 0.14);
+
+    &--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #d2cec7 0%, #b8b3ab 100%);
+      box-shadow: none;
+    }
+  }
+
+  &__cover-icon {
+    font-size: 4.5rem !important;
+    color: #534e46;
+    opacity: 0.55;
+  }
+
+  &__content {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding: 1.35rem 1.4rem 1.6rem !important;
+  }
+
+  &__title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #534e46 !important;
+    line-height: 1.25 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 6.25rem;
+  }
+
+  &__author {
+    font-size: 2rem !important;
+    color: #6b655c !important;
+    font-weight: 500 !important;
+  }
+
+  &__description {
+    margin-top: 0.35rem !important;
+    font-size: 1.8rem !important;
+    line-height: 1.4 !important;
+    color: #5f5a52 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .book-card {
+    &__cover {
+      height: 240px;
+    }
+
+    &__title {
+      font-size: 2.1rem !important;
+      min-height: 5.25rem;
+    }
+
+    &__author {
+      font-size: 1.7rem !important;
+    }
+
+    &__description {
+      font-size: 1.55rem !important;
+    }
+  }
+}

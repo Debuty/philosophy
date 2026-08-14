@@ -1,0 +1,19 @@
+{
+  "title": "Philosophy Books",
+  "subtitle": "Explore influential works that shaped human thought",
+  "empty": "No books match your search or filters.",
+  "errorLoading": "Failed to load books.",
+  "filter": {
+    "title": "Search & Filter",
+    "bookName": "Book name",
+    "author": "Author",
+    "clear": "Clear filters",
+    "results": "{{count}} books"
+  },
+  "details": {
+    "back": "Back to books",
+    "by": "By {{author}}",
+    "publishedYear": "Published {{year}}",
+    "notFound": "Book not found"
+  }
+}

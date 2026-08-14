@@ -174,7 +174,11 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     >
       <Box sx={{ display: "flex", alignItems: "flex-start" }}>
         <ListItemAvatar>
-          <Avatar sx={{ bgcolor: "#534e46" }}>
+          <Avatar
+            src={comment.profiles?.avatar_url ?? undefined}
+            alt={comment.profiles?.username ?? undefined}
+            sx={{ bgcolor: "#534e46" }}
+          >
             {comment.profiles?.username?.charAt(0)?.toUpperCase() || "?"}
           </Avatar>
         </ListItemAvatar>

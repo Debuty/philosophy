@@ -1,84 +1,91 @@
 .books {
   padding: 2rem;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 
-  .books-header {
+  &__header {
     text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 0;
+    margin-bottom: 2rem;
+  }
 
-    .books-title {
-      font-weight: 700;
-      color: #2c3e50;
-      margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    }
+  &__title {
+    font-size: 2.6rem !important;
+    font-weight: 700 !important;
+    color: #534e46 !important;
+    margin-bottom: 0.5rem !important;
+  }
 
-    .books-subtitle {
-      color: #7f8c8d;
-      font-weight: 400;
-      max-width: 600px;
-      margin: 0 auto;
+  &__subtitle {
+    font-size: 1.4rem !important;
+    color: #6b655c !important;
+    max-width: 40rem;
+    margin: 0 auto !important;
+  }
+
+  &__grid-item {
+    display: flex;
+
+    .book-card {
+      width: 100%;
     }
   }
 
-  .books-content {
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  &__empty {
+    text-align: center;
+    margin: 4rem auto !important;
+    font-size: 1.8rem !important;
+    color: #6b655c !important;
+  }
 
-    .books-description {
-      font-size: 1.1rem;
-      line-height: 1.8;
-      color: #34495e;
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 0 1rem;
-    }
+  &__error {
+    margin: 2rem auto !important;
+    max-width: 40rem;
+    font-size: 1.4rem !important;
+  }
 
-    .books-grid {
-      margin-top: 2rem;
-    }
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    padding: 2rem 0;
 
-    .coming-soon {
-      text-align: center;
-      color: #e74c3c;
-      font-weight: 600;
-      padding: 3rem;
-      background: linear-gradient(45deg, #ffeaa7, #fab1a0);
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    .MuiPaginationItem-root {
+      font-size: 1.8rem !important;
+      min-width: 3rem !important;
+      height: 3rem !important;
+      margin: 0 0.5rem !important;
+      border-radius: 0.5rem !important;
+      color: #534e46 !important;
+      border: 1px solid #534e46 !important;
+
+      &:hover {
+        background-color: #534e46 !important;
+        color: white !important;
+      }
+
+      &.Mui-selected {
+        background-color: #534e46 !important;
+        color: white !important;
+        border-color: #534e46 !important;
+      }
+
+      &:disabled {
+        color: #ccc !important;
+        border-color: #ccc !important;
+      }
     }
   }
 }
 
-// Responsive design
 @media (max-width: 768px) {
   .books {
     padding: 1rem;
 
-    .books-header {
-      margin-bottom: 2rem;
-      padding: 1rem 0;
-
-      .books-title {
-        font-size: 2rem;
-      }
-
-      .books-subtitle {
-        font-size: 1rem;
-      }
+    &__title {
+      font-size: 2.1rem !important;
     }
 
-    .books-content {
-      padding: 1rem;
-
-      .books-description {
-        font-size: 1rem;
-        padding: 0;
-      }
+    &__subtitle {
+      font-size: 1.2rem !important;
     }
   }
 }

@@ -75,7 +75,7 @@ export type CommentDto = {
   parent_id: string | null;
   depth: number;
   replies_count: number;
-  profiles: { username: string } | null;
+  profiles: { username: string; avatar_url: string | null } | null;
   comment_reaction_counts: ArticleReactionsState;
 };
 

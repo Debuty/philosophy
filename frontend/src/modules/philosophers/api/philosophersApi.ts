@@ -20,7 +20,7 @@ export async function listPhilosophers(
   const { data } = await apiClient.get<ListResponse>("/philosophers", {
     params: {
       page: params.page ?? 1,
-      pageSize: params.pageSize ?? 12,
+      pageSize: params.pageSize ?? 3,
       ...(params.search?.trim() ? { search: params.search.trim() } : {}),
       ...(params.era ? { era: params.era } : {}),
       ...(params.school ? { school: params.school } : {}),
@@ -31,7 +31,7 @@ export async function listPhilosophers(
     data: data.data,
     pagination: data.pagination ?? {
       page: params.page ?? 1,
-      pageSize: params.pageSize ?? 12,
+      pageSize: params.pageSize ?? 3,
       total: data.data.length,
       totalPages: 1,
     },

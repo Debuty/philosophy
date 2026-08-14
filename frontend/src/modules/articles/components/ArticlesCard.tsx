@@ -22,6 +22,7 @@ interface ArticleData {
 interface AuthorInfo {
   username?: string | null;
   bio?: string | null;
+  avatar_url?: string | null;
 }
 
 interface ReactionCounts {
@@ -92,7 +93,13 @@ const ArticlesCard: React.FC<ArticlesCardProps> = ({ article, author, reactionCo
           >
             <Box className="articles-card-box " sx={{ display: 'flex', gap: '1rem' }}>
               <div className="articles-card-avatar-container">
-                <Avatar className="articles-card-avatar" />
+                <Avatar
+                  className="articles-card-avatar"
+                  src={author?.avatar_url ?? undefined}
+                  alt={author?.username ?? undefined}
+                >
+                  {author?.username?.charAt(0).toUpperCase()}
+                </Avatar>
               </div>
               <div className="articles-card-avatar-info-container">
                 <Typography className="articles-card-avatar-name">{author?.username}</Typography>

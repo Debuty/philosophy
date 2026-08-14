@@ -10,5 +10,5 @@ export const PROFILE_CONSTANTS = {
   GRID_SIZES: { xs: 12, sm: 6, md: 2.4 },
   SIDEBAR_SIZE: { xs: 12, md: 3 },
   MAIN_SIZE: { xs: 12, md: 9 },
-  AVATAR_SIZE: 80,
+  AVATAR_SIZE: 128,
 } as const;

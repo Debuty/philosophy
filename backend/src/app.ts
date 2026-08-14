@@ -10,6 +10,7 @@ import {
   bookmarksRoutes,
 } from "./modules/articles/articles.routes.js";
 import { philosophersRoutes } from "./modules/philosophers/philosophers.routes.js";
+import { booksRoutes } from "./modules/books/books.routes.js";
 import { usersRoutes } from "./modules/users/users.routes.js";
 
 export const app = express();
@@ -34,6 +35,7 @@ app.get("/health", async (_req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/philosophers", philosophersRoutes);
+app.use("/api/v1/books", booksRoutes);
 app.use("/api/v1/articles", articlesRoutes);
 app.use("/api/v1/users/me/bookmarks", bookmarksRoutes);
 app.use("/api/v1/users", usersRoutes);

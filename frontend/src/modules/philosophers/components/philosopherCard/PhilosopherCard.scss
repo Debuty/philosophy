@@ -1,7 +1,5 @@
 .philosopher-card {
-  @media (max-width: 768px) {
-    max-width: 400px !important;
-  }
+  width: 100%;
 
   .MuiCardContent-root {
     .MuiTypography-h5 {

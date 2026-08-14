@@ -15,3 +15,16 @@ export async function getPublicProfile(
     next(error);
   }
 }
+
+export async function updateMyAvatar(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const data = await usersService.updateMyAvatar(req.user!.id, req.file);
+    res.status(200).json({ data, message: "Avatar updated" });
+  } catch (error) {
+    next(error);
+  }
+}

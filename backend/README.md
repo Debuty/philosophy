@@ -20,6 +20,9 @@ npm run dev
 | `PORT` | Server port (default `3000`) |
 | `CORS_ORIGIN` | Allowed frontend origin |
 | `JWT_SECRET` | Secret for JWT (used in later auth phase) |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
 
 ## Scripts
 

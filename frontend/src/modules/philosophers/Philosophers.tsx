@@ -27,7 +27,7 @@ const Philosophers: React.FC = () => {
     (state: RootState) => state.pagination.currentPage,
   );
 
-  const cardsPerPage = 12;
+  const cardsPerPage = 3;
 
   const { data, isLoading, error } = usePhilosophersList({
     page: currentPage,
@@ -110,12 +110,11 @@ const Philosophers: React.FC = () => {
             : t("Philosophers.empty")}
         </Typography>
       ) : (
-        <Grid container spacing={3} sx={{ justifyContent: "center" }}>
+        <Grid container spacing={3}>
           {philosophers.map((philosopher) => (
             <Grid
               key={philosopher.id}
               size={{ xs: 12, md: 4 }}
-              sx={{ maxWidth: "fit-content" }}
             >
               <PhilosopherCard philosopher={philosopher} />
             </Grid>

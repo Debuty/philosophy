@@ -1,0 +1,45 @@
+.books-filter-bar {
+  padding: 1.5rem 2rem !important;
+  margin-bottom: 2rem;
+  background-color: #bfbdb9 !important;
+  border-radius: 1rem !important;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: #534e46 !important;
+  }
+
+  &__results {
+    margin-top: 1rem;
+    color: #534e46;
+    font-size: 1.2rem;
+  }
+
+  .MuiButton-outlined {
+    border-color: #534e46 !important;
+    background-color: #534e46 !important;
+    color: #ffffff !important;
+    font-size: 1.2rem !important;
+
+    &:hover {
+      background-color: #3f3b36 !important;
+      border-color: #3f3b36 !important;
+      color: #ffffff !important;
+    }
+  }
+
+  .MuiInputLabel-root,
+  .MuiOutlinedInput-root {
+    font-size: 1.3rem !important;
+  }
+}
