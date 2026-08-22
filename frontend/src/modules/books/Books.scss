@@ -1,5 +1,7 @@
+@import "../../styles/mixins";
+
 .books {
-  padding: 2rem;
+  @include articles-page-padding;
   min-height: 100vh;
 
   &__header {

@@ -1,13 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Drawer, List, Divider, IconButton } from '@mui/material';
-import { AccountCircle } from '@mui/icons-material';
+import { Avatar, Drawer, List, Divider, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import type { RootState } from '../../../../store';
-import { HEADER_CONSTANTS } from '../constants';
-import { useAuth } from '../hooks/useAuth';
-import { LanguageSwitcher, NavigationItems, AuthSection } from './index';
-import './Sidebar.scss';
+import { useAuth } from "../hooks/useAuth";
+import { LanguageSwitcher, NavigationItems, AuthSection } from "./index";
+import "./Sidebar.scss";
 
 interface SidebarProps {
     open: boolean;
@@ -45,7 +43,15 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
                             color="inherit"
                             className="sidebar-profile-button"
                         >
-                            <AccountCircle sx={{ fontSize: HEADER_CONSTANTS.DIMENSIONS.ICON_SIZE }} />
+                            <Avatar
+                                className="sidebar-profile-avatar"
+                                src={user.avatarUrl ?? undefined}
+                                alt={user.username}
+                                imgProps={{ loading: "lazy" }}
+                            >
+                                {!user.avatarUrl &&
+                                    user.username.charAt(0).toUpperCase()}
+                            </Avatar>
                         </IconButton>
                     )}
 

@@ -110,11 +110,12 @@ const Philosophers: React.FC = () => {
             : t("Philosophers.empty")}
         </Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className="philosophers__grid">
           {philosophers.map((philosopher) => (
             <Grid
               key={philosopher.id}
-              size={{ xs: 12, md: 4 }}
+              size={{ xs: 12, sm: 6, md: 4 }}
+              className="philosophers__grid-item"
             >
               <PhilosopherCard philosopher={philosopher} />
             </Grid>

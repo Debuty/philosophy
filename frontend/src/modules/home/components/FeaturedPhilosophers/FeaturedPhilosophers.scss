@@ -1,120 +1,25 @@
+@import "../../../../styles/mixins";
+
 .featured-philosophers {
-  padding: 6rem 0;
-  background: #ffffff;
+  padding: var(--section-padding-y-lg) 0;
+
+  @include home-section-header;
 
   &__header {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  &__title {
-    font-weight: 700 !important;
-    margin-bottom: 1rem !important;
-    color: #3d3a35;
-    font-size: 2.5rem !important;
-
-    @media (max-width: 768px) {
-      font-size: 2rem !important;
-    }
-  }
-
-  &__subtitle {
-    color: #666;
-    font-weight: 400 !important;
-    font-size: 1.2rem !important;
-
-    @media (max-width: 768px) {
-      font-size: 1rem !important;
-    }
+    margin-bottom: var(--space-2xl);
   }
 
   &__grid {
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-xl);
   }
 
   &__action {
     display: flex;
     justify-content: center;
-    margin-top: 4rem;
+    margin-top: var(--space-2xl);
   }
 
   &__view-all-btn {
-    background-color: #534e46 !important;
-    color: white !important;
-    padding: 12px 32px !important;
-    font-size: 1.1rem !important;
-    border-radius: 8px !important;
-    text-transform: none !important;
-    font-weight: 600 !important;
-
-    &:hover {
-      background-color: #3d3a35 !important;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
+    @include view-all-button;
   }
 }
-
-.philosopher-preview-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #f9f8f6 !important;
-  border-radius: 12px !important;
-  overflow: hidden;
-  transition: all 0.3s ease !important;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15) !important;
-  }
-
-  &__image {
-    height: 300px;
-    object-fit: cover;
-  }
-
-  &__content {
-    flex-grow: 1;
-    padding: 2rem !important;
-  }
-
-  &__name {
-    font-weight: 700 !important;
-    margin-bottom: 0.5rem !important;
-    color: #3d3a35;
-    font-size: 1.5rem !important;
-  }
-
-  &__dates {
-    color: #888;
-    margin-bottom: 1rem !important;
-    font-weight: 500 !important;
-  }
-
-  &__description {
-    color: #666;
-    line-height: 1.6 !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-  }
-
-  &__actions {
-    padding: 1rem 2rem 2rem !important;
-  }
-
-  &__button {
-    color: #c2bbb0 !important;
-    font-weight: 600 !important;
-    text-transform: none !important;
-    font-size: 1rem !important;
-    padding: 1rem 2rem !important;
-
-    &:hover {
-      background-color: rgba(83, 78, 70, 0.08) !important;
-    }
-  }
-}
-

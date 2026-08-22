@@ -1,6 +1,6 @@
 .auth-section {
   display: flex;
-  gap: 10px;
+  gap: var(--space-xs);
   align-items: center;
 }
 
@@ -8,21 +8,35 @@
   display: contents;
 }
 
+.auth-section__btn {
+  font-size: var(--font-size-md) !important;
+  background-color: var(--color-primary) !important;
+  align-self: center;
+}
+
+.auth-section__avatar {
+  background-color: var(--color-primary) !important;
+  margin: auto var(--space-sm);
+  width: var(--header-avatar-size) !important;
+  height: var(--header-avatar-size) !important;
+  cursor: pointer;
+}
+
 .auth-section-mobile {
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.3s ease;
-  
+
   &:hover {
-    background-color: #e0e0e0;
+    background-color: var(--color-hover);
   }
-  
+
   &__icon {
-    color: #534e46;
-    margin-right: 16px;
+    color: var(--color-primary);
+    margin-right: var(--space-sm);
   }
 }

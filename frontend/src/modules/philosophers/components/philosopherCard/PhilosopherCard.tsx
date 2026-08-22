@@ -33,64 +33,35 @@ export const PhilosopherCard = ({
   const initials = displayName.trim().charAt(0).toUpperCase() || "?";
 
   return (
-    <Card
-      className="philosopher-card"
-      sx={{
-        padding: "2rem",
-        height: "100%",
-        width: "100%",
-        backgroundColor: "rgb(193, 188, 181) !important",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <CardActionArea>
-        {imageSrc ? (
-          <CardMedia
-            component="img"
-            loading="lazy"
-            image={imageSrc}
-            alt={displayName}
-            sx={{
-              height: "366px !important",
-              width: "278px !important",
-              margin: "1rem auto",
-              borderRadius: "1rem",
-            }}
-          />
-        ) : (
-          <Avatar
-            alt={displayName}
-            sx={{
-              height: "366px",
-              width: "278px",
-              margin: "1rem auto",
-              borderRadius: "1rem",
-              fontSize: "6rem",
-              bgcolor: "rgb(174, 171, 165)",
-              color: "#534e46",
-            }}
-          >
-            {initials}
-          </Avatar>
-        )}
+    <Card className="philosopher-card">
+      <CardActionArea className="philosopher-card__action">
+        <div className="philosopher-card__media">
+          {imageSrc ? (
+            <CardMedia
+              component="img"
+              loading="lazy"
+              image={imageSrc}
+              alt={displayName}
+              className="philosopher-card__image"
+            />
+          ) : (
+            <Avatar
+              alt={displayName}
+              className="philosopher-card__avatar-placeholder"
+            >
+              {initials}
+            </Avatar>
+          )}
+        </div>
         <CardContent>
           <Typography
             gutterBottom
             variant="h5"
             component="div"
-            sx={{ fontWeight: "1000" }}
+            className="philosopher-card__name"
           >
             {displayName}{" "}
-            <span
-              style={{
-                fontSize: "2rem",
-                fontWeight: "500",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {" "}
+            <span className="philosopher-card__years">
               ( {philosopher.birth} / {philosopher.death} )
             </span>
           </Typography>
@@ -113,18 +84,17 @@ export const PhilosopherCard = ({
             <Typography
               variant="body2"
               className="philosopher-card__description"
-              sx={{ color: "text.secondary", fontWeight: "500" }}
             >
               {shortDescription}
             </Typography>
           </Tooltip>
         </CardContent>
       </CardActionArea>
-      <CardActions>
+      <CardActions className="philosopher-card__actions">
         <Button
           size="small"
           color="primary"
-          sx={{ padding: "1rem" }}
+          className="philosopher-card__read-more"
           onClick={() =>
             navigate(`/philosophers/${philosopher.id}`, {
               state: { philosopher },

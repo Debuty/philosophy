@@ -1,11 +1,13 @@
+@import "../../../../styles/mixins";
+
 .header {
   display: none;
-  
-  @media (min-width: 769px) {
+
+  @include md-up {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: var(--space-sm) var(--space-lg);
   }
 }
 
@@ -16,7 +18,7 @@
 .header__list {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: var(--space-lg);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -24,7 +26,7 @@
 
 .header__auth-item {
   display: flex;
-  gap: 10px;
+  gap: var(--space-xs);
 }
 
 .header__image-wrapper {

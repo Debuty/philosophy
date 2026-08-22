@@ -1,50 +1,48 @@
+@import "./styles/index.scss";
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: #534e46;
+  color: var(--color-text-body);
 }
 
 html {
   font-size: 10px;
 }
 
-
-
 // Custom TextField styles
 .MuiTextField-root {
   .MuiFormHelperText-root {
-    font-size: 1.5rem !important;
+    font-size: var(--font-size-md) !important;
   }
 
-
   .MuiInputBase-input {
-    font-size: 1.5rem !important;
+    font-size: var(--font-size-md) !important;
 
     &:focus {
-      border-color: #534e46 !important;
+      border-color: var(--color-primary) !important;
     }
   }
 }
 
 // Custom InputLabel styles
 .MuiInputLabel-root {
-  font-size: 1.5rem !important;
+  font-size: var(--font-size-md) !important;
   margin-bottom: 10px !important;
 }
 
 // Custom Button styles
 .MuiButton-root {
-  font-size: 1.5rem !important;
-  background-color: #534e46 !important;
-  color: #ffffff !important;
-
+  font-size: var(--font-size-md) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-on-dark) !important;
 }
 
 .MuiOutlinedInput-root.Mui-focused fieldset {
-  border-color: #534e46 !important;
+  border-color: var(--color-primary) !important;
 }
 
-.MuiButtonBase-root{
+.MuiButtonBase-root {
   border: none !important;
 }

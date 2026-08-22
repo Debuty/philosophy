@@ -1,12 +1,12 @@
-import { Avatar, Box, Button, Grid, Paper, Typography } from '@mui/material';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Avatar, Box, Button, Grid, Paper, Typography } from "@mui/material";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import './ArticlesCard.scss';
-import type { RootState } from '../../../store';
-import { debugLog } from '../../../utils/debug';
+import "./ArticlesCard.scss";
+import type { RootState } from "../../../store";
+import { debugLog } from "../../../utils/debug";
 
 interface ArticleData {
   title: string;
@@ -36,89 +36,90 @@ interface ArticlesCardProps {
   reactionCounts?: ReactionCounts | null;
 }
 
-const ArticlesCard: React.FC<ArticlesCardProps> = ({ article, author, reactionCounts }) => {
+const ArticlesCard: React.FC<ArticlesCardProps> = ({
+  article,
+  author,
+  reactionCounts,
+}) => {
   const lang = useSelector((state: RootState) => state.locale.lang);
   const navigate = useNavigate();
 
   debugLog(author);
 
   return (
-    <div className="articles-card">
+    <div
+      className={`articles-card ${lang === "ar" ? "articles-card--rtl" : ""}`}
+    >
       <Paper className="articles-card-paper">
-        <Grid container className="articles-card-grid">
+        <Grid container className="articles-card-grid" spacing={2}>
           <Grid
             size={{ xs: 12, md: 9 }}
             className="articles-card-grid-item article-info"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              paddingRight: '3.5rem',
-              textAlign: 'left',
-            }}
           >
-            <Typography className="articles-card-title">{article.title}</Typography>
-            <Typography className="articles-card-description" sx={{ color: '#777065 !important' }}>
+            <Typography className="articles-card-title">
+              {article.title}
+            </Typography>
+            <Typography
+              className="articles-card-description"
+              sx={{ color: "#777065 !important" }}
+            >
               {article.subtitle}
             </Typography>
 
             <Button
-              onClick={() => navigate(`/articles/${article.id}`, { state: { article } })}
+              onClick={() =>
+                navigate(`/articles/${article.id}`, { state: { article } })
+              }
               className="articles-card-button"
-              sx={{ alignSelf: 'flex-start' }}
             >
-              {lang === 'ar' ? 'اقرأ المزيد' : 'Read More'}
+              {lang === "ar" ? "اقرأ المزيد" : "Read More"}
             </Button>
           </Grid>
+
           <Grid
             size={{ xs: 12, md: 3 }}
             className="articles-card-grid-item author-info"
-            sx={
-              lang === 'ar'
-                ? {
-                  borderRight: '1px solid #534e46',
-                  paddingRight: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                }
-                : {
-                  borderLeft: '1px solid #534e46',
-                  paddingLeft: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                }
-            }
           >
-            <Box className="articles-card-box " sx={{ display: 'flex', gap: '1rem' }}>
+            <Box className="articles-card-box">
               <div className="articles-card-avatar-container">
                 <Avatar
                   className="articles-card-avatar"
                   src={author?.avatar_url ?? undefined}
                   alt={author?.username ?? undefined}
+                  imgProps={{ loading: "lazy" }}
                 >
-                  {author?.username?.charAt(0).toUpperCase()}
+                  {!author?.avatar_url &&
+                    author?.username?.charAt(0).toUpperCase()}
                 </Avatar>
               </div>
               <div className="articles-card-avatar-info-container">
-                <Typography className="articles-card-avatar-name">{author?.username}</Typography>
-                <Typography className="articles-card-avatar-field">{author?.bio}</Typography>
+                <Typography className="articles-card-avatar-name">
+                  {author?.username}
+                </Typography>
+                <Typography className="articles-card-avatar-field">
+                  {author?.bio}
+                </Typography>
               </div>
             </Box>
-            <Typography className="articles-card-time ">
-              published at : {article.created_at ? new Date(article.created_at).toLocaleDateString() : 'Wrong Date'}
+
+            <Typography className="articles-card-time">
+              published at :{" "}
+              {article.created_at
+                ? new Date(article.created_at).toLocaleDateString()
+                : "Wrong Date"}
             </Typography>
+
             <Typography className="articles-card-category">
-              {lang === 'ar' ? 'الفئة' : 'Category'} : {article.category}
+              {lang === "ar" ? "الفئة" : "Category"} : {article.category}
             </Typography>
-            <Box className="articles-card-button-container" sx={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
-              <div className="articles-card-button-like" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <ThumbUpIcon sx={{ fontSize: '2rem' }} />
+
+            <Box className="articles-card-button-container">
+              <div className="articles-card-button-like">
+                <ThumbUpIcon className="articles-card-reaction-icon" />
                 {reactionCounts?.likes ?? 0}
               </div>
-              <div className="articles-card-button-dislike" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <ThumbDownIcon sx={{ fontSize: '2rem' }} />
+              <div className="articles-card-button-dislike">
+                <ThumbDownIcon className="articles-card-reaction-icon" />
                 {reactionCounts?.dislikes ?? 0}
               </div>
             </Box>

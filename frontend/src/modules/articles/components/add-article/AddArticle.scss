@@ -1,23 +1,21 @@
+@import "../../../../styles/mixins";
+
 .add-article {
-  padding: 20px;
-  
+  @include articles-page-padding;
+
   .MuiPaper-root {
-    border-radius: 12px;
-    
+    border-radius: var(--radius-md);
   }
-  
+
   .MuiTextField-root {
     .MuiOutlinedInput-root {
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
     }
   }
-  
+
   .MuiFormControl-root {
     .MuiOutlinedInput-root {
-      border-radius: 8px;
+      border-radius: var(--radius-sm);
     }
   }
 }
-
-
-

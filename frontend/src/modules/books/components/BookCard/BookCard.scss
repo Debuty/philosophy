@@ -23,13 +23,16 @@
   &__cover-wrap {
     flex-shrink: 0;
     padding: 1rem 1rem 0;
+    display: flex;
+    justify-content: center;
   }
 
   &__cover {
     display: block;
-    width: 100%;
-    height: 280px;
+    width: min(68%, 220px);
+    aspect-ratio: 2 / 3;
     object-fit: cover;
+    object-position: center;
     border-radius: 0.9rem;
     background: #aea99f;
     box-shadow: 0 4px 12px rgba(83, 78, 70, 0.14);
@@ -91,7 +94,7 @@
 @media (max-width: 600px) {
   .book-card {
     &__cover {
-      height: 240px;
+      width: min(58%, 180px);
     }
 
     &__title {

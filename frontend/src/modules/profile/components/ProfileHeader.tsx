@@ -2,11 +2,11 @@ import React, { useRef } from "react";
 import {
   Box,
   Typography,
-  Button,
+  // Button,
   Avatar,
   CircularProgress,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+// import EditIcon from "@mui/icons-material/Edit";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { toast } from "react-toastify";
 import type { AuthUser } from "../../../modules/auth/types";
@@ -86,16 +86,17 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
 
       <Box className="profile__user-info">
         <Typography variant="h4" component="h1" className="profile__title">
-          {user.username} <EditIcon className="profile__edit-icon" />
+          {user.username}
+          {/* <EditIcon className="profile__edit-icon" /> */}
         </Typography>
         <Typography variant="body1" className="profile__email">
           {user.email}
         </Typography>
-        <Box className="profile__edit-button-container">
+        {/* <Box className="profile__edit-button-container">
           <Button variant="contained" className="profile__edit-button">
             Edit Profile
           </Button>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

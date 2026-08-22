@@ -53,10 +53,11 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Paper
-      className="login"
-      sx={{ p: 3, maxWidth: 600, mx: "auto", backgroundColor: "#afada9" }}
-    >
+    <div className="login-page">
+      <Paper
+        className="login"
+        sx={{ p: 3, backgroundColor: "#afada9" }}
+      >
       <Typography variant="h4" component="h1" gutterBottom align="center">
         {t("login.title")}
       </Typography>
@@ -147,6 +148,7 @@ const Login: React.FC = () => {
         </Grid>
       </form>
     </Paper>
+    </div>
   );
 };
 

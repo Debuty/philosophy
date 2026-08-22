@@ -1,0 +1,50 @@
+@import "../../../../styles/mixins";
+
+.latest-articles {
+  padding: var(--section-padding-y) 0;
+
+  @include home-section-header;
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-lg);
+
+    > .latest-article-card,
+    > .latest-articles__skeleton {
+      flex: 1 1 340px;
+      min-width: min(100%, 340px);
+      max-width: 100%;
+    }
+  }
+
+  &__skeleton {
+    height: 280px;
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-card-warm) !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  &__message {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: var(--font-size-ui);
+    padding: var(--space-lg) 0;
+  }
+
+  &__action {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-lg);
+  }
+
+  &__view-all-btn {
+    @include view-all-button;
+  }
+}

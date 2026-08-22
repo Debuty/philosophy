@@ -1,58 +1,59 @@
+@import "../../../../styles/mixins";
+
 .features-section {
-  padding: 6rem 0;
-  background: linear-gradient(135deg, #f5f3f0 0%, #e8e4df 100%);
+  padding: var(--section-padding-y-lg) 0;
 
   &__title {
     text-align: center;
-    font-weight: 700 !important;
-    margin-bottom: 4rem !important;
-    color: #3d3a35;
-    font-size: 2.5rem !important;
+    font-weight: var(--font-weight-bold) !important;
+    margin-bottom: var(--space-2xl) !important;
+    color: var(--color-primary) !important;
+    font-size: var(--font-size-2xl) !important;
 
-    @media (max-width: 768px) {
-      font-size: 2rem !important;
-      margin-bottom: 3rem !important;
+    @include md-down {
+      font-size: var(--font-size-xl) !important;
+      margin-bottom: var(--space-xl) !important;
     }
   }
 
   &__grid {
-    margin-top: 2rem;
+    margin-top: var(--space-lg);
   }
 }
 
 .feature-card {
-  padding: 3rem 2rem !important;
+  padding: var(--space-xl) var(--space-lg) !important;
   text-align: center;
   height: 100%;
-  background-color: #ffffff !important;
-  border-radius: 12px !important;
+  background-color: var(--color-bg-card-warm) !important;
+  border-radius: var(--radius-md) !important;
   transition: all 0.3s ease !important;
   border: 2px solid transparent;
+  box-shadow: var(--shadow-sm);
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
-    border-color: #afaaa2;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg) !important;
+    border-color: var(--color-border-hover);
   }
 
   &__icon {
-    color: #534e46;
-    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
     display: flex;
     justify-content: center;
   }
 
   &__title {
-    font-weight: 600 !important;
-    margin-bottom: 1rem !important;
-    color: #3d3a35;
-    font-size: 1.5rem !important;
+    font-weight: var(--font-weight-semibold) !important;
+    margin-bottom: var(--space-sm) !important;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-md) !important;
   }
 
   &__description {
-    color: #666;
+    color: var(--color-text-secondary);
     line-height: 1.7 !important;
-    font-size: 1.5rem !important;
+    font-size: var(--font-size-md) !important;
   }
 }
-

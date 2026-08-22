@@ -1,21 +1,20 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button, Avatar} from '@mui/material';
-import { Login, Logout } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
-import { ROUTES } from '../../../../routes/pathes';
-import { HEADER_CONSTANTS } from '../constants';
-import { useAuth } from '../hooks/useAuth';
-import './AuthSection.scss';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Avatar } from "@mui/material";
+import { Login, Logout } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
+import { ROUTES } from "../../../../routes/pathes";
+import { useAuth } from "../hooks/useAuth";
+import "./AuthSection.scss";
 
 interface AuthSectionProps {
-  variant?: 'desktop' | 'mobile';
+  variant?: "desktop" | "mobile";
   onAction?: () => void;
 }
 
-const AuthSection: React.FC<AuthSectionProps> = ({ 
-  variant = 'desktop', 
-  onAction 
+const AuthSection: React.FC<AuthSectionProps> = ({
+  variant = "desktop",
+  onAction,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -39,7 +38,7 @@ const AuthSection: React.FC<AuthSectionProps> = ({
   };
 
   if (!isAuthenticated) {
-    if (variant === 'mobile') {
+    if (variant === "mobile") {
       return (
         <div className="auth-section-mobile" onClick={handleLoginClick}>
           <Login className="auth-section-mobile__icon" />
@@ -50,20 +49,14 @@ const AuthSection: React.FC<AuthSectionProps> = ({
 
     return (
       <Link to={ROUTES.LOGIN} className="auth-section__link">
-        <Button 
-          sx={{ 
-            fontSize: "1.5rem", 
-            backgroundColor: HEADER_CONSTANTS.COLORS.PRIMARY 
-          }} 
-          variant="contained"
-        >
+        <Button variant="contained" className="auth-section__btn">
           {t("login", { ns: "header" })}
         </Button>
       </Link>
     );
   }
 
-  if (variant === 'mobile') {
+  if (variant === "mobile") {
     return (
       <div className="auth-section-mobile" onClick={handleLogoutClick}>
         <Logout className="auth-section-mobile__icon" />
@@ -75,26 +68,16 @@ const AuthSection: React.FC<AuthSectionProps> = ({
   return (
     <div className="auth-section">
       <Button
-        sx={{ 
-          fontSize: "1.5rem", 
-          backgroundColor: HEADER_CONSTANTS.COLORS.PRIMARY, 
-          alignSelf: "center" 
-        }}
         variant="contained"
+        className="auth-section__btn"
         onClick={handleLogoutClick}
       >
         {t("logout", { ns: "header" })}
       </Button>
-      <Avatar 
+      <Avatar
         onClick={handleProfileClick}
-        src={user?.avatarUrl ?? undefined} 
-        sx={{ 
-          backgroundColor: HEADER_CONSTANTS.COLORS.PRIMARY, 
-          margin: "auto 1rem", 
-          width: HEADER_CONSTANTS.DIMENSIONS.AVATAR_SIZE, 
-          height: HEADER_CONSTANTS.DIMENSIONS.AVATAR_SIZE, 
-          cursor: "pointer" 
-        }} 
+        src={user?.avatarUrl ?? undefined}
+        className="auth-section__avatar"
       />
     </div>
   );

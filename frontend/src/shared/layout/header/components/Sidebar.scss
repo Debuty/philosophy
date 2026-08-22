@@ -1,36 +1,51 @@
 .sidebar-drawer {
   .MuiDrawer-paper {
-    width: 280px;
-    background-color: #b1aea9;
+    width: var(--drawer-width);
+    background-color: var(--color-bg-header);
   }
 }
 
 .sidebar-content {
-  padding: 20px;
+  padding: var(--space-md);
 }
 
 .sidebar-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-lg);
   align-items: center;
 }
 
 .sidebar-profile-button {
-  margin-right: 1rem;
+  margin-right: var(--space-sm);
+  padding: 0 !important;
+}
+
+.sidebar-profile-avatar {
+  width: var(--header-avatar-size) !important;
+  height: var(--header-avatar-size) !important;
+  font-size: var(--font-size-xl) !important;
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-on-dark) !important;
+
+  .MuiAvatar-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
 }
 
 .sidebar-language-switcher {
-  height: 3rem;
+  height: var(--space-xl);
 }
 
 .sidebar-navigation {
   .MuiListItem-root {
-    border-radius: 8px;
-    margin-bottom: 8px;
-    
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--radius-sm);
+
     &:hover {
-      background-color: #e0e0e0;
+      background-color: var(--color-hover);
     }
   }
 }

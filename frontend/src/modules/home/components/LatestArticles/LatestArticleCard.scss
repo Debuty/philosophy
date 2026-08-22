@@ -1,0 +1,89 @@
+@import "../../../../styles/mixins";
+
+.latest-article-card {
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg);
+  background-color: var(--color-bg-card-warm) !important;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  &__title {
+    font-size: var(--font-size-xl) !important;
+    font-weight: var(--font-weight-bold) !important;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm) !important;
+    line-height: var(--line-height-tight) !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
+  &__description {
+    flex: 1;
+    font-size: var(--font-size-md) !important;
+    font-weight: var(--font-weight-normal) !important;
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-normal) !important;
+    margin-bottom: var(--space-md) !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: auto;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border-strong);
+    min-width: 0;
+  }
+
+  &__avatar {
+    width: 48px !important;
+    height: 48px !important;
+    flex-shrink: 0;
+    font-size: var(--font-size-md) !important;
+    background-color: var(--color-primary) !important;
+    color: var(--color-text-on-dark) !important;
+    border: 2px solid rgba(83, 78, 70, 0.3);
+    box-shadow: var(--shadow-sm);
+
+    .MuiAvatar-img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+    }
+  }
+
+  &__author-name {
+    font-size: var(--font-size-md) !important;
+    font-weight: var(--font-weight-semibold) !important;
+    color: var(--color-text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+}

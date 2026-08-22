@@ -1,0 +1,37 @@
+:root {
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  // Layout
+  --layout-padding-x: 1rem;
+  --layout-padding-x-md: 1.5rem;
+  --layout-padding-x-lg: 3rem;
+  --layout-padding-x-xl: 5rem;
+  --layout-padding-x-2xl: 8rem;
+  --layout-padding-bottom: 2rem;
+
+  // Articles page
+  --articles-padding-y: 2rem;
+  --articles-padding-x: 1rem;
+  --articles-padding-x-md: 3rem;
+  --articles-padding-x-lg: 6rem;
+  --articles-padding-x-xl: 9rem;
+  --articles-padding-x-2xl: 13rem;
+
+  // Components
+  --drawer-width: 280px;
+  --header-avatar-size: 5rem;
+  --header-icon-size: 3rem;
+  --header-button-height: 3rem;
+
+  // Sections
+  --section-padding-y: 5rem;
+  --section-padding-y-lg: 6rem;
+  --section-header-gap: 1rem;
+  --section-header-margin: 3rem;
+}

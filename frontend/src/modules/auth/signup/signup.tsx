@@ -4,6 +4,7 @@ import { Grid, Button, Paper, Typography } from "@mui/material";
 import { useSignup } from "./hooks/useSignup";
 import { FormField } from "./components/FormField";
 import { formFields } from "./constants/signupConstants";
+import "./signup.scss";
 
 const Signup: React.FC = () => {
   const { t } = useTranslation("auth");
@@ -12,7 +13,8 @@ const Signup: React.FC = () => {
   const onSubmit = form.handleSubmit(handleSignup);
 
   return (
-    <Paper className="signup" sx={{ p: 3, mx: "auto", backgroundColor: "#afada9" }}>
+    <div className="signup-page">
+      <Paper className="signup" sx={{ p: 3, backgroundColor: "#afada9" }}>
       <Typography
         variant="h4"
         component="h1"
@@ -51,6 +53,7 @@ const Signup: React.FC = () => {
         </Grid>
       </form>
     </Paper>
+    </div>
   );
 };
 

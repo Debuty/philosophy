@@ -1,5 +1,7 @@
+@import "../../styles/mixins";
+
 .philosopher-details {
-  padding: 20px;
+  @include articles-page-padding;
   
   h1 {
     color: #333;

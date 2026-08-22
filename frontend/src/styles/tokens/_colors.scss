@@ -1,0 +1,43 @@
+:root {
+  // Brand
+  --color-primary: #534e46;
+  --color-primary-dark: #3d3a35;
+  --color-primary-hover: #3d3a35;
+
+  // Header / nav
+  --color-bg-page: #bab8b5;
+  --color-bg-header: #b1aea9;
+  --color-hover: #e0e0e0;
+  --color-text-nav: #333333;
+  --color-bg-section: #f5f4f2;
+  --color-bg-section-alt: #f5f3f0;
+  --color-bg-section-gradient-end: #e8e4df;
+  --color-bg-card: #ffffff;
+  --color-bg-card-alt: #f9f8f6;
+  --color-bg-card-warm: #c1bcb5;
+  --color-bg-card-muted: #eae8e4;
+  --color-bg-avatar: rgb(174, 171, 165);
+  --color-bg-cover: #aea99f;
+
+  // Hero gradients
+  --color-bg-hero-from: #afaaa2;
+  --color-bg-hero-to: #8e8981;
+
+  // Text
+  --color-text-body: #534e46;
+  --color-text-primary: #3d3a35;
+  --color-text-secondary: #666666;
+  --color-text-muted: #888888;
+  --color-text-on-dark: #ffffff;
+  --color-text-link: #534e46;
+
+  // Borders
+  --color-border: rgba(83, 78, 70, 0.1);
+  --color-border-strong: rgba(83, 78, 70, 0.2);
+  --color-border-hover: #afaaa2;
+
+  // Overlays
+  --color-overlay-light: rgba(255, 255, 255, 0.1);
+  --color-overlay-medium: rgba(255, 255, 255, 0.15);
+  --color-overlay-border: rgba(255, 255, 255, 0.2);
+}

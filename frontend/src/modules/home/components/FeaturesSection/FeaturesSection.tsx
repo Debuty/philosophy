@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import PsychologyIcon from '@mui/icons-material/Psychology';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import './FeaturesSection.scss';
 
 interface Feature {
@@ -17,17 +17,17 @@ const FeaturesSection: React.FC = () => {
 
   const features: Feature[] = [
     {
-      icon: <HistoryEduIcon sx={{ fontSize: 60 }} />,
+      icon: <ForumOutlinedIcon sx={{ fontSize: 60 }} />,
       titleKey: 'feature_1_title',
       descKey: 'feature_1_desc',
     },
     {
-      icon: <PsychologyIcon sx={{ fontSize: 60 }} />,
+      icon: <GroupsOutlinedIcon sx={{ fontSize: 60 }} />,
       titleKey: 'feature_2_title',
       descKey: 'feature_2_desc',
     },
     {
-      icon: <AutoStoriesIcon sx={{ fontSize: 60 }} />,
+      icon: <MenuBookOutlinedIcon sx={{ fontSize: 60 }} />,
       titleKey: 'feature_3_title',
       descKey: 'feature_3_desc',
     },

@@ -1,8 +1,9 @@
-.footer{
-
+.footer {
+  padding: var(--space-lg) 0;
 }
 
-.footer p{
-    font-size: 2rem;
-    text-align: center;
+.footer p {
+  font-size: var(--font-size-footer);
+  text-align: center;
+  color: var(--color-text-body);
 }

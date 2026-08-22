@@ -1,7 +1,9 @@
+@import "../../../../styles/mixins";
+
 .header-sm-screen {
   display: none;
-  
-  @media (max-width: 768px) {
+
+  @include md-down {
     display: block;
   }
 }

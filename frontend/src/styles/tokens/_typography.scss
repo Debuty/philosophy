@@ -1,0 +1,31 @@
+:root {
+  // Base html font-size is 10px — 1rem = 10px
+  --font-size-xs: 1rem;    // 10px
+  --font-size-sm: 1.2rem;  // 12px
+  --font-size-base: 1.4rem; // 14px
+  --font-size-md: 1.5rem;  // 15px
+  --font-size-lg: 1.8rem;  // 18px
+  --font-size-xl: 2rem;    // 20px
+  --font-size-2xl: 2.5rem; // 25px — section titles
+  --font-size-3xl: 3.5rem; // 35px — hero tagline
+  --font-size-4xl: 4.5rem; // 45px
+  --font-size-ui: 1.1rem;  // buttons, compact UI
+  --font-size-card-title: 1.25rem;
+  --font-size-quote: 1.75rem;
+  --font-size-quote-sm: 1.35rem;
+  --font-size-quote-xs: 1.15rem;
+  --font-size-tagline-sm: 2.2rem;
+  --font-size-tagline-xs: 1.75rem;
+  --font-size-nav: 2.3rem;
+  --font-size-footer: 2rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 800;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.6;
+  --line-height-loose: 1.8;
+}

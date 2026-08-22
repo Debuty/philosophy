@@ -1,6 +1,15 @@
 .language-switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background-color: var(--color-primary) !important;
+  cursor: pointer;
   transition: all 0.3s ease;
-  
+
+  &--mobile {
+    height: var(--header-button-height);
+  }
+
   &:hover {
     opacity: 0.9;
     transform: translateY(-1px);

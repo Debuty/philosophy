@@ -1,10 +1,13 @@
 // Import component styles
+@import '../../styles/mixins';
 @import './components/StatsCard.scss';
 @import './components/ProfileHeader.scss';
 @import './components/ProfileSidebar.scss';
 @import './components/BookmarksSection.scss';
 
 .profile {
+  @include articles-page-padding;
+
   &__main-paper {
     padding: 2rem !important;
     background-color: #cac8c4 !important;

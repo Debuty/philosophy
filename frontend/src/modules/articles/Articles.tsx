@@ -33,14 +33,16 @@ const Articles: React.FC = () => {
       {isLoading ? (
         <Loading />
       ) : processedArticles.length > 0 ? (
-        processedArticles.map(({ article, author, reactionCounts }) => (
-          <ArticlesCard
-            key={article.id}
-            article={article}
-            author={author}
-            reactionCounts={reactionCounts}
-          />
-        ))
+        <div className="articles__grid">
+          {processedArticles.map(({ article, author, reactionCounts }) => (
+            <ArticlesCard
+              key={article.id}
+              article={article}
+              author={author}
+              reactionCounts={reactionCounts}
+            />
+          ))}
+        </div>
       ) : (
         <EmptyState DataName={"Articles"} />
       )}

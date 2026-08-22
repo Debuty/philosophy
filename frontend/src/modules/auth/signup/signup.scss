@@ -1,7 +1,10 @@
-.signup {
-  padding: 20px;
+@import "../../../styles/mixins";
 
+.signup-page {
+  @include articles-page-padding;
 }
 
-
-// Signup component styles will go here
+.signup {
+  max-width: 960px;
+  margin-inline: auto;
+}

@@ -9,7 +9,6 @@ import {
   Button,
   Paper,
   Typography,
-  Box,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./FilterBar.scss";
@@ -142,11 +141,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           </FormControl>
         </Grid>
       </Grid>
-
-      {/* Results Count */}
-      <Box className="results-info">
-        <Typography variant="body2">Test</Typography>
-      </Box>
     </Paper>
   );
 };

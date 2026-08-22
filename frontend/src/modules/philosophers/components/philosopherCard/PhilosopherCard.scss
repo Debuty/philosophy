@@ -1,5 +1,57 @@
 .philosopher-card {
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 2rem;
+  height: 100%;
+  background-color: rgb(193, 188, 181) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+
+  &__action {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__media {
+    width: 100%;
+    max-width: min(278px, 72%);
+    margin: 1rem auto;
+    aspect-ratio: 278 / 366;
+    border-radius: 1rem;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  &__avatar-placeholder {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    font-size: clamp(3rem, 12vw, 6rem) !important;
+    background-color: rgb(174, 171, 165) !important;
+    color: #534e46 !important;
+  }
+
+  &__name {
+    font-weight: 1000 !important;
+  }
+
+  &__years {
+    font-size: 2rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
 
   .MuiCardContent-root {
     .MuiTypography-h5 {
@@ -8,6 +60,8 @@
 
     .philosopher-card__description {
       font-size: 1.8rem !important;
+      color: rgba(0, 0, 0, 0.6);
+      font-weight: 500;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 4;
@@ -18,9 +72,49 @@
     }
   }
 
-  .MuiCardActions-root {
-    .MuiButton-root {
+  &__actions {
+    .philosopher-card__read-more {
       font-size: 1.6rem !important;
+      padding: 1rem !important;
+    }
+  }
+}
+
+@media (max-width: 899px) {
+  .philosopher-card {
+    padding: clamp(1.1rem, 2.8vw, 1.75rem);
+
+    &__media {
+      max-width: min(240px, 68%);
+      margin-block: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    &__years {
+      font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+    }
+
+    .MuiCardContent-root {
+      .MuiTypography-h5 {
+        font-size: clamp(1.75rem, 4.2vw, 2.2rem) !important;
+      }
+
+      .philosopher-card__description {
+        font-size: clamp(1.35rem, 3.2vw, 1.65rem) !important;
+        max-height: 7.5rem;
+      }
+    }
+
+    &__actions .philosopher-card__read-more {
+      font-size: clamp(1.3rem, 3vw, 1.5rem) !important;
+      padding: clamp(0.65rem, 1.8vw, 0.9rem) !important;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .philosopher-card {
+    &__years {
+      white-space: normal;
     }
   }
 }
